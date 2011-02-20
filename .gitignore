@@ -4,3 +4,6 @@ local.properties
 .classpath
 .project
 .settings
+tests/bin
+tests/gen
+tests/local.properties
