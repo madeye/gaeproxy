@@ -39,7 +39,8 @@ public class HTTPServer implements WrapServer {
             while (true) {
                 Log.d(TAG, "waiting for connect...");
                 Socket client = serverSocket.accept();
-                new Thread(new ProxyServerWorkThread(client, proxy)).start();
+                //new Thread(new ProxyServerWorkThread(client, proxy)).start();
+                new ProxyServerWorkThread(client, proxy).run();
             }
 
         } catch (IOException e) {

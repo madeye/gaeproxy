@@ -48,10 +48,10 @@ public class ProxyServerWorkThread implements Runnable {
 	SSLSocket mSSLSocket;
 
 	String mGappProxyURL;
-	
-	//输入数据的最大长度
-	 private static final int MAXLENGTH = 102400;
-	 private static final int BUFFERSIZE = 1024;
+
+	// 输入数据的最大长度
+	private static final int MAXLENGTH = 102400;
+	private static final int BUFFERSIZE = 1024;
 
 	public static final String REQUEST_URL = "Request_URL";
 	public static final String REQUEST_METHOD = "Request_METHOD";
@@ -183,34 +183,35 @@ public class ProxyServerWorkThread implements Runnable {
 
 			HttpResponse httpResponse = doHttpPost(mGappProxyURL, nvp);
 
-			Log.d(TAG,
-					"**************print response********************");
+			Log.d(TAG, "**************print response********************");
 			Log.d(TAG, "statusLine=" + httpResponse.getStatusLine());
-			
+
 			/* Construct the response */
-			
+
 			StringBuffer resp = new StringBuffer();
 			boolean isText = false;
-			
-			InputStreamReader inrd = new InputStreamReader(httpResponse.getEntity().getContent());
+
+			InputStreamReader inrd = new InputStreamReader(httpResponse
+					.getEntity().getContent());
 			BufferedReader inbr = new BufferedReader(inrd);
 
-	        line = inbr.readLine();
-	        String [] words = line.split(" ");
-	        if (words.length < 2)
-	        	return;
-	        String status = words[1].trim();
-	
-			if (status.equals(592) && hashMap.get("REQUEST_METHOD").equals("GET")) {
-	            //processLargeResponse(path)
-	            //connection.close()
-	            return;
+			line = inbr.readLine();
+			String[] words = line.split(" ");
+			if (words.length < 2)
+				return;
+			String status = words[1].trim();
+
+			if (status.equals(592)
+					&& hashMap.get("REQUEST_METHOD").equals("GET")) {
+				// processLargeResponse(path)
+				// connection.close()
+				return;
 			}
-			
+
 			// write status to response
 			resp.append(line);
 			resp.append("\n");
-	
+
 			// do with headers
 			while (true) {
 				line = inbr.readLine().trim();
@@ -222,38 +223,35 @@ public class ProxyServerWorkThread implements Runnable {
 				if (index < 0) {
 					continue;
 				}
-	
+
 				String key = line.substring(0, index);
 				String value = line.substring(index + 1, line.length());
-				
+
 				if (key.toLowerCase().equals("accept-ranges"))
 					continue;
-				
+
 				resp.append(line);
-				
+
 				if (key.toLowerCase().equals("content-type")) {
 					if (value.toLowerCase().contains("text"))
 						isText = true;
 				}
 			}
-			
+
 			// headers done
 			resp.append("\n");
-			
-			StringBuffer content = new StringBuffer();
+
+			char[] buf = new char[BUFFERSIZE];
 
 			if (isText) {
 				while (true) {
-					int t = inbr.read();
-					if (t == -1)
+					int len = inbr.read(buf);
+					if (len <= 0)
 						break;
-					content.append(line);
+					os.write(unzip(buf.toString().getBytes()));
 				}
 			}
-			
-			
-			
-			os.write(null);
+
 			os.close();
 			pw.close();
 
@@ -262,42 +260,43 @@ public class ProxyServerWorkThread implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	  * 解压被压缩的数据
-	  * @param object
-	  * @return
-	  * @throws IOException
-	  */
-	 public static byte[] UnCompress(byte[] object) throws IOException {
+	 * 解压被压缩的数据
+	 * 
+	 * @param object
+	 * @return
+	 * @throws IOException
+	 */
+	public static byte[] unzip(byte[] object) throws IOException {
 
-	  byte[] data = new byte[MAXLENGTH];
-	  try {
-	   ByteArrayInputStream in = new ByteArrayInputStream(object);
-	   ZInputStream zIn = new ZInputStream(in);
-	   DataInputStream objIn = new DataInputStream(zIn);
+		byte[] data = new byte[MAXLENGTH];
+		try {
+			ByteArrayInputStream in = new ByteArrayInputStream(object);
+			ZInputStream zIn = new ZInputStream(in);
+			DataInputStream objIn = new DataInputStream(zIn);
 
-	   int len = 0;
-	   int count = 0;
-	   while ((count = objIn.read(data, len, len + BUFFERSIZE)) != -1) {
-	    len = len + count;
-	   }
+			int len = 0;
+			int count = 0;
+			while ((count = objIn.read(data, len, len + BUFFERSIZE)) != -1) {
+				len = len + count;
+			}
 
-	   byte[] trueData = new byte[len];
-	   System.arraycopy(data, 0, trueData, 0, len);
+			byte[] trueData = new byte[len];
+			System.arraycopy(data, 0, trueData, 0, len);
 
-	   objIn.close();
-	   zIn.close();
-	   in.close();
+			objIn.close();
+			zIn.close();
+			in.close();
 
-	   return trueData;
+			return trueData;
 
-	  } catch (IOException e) {
-	   e.printStackTrace();
-	   throw e;
-	  }
-	 }
-	
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 	List<NameValuePair> createParams(HashMap<String, String> hashmap) {
 		Log.d(TAG, "************************printHeader*********************");
 		String headers = "";
@@ -345,9 +344,9 @@ public class ProxyServerWorkThread implements Runnable {
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(TAG, "Connection error: " + e);
 		}
 
 		// httpClient.getConnectionManager().shutdown();
