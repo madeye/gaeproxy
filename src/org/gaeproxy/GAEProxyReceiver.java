@@ -9,40 +9,35 @@ import android.preference.PreferenceManager;
 
 public class GAEProxyReceiver extends BroadcastReceiver {
 
-	public static final String PREFS_NAME = "GAEProxy";
-
 	private String proxy;
 	private int port;
-	private boolean isSaved = false;
 	private boolean isAutoStart = false;
-	private boolean isAutoSetProxy = false;
+	private boolean isInstalled = false;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
- 
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
-		isSaved = settings.getBoolean("isSaved", false);
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
 		isAutoStart = settings.getBoolean("isAutoStart", false);
+		isInstalled = settings.getBoolean("isInstalled", false);
 
-		if (isSaved && isAutoStart) {
+		if (isAutoStart && isInstalled) {
 			proxy = settings.getString("proxy", "");
 			String portText = settings.getString("port", "");
 			if (portText != null && portText.length() > 0) {
 				port = Integer.valueOf(portText);
 				if (port <= 1024)
 					port = 1984;
-			}
-			else 
+			} else {
 				port = 1984;
+			}
 			
-			isAutoSetProxy = settings.getBoolean("isAutoSetProxy", false);
-
 			Intent it = new Intent(context, GAEProxyService.class);
 			Bundle bundle = new Bundle();
 			bundle.putString("proxy", proxy);
 			bundle.putInt("port", port);
-			bundle.putBoolean("isAutoSetProxy", isAutoSetProxy);
 
 			it.putExtras(bundle);
 			context.startService(it);

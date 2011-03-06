@@ -1,5 +1,6 @@
 package org.gaeproxy;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -8,14 +9,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Hashtable;
 
@@ -65,10 +70,10 @@ class DnsResponse implements Serializable {
 			return null;
 		}
 
-		ip = "" + (int) (dnsResponse[i] & 0xFF); /* Unsigned byte to int */
+		ip = "" + (dnsResponse[i] & 0xFF); /* Unsigned byte to int */
 
 		for (i++; i < dnsResponse.length; i++) {
-			ip += "." + (int) (dnsResponse[i] & 0xFF);
+			ip += "." + (dnsResponse[i] & 0xFF);
 		}
 
 		return ip;
@@ -121,9 +126,9 @@ public class DNSServer implements WrapServer {
 
 	private final String TAG = "CMWRAP->DNSServer";
 	private String homePath;
-	private final String CACHE_PATH = "/cache";
+	private final String CACHE_PATH = "cache/";
 
-	private final String CACHE_FILE = "/dnscache";
+	private final String CACHE_FILE = "dnscache";
 
 	private DatagramSocket srvSocket;
 
@@ -151,22 +156,24 @@ public class DNSServer implements WrapServer {
 
 	private String target = "8.8.8.8:53";
 
-	public DNSServer(String name, int port, String dnsHost, int dnsPort) {
+	private String appHost = "203.208.39.99";
+
+	public DNSServer(String name, int port, String dnsHost, int dnsPort,
+			String appHost) {
 		this.name = name;
 		this.srvPort = port;
 		this.dnsHost = dnsHost;
 		this.dnsPort = dnsPort;
+		this.appHost = appHost;
 
 		if (dnsHost != null && !dnsHost.equals(""))
 			target = dnsHost + ":" + dnsPort;
 
-		initOrgCache();
-
 		try {
 			srvSocket = new DatagramSocket(srvPort,
 					InetAddress.getByName("127.0.0.1"));
-			inService = true;
 			Log.e(TAG, this.name + "启动于端口： " + port);
+			inService = true;
 		} catch (SocketException e) {
 			Log.e(TAG, "DNSServer初始化错误，端口号" + port, e);
 		} catch (UnknownHostException e) {
@@ -189,6 +196,7 @@ public class DNSServer implements WrapServer {
 		saveCache();
 	}
 
+	@Override
 	public void close() throws IOException {
 		inService = false;
 		srvSocket.close();
@@ -254,7 +262,7 @@ public class DNSServer implements WrapServer {
 	 */
 	protected byte[] fetchAnswer(byte[] quest) {
 
-		Socket innerSocket = new InnerSocketBuilder("8.8.8.8", 53, target)
+		Socket innerSocket = new InnerSocketBuilder(dnsHost, dnsPort, target)
 				.getSocket();
 		DataInputStream in;
 		DataOutputStream out;
@@ -312,16 +320,46 @@ public class DNSServer implements WrapServer {
 		return requestDomain;
 	}
 
+	@Override
 	public int getServPort() {
 		return this.srvPort;
 	}
 
 	private void initOrgCache() {
-		// TODO: 由Preference读取
-		// TODO: 重构
-		
+		try {
+			URL aURL = new URL("http://myhosts.sinaapp.com/hosts");
+			HttpURLConnection conn = (HttpURLConnection) aURL.openConnection();
+			conn.connect();
+			InputStream is = conn.getInputStream();
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(is));
+			String line = reader.readLine();
+			if (line == null)
+				return;
+			if (!line.startsWith("#SSHTunnel"))
+				return;
+			while (true) {
+				line = reader.readLine();
+				if (line == null)
+					break;
+				if (line.startsWith("#"))
+					continue;
+				line = line.trim().toLowerCase();
+				if (line.equals(""))
+					continue;
+				String[] hosts = line.split(" ");
+				if (hosts.length == 2) {
+					orgCache.put(hosts[1], hosts[0]);
+					Log.d(TAG, hosts[0] + " " + hosts[1]);
+				}
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "cannot get remote host files", e);
+		}
+
 	}
 
+	@Override
 	public boolean isClosed() {
 		return srvSocket.isClosed();
 	}
@@ -444,8 +482,10 @@ public class DNSServer implements WrapServer {
 		return result;
 	}
 
+	@Override
 	public void run() {
 
+		initOrgCache();
 		loadCache();
 
 		byte[] qbuffer = new byte[576];
@@ -467,11 +507,20 @@ public class DNSServer implements WrapServer {
 				String questDomain = getRequestDomain(udpreq);
 
 				Log.d(TAG, "解析" + questDomain);
-				
-				if (questDomain.contains("appspot.com"))
-					orgCache.put(questDomain, "74.125.153.141");
 
-				if (dnsCache.containsKey(questDomain)) {
+				// if (questDomain.toLowerCase().contains("appspot.com")) {
+				// byte[] ips = parseIPString(appHost);
+				// byte[] answer = createDNSResponse(udpreq, ips);
+				// addToCache(questDomain, answer);
+				// }
+
+				if (questDomain.toLowerCase().contains("google.cn")) {
+					
+					byte[] ips = parseIPString(appHost);
+					byte[] answer = createDNSResponse(udpreq, ips);
+					sendDns(answer, dnsq, srvSocket);
+					
+				} else if (dnsCache.containsKey(questDomain)) {
 
 					sendDns(dnsCache.get(questDomain).getDnsResponse(), dnsq,
 							srvSocket);
@@ -589,5 +638,16 @@ public class DNSServer implements WrapServer {
 
 	}
 
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
+	public boolean test(String domain, String ip) {
+		boolean ret = true;
+
+		// TODO: Implement test case
+
+		return ret;
+	}
 
 }

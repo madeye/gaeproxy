@@ -39,8 +39,10 @@ redsocks {
   ;;
 stop)
   kill -9 `cat $DIR/redsocks.pid`
+  kill -9 `cat $DIR/python.pid`
 
   rm $DIR/redsocks.pid
+  rm $DIR/python.pid
   
   rm $DIR/redsocks.conf
   

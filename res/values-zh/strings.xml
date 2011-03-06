@@ -33,4 +33,12 @@
 <string name="auto_set_proxy_summary">自动配置全局代理，需要 ROOT 权限以及 IPTABLES 的支持</string>
 <string name="port_empty">端口不能为空</string>
 <string name="proxy_empty">代理地址不能为空</string>
+<string name="install_cat">模块管理</string>
+<string name="isInstalled">安装/卸载</string>
+<string name="isInstalled_summary">安装/卸载依赖模块，请确认SD卡已插入，并连接到互联网</string>
+<string name="download">下载中...（100%处请耐心等待）</string>
+<string name="install_alert">请先安装依赖模块，滑动到底部，选择安装</string>
+<string name="sdcard_alert">请确认SD卡已插入</string>
+<string name="recovery">清除连接状态</string>
+<string name="unzip">解压缩中...</string>
 </resources>

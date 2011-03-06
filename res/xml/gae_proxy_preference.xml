@@ -3,17 +3,17 @@
 	<PreferenceCategory android:title="@string/function_cat">
 		<CheckBoxPreference android:key="isRunning" android:title="@string/service_controller" android:summary="@string/service_summary"></CheckBoxPreference>
 	</PreferenceCategory><PreferenceCategory android:title="@string/proxy_cat">
-		<EditTextPreference android:title="@string/proxy" android:summary="@string/proxy_summary" android:key="proxy"></EditTextPreference>
+		<EditTextPreference android:title="@string/proxy" android:summary="@string/proxy_summary" android:key="proxy" android:defaultValue="http://proxyofmax.appspot.com/fetch.py"></EditTextPreference>
 		<EditTextPreference android:title="@string/port"
-			android:summary="@string/port_summary" android:key="port"></EditTextPreference>
+			android:summary="@string/port_summary" android:key="port" android:defaultValue="1984"></EditTextPreference>
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="@string/fearute_cat">
 		<CheckBoxPreference android:key="isAutoConnect"
 			android:title="@string/auto_connect" android:summary="@string/auto_connect_summary"></CheckBoxPreference>
-		<CheckBoxPreference android:key="isAutoSetProxy"
-			android:title="@string/auto_set_proxy" android:summary="@string/auto_set_proxy_summary"></CheckBoxPreference>
 	</PreferenceCategory>
 	
 
+<PreferenceCategory android:title="@string/install_cat"><CheckBoxPreference android:key="isInstalled" android:title="@string/isInstalled" android:summary="@string/isInstalled_summary"></CheckBoxPreference>
+</PreferenceCategory>
 </PreferenceScreen>

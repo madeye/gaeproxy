@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.gaeproxy" android:versionCode="1" android:versionName="1.0">
+	package="org.gaeproxy" android:versionName="0.4.5" android:versionCode="19">
 	<uses-sdk android:minSdkVersion="4" />
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
 		<activity android:name=".GAEProxy" android:label="@string/app_name">
@@ -19,6 +20,14 @@
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
+		</receiver>
+		<receiver android:name=".GAEProxyWidgetProvider">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+				<action android:name="org.gaeproxy.GAEProxyWidgetProvider.PROXY_SWITCH_ACTION" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/gaeproxy_appwidget_provider" />
 		</receiver>
 	</application>
 </manifest>

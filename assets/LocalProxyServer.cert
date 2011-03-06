@@ -1,0 +1,95 @@
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number:
+            dc:a1:c2:5f:8e:89:7c:4b
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=CN, O=GAppProxy, CN=CA/emailAddress=dugang.2008@gmail.com
+        Validity
+            Not Before: Aug 25 21:15:45 2010 GMT
+            Not After : Aug 22 21:15:45 2020 GMT
+        Subject: C=CN, O=GAppProxy, CN=*
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:dd:f3:f3:d3:45:d4:65:f6:87:9d:47:22:0b:22:
+                    8a:f0:5e:51:cf:ab:6d:ad:68:cf:0b:f6:2a:d2:71:
+                    ee:3b:cc:f5:2c:b5:3b:17:74:43:f1:e4:8e:4c:34:
+                    22:d1:ab:01:14:9e:d3:c2:05:b7:d2:46:1c:85:1a:
+                    69:c9:70:0e:d9:13:c4:b9:27:85:ed:41:38:51:4f:
+                    6c:73:cc:c9:c7:95:7b:11:c2:b6:93:dd:da:04:66:
+                    d5:53:8a:16:b6:f7:2a:32:67:30:0a:c2:d5:4a:65:
+                    b2:e9:f5:8b:85:c9:89:9e:b7:75:e7:bf:46:68:08:
+                    b0:ba:52:ff:ff:47:c1:7c:77
+                Exponent: 65537 (0x10001)
+    Signature Algorithm: sha1WithRSAEncryption
+        35:ce:2a:f4:7e:c8:d1:dd:c5:be:13:54:b8:af:1e:d2:d5:09:
+        d7:df:b0:fc:e1:aa:a2:2a:1f:5e:88:3f:46:31:ca:a7:a3:95:
+        d1:c2:2f:e0:04:9a:2a:9d:2a:7b:e5:7f:3d:73:5b:bf:47:74:
+        ce:3f:23:c3:47:7b:43:4b:c9:38:e2:f5:e5:a6:86:80:b7:5c:
+        06:bc:b7:ed:71:05:3f:4f:41:ec:db:eb:94:da:97:72:b5:23:
+        58:d7:53:44:34:42:6d:32:ad:80:17:e5:0f:d7:ce:01:bd:06:
+        92:bf:38:0e:90:e3:e2:1e:2f:9f:48:41:54:42:91:49:13:f8:
+        5c:ce
+-----BEGIN CERTIFICATE-----
+MIIB+DCCAWECCQDcocJfjol8SzANBgkqhkiG9w0BAQUFADBUMQswCQYDVQQGEwJD
+TjESMBAGA1UEChMJR0FwcFByb3h5MQswCQYDVQQDEwJDQTEkMCIGCSqGSIb3DQEJ
+ARYVZHVnYW5nLjIwMDhAZ21haWwuY29tMB4XDTEwMDgyNTIxMTU0NVoXDTIwMDgy
+MjIxMTU0NVowLTELMAkGA1UEBhMCQ04xEjAQBgNVBAoTCUdBcHBQcm94eTEKMAgG
+A1UEAwwBKjCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA3fPz00XUZfaHnUci
+CyKK8F5Rz6ttrWjPC/Yq0nHuO8z1LLU7F3RD8eSOTDQi0asBFJ7TwgW30kYchRpp
+yXAO2RPEuSeF7UE4UU9sc8zJx5V7EcK2k93aBGbVU4oWtvcqMmcwCsLVSmWy6fWL
+hcmJnrd1579GaAiwulL//0fBfHcCAwEAATANBgkqhkiG9w0BAQUFAAOBgQA1zir0
+fsjR3cW+E1S4rx7S1QnX37D84aqiKh9eiD9GMcqno5XRwi/gBJoqnSp75X89c1u/
+R3TOPyPDR3tDS8k44vXlpoaAt1wGvLftcQU/T0Hs2+uU2pdytSNY11NENEJtMq2A
+F+UP184BvQaSvzgOkOPiHi+fSEFUQpFJE/hczg==
+-----END CERTIFICATE-----
+Certificate:
+    Data:
+        Version: 1 (0x0)
+        Serial Number:
+            fe:8c:17:d5:85:14:a9:f1
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=CN, O=GAppProxy, CN=CA/emailAddress=dugang.2008@gmail.com
+        Validity
+            Not Before: Aug 25 21:11:22 2010 GMT
+            Not After : Aug 22 21:11:22 2020 GMT
+        Subject: C=CN, O=GAppProxy, CN=CA/emailAddress=dugang.2008@gmail.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:c7:cf:97:9a:9f:25:94:21:85:55:db:43:49:7e:
+                    88:a9:ef:fa:57:f8:f9:1c:1f:f7:71:b2:b8:e6:68:
+                    1c:9a:ed:62:0b:c3:c7:21:48:b6:fc:3e:8e:cc:70:
+                    25:bb:95:b8:1e:cb:a9:0f:d1:dc:4e:c5:ac:25:e0:
+                    34:a7:ef:f1:48:82:4e:28:20:5b:93:fd:8a:41:81:
+                    09:4c:ac:09:8b:34:36:67:8e:cb:21:20:f3:c3:e9:
+                    be:82:4d:63:15:42:48:4b:f5:ec:1e:0a:af:54:44:
+                    58:f3:7b:40:4a:b9:58:16:3e:8b:3f:09:35:28:cc:
+                    24:ae:9c:94:aa:5d:1d:e1:55
+                Exponent: 65537 (0x10001)
+    Signature Algorithm: sha1WithRSAEncryption
+        6e:bc:82:18:3b:46:6d:8b:41:36:79:0b:22:7a:a3:42:fb:e3:
+        64:62:d0:73:0c:99:47:26:e2:ac:e0:4a:1b:aa:02:71:5b:32:
+        35:e3:cc:f5:a3:62:65:da:51:61:99:ff:d5:84:0b:23:17:03:
+        5a:ee:d5:75:13:e9:f2:66:bf:de:7c:b1:eb:5d:19:67:d5:c7:
+        17:b5:a2:8d:cb:59:b4:3d:3b:65:ad:5b:36:68:56:b0:ef:ad:
+        59:a7:fd:87:86:b1:ea:7d:bd:02:ac:8c:dd:4c:fa:0d:e9:26:
+        3a:6a:b9:fe:55:62:b2:4d:e5:c5:c9:c4:bd:1b:5d:1d:c8:70:
+        b7:0d
+-----BEGIN CERTIFICATE-----
+MIICHzCCAYgCCQD+jBfVhRSp8TANBgkqhkiG9w0BAQUFADBUMQswCQYDVQQGEwJD
+TjESMBAGA1UEChMJR0FwcFByb3h5MQswCQYDVQQDEwJDQTEkMCIGCSqGSIb3DQEJ
+ARYVZHVnYW5nLjIwMDhAZ21haWwuY29tMB4XDTEwMDgyNTIxMTEyMloXDTIwMDgy
+MjIxMTEyMlowVDELMAkGA1UEBhMCQ04xEjAQBgNVBAoTCUdBcHBQcm94eTELMAkG
+A1UEAxMCQ0ExJDAiBgkqhkiG9w0BCQEWFWR1Z2FuZy4yMDA4QGdtYWlsLmNvbTCB
+nzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAx8+Xmp8llCGFVdtDSX6Iqe/6V/j5
+HB/3cbK45mgcmu1iC8PHIUi2/D6OzHAlu5W4HsupD9HcTsWsJeA0p+/xSIJOKCBb
+k/2KQYEJTKwJizQ2Z47LISDzw+m+gk1jFUJIS/XsHgqvVERY83tASrlYFj6LPwk1
+KMwkrpyUql0d4VUCAwEAATANBgkqhkiG9w0BAQUFAAOBgQBuvIIYO0Zti0E2eQsi
+eqNC++NkYtBzDJlHJuKs4EobqgJxWzI148z1o2Jl2lFhmf/VhAsjFwNa7tV1E+ny
+Zr/efLHrXRln1ccXtaKNy1m0PTtlrVs2aFaw761Zp/2HhrHqfb0CrIzdTPoN6SY6
+arn+VWKyTeXFycS9G10dyHC3DQ==
+-----END CERTIFICATE-----
