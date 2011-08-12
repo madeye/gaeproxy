@@ -1,44 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="service_running">正通过GAE代理连接到互联网</string>
-    <string name="app_name">GAE代理</string>
-<string name="forward_success">GAE代理连接成功</string>
-<string name="forward_fail">GAE代理连接失败</string>
-<string name="service_stopped">GAE代理服务已停止</string>
-<string name="auto_reconnected">恢复连接中</string>
-<string name="reconnect_success">恢复连接成功</string>
-<string name="already_stopped">服务已关闭</string>
-<string name="already_running">服务已启动</string>
-<string name="forward_stop">GAE代理连接已关闭</string>
-<string name="service_failed">请检查你的网络状况和账户信息</string>
-<string name="reconnect_fail">恢复连接失败</string>
-<string name="ok_iknow">我知道了</string>
-<string name="proxy">代理地址</string>
-<string name="port">本地端口</string>
-<string name="auto_connect">启动时连接</string>
-<string name="auto_reconnect">自动恢复连接</string>
-<string name="auto_set_proxy">自动配置代理</string>
-<string name="disconnect">关闭服务</string>
-<string name="connect">启动服务</string>
-<string name="feedback">反馈 @ofmax</string>
-<string name="proxy_cat">GAE代理设置</string>
-<string name="fearute_cat">功能设置</string>
-<string name="function_cat">后台服务</string>
-<string name="service_controller">代理开关</string>
-<string name="service_summary">开启 / 关闭后台服务</string>
-<string name="proxy_summary">GAE代理服务地址</string>
-<string name="port_summary">本地代理服务器监听端口，任意大于1024的数字</string>
-<string name="port_alert">端口必需是大于1024的数字</string>
-<string name="auto_connect_summary">启动时自动打开代理服务</string>
-<string name="auto_set_proxy_summary">自动配置全局代理，需要 ROOT 权限以及 IPTABLES 的支持</string>
-<string name="port_empty">端口不能为空</string>
-<string name="proxy_empty">代理地址不能为空</string>
-<string name="install_cat">模块管理</string>
-<string name="isInstalled">安装/卸载</string>
-<string name="isInstalled_summary">安装/卸载依赖模块，请确认SD卡已插入，并连接到互联网</string>
-<string name="download">下载中...（100%处请耐心等待）</string>
-<string name="install_alert">请先安装依赖模块，滑动到底部，选择安装</string>
-<string name="sdcard_alert">请确认SD卡已插入</string>
-<string name="recovery">清除连接状态</string>
-<string name="unzip">解压缩中...</string>
+	<string name="service_running">正通过GAE代理连接到互联网</string>
+	<string name="app_name">GAE代理</string>
+	<string name="forward_success">GAE代理连接成功</string>
+	<string name="forward_fail">GAE代理连接失败</string>
+	<string name="service_stopped">GAE代理服务已停止</string>
+	<string name="auto_reconnected">恢复连接中</string>
+	<string name="reconnect_success">恢复连接成功</string>
+	<string name="already_stopped">服务已关闭</string>
+	<string name="already_running">服务已启动</string>
+	<string name="forward_stop">GAE代理连接已关闭</string>
+	<string name="service_failed">请检查你的网络状况和账户信息</string>
+	<string name="reconnect_fail">恢复连接失败</string>
+	<string name="ok_iknow">我知道了</string>
+	<string name="proxy">代理地址</string>
+	<string name="port">本地端口</string>
+	<string name="sitekey">密钥</string>
+	<string name="auto_connect">启动时连接</string>
+	<string name="auto_reconnect">自动恢复连接</string>
+	<string name="auto_set_proxy">全局代理</string>
+	<string name="disconnect">关闭服务</string>
+	<string name="connect">启动服务</string>
+	<string name="feedback">反馈 @ofmax</string>
+	<string name="proxy_cat">GAE代理设置</string>
+	<string name="fearute_cat">功能设置</string>
+	<string name="function_cat">后台服务</string>
+	<string name="service_controller">代理开关</string>
+	<string name="service_summary">开启 / 关闭后台服务</string>
+	<string name="proxy_summary">GAE代理服务地址</string>
+	<string name="port_summary">本地代理服务器监听端口，任意大于1024的数字</string>
+	<string name="sitekey_summary">WallProxy / GoAgent 加密密钥</string>
+	<string name="port_alert">端口必需是大于1024的数字</string>
+	<string name="auto_connect_summary">启动时自动打开代理服务</string>
+	<string name="auto_set_proxy_summary">配置全局代理，需要 ROOT 权限以及 IPTABLES 的支持</string>
+	<string name="port_empty">端口不能为空</string>
+	<string name="proxy_empty">代理地址不能为空</string>
+	<string name="install_cat">模块管理</string>
+	<string name="isInstalled">安装/卸载</string>
+	<string name="isInstalled_summary">安装/卸载依赖模块，请确认SD卡已插入，并连接到互联网</string>
+	<string name="download">下载中...</string>
+	<string name="downloading">下载中...（100%处请耐心等待）</string>
+	<string name="install_alert">请先安装依赖模块，滑动到底部，选择安装</string>
+	<string name="sdcard_alert">请确认SD卡已插入</string>
+	<string name="recovery">清除连接状态</string>
+	<string name="unzip">解压缩中...</string>
+	<string name="proxyed_apps">分应用代理</string>
+	<string name="proxyed_apps_summary">为应用单独设置代理，需要 ROOT 权限以及 IPTABLES 的支持</string>
+	<string name="proxyed_help">选择使用GAE代理的应用:</string>
+
+	<string name="crash_alert">检测到一次非正常退出，状态已重置</string>
+	<string name="copy_rights">关于：\n\nGAE代理是一款开源软件，基于 GPLV3
+		发布。\n\n如果您有任何问题，请前往项目网站进行反馈。
+		\n\n(gaeproxy.googlecode.com)</string>
+	<string name="about">关于</string>
+
+	<string name="proxy_type">代理类型选择</string>
+
+	<string name="connecting">正在连接...</string>
+	<string name="https_alert">请修改你的代理地址，以 "https://" 开头</string>
+
+	<string name="https_proxy">启用HTTPS代理</string>
+	<string name="https_proxy_summary">重定向HTTPS流量，与大部分应用不兼容</string>
+
+	<!-- settings notification category -->
+	<string name="notif_cat">通知设置</string>
+	<string name="notif_ringtone_title">选择铃声</string>
+	<string name="notif_vibrate_title">震动</string>
+	<string name="notif_vibrate_summary">在连接状态改变时震动</string>
+
+	<string name="loading">正在加载应用列表...</string>
+	<string name="enable_market">启用电子市场</string>
+	<string name="enable_market_summary">帮助大陆用户从电子市场中获得程序更新（需要重启）</string>
+
+	<string name="auto_set_gfwlist">启用GFW列表</string>
+	<string name="auto_set_gfwlist_summary">为部分被屏蔽网站设置代理（实验性）</string>
+	<string name="toast_start">GAE代理正在启动</string>
+
 </resources>

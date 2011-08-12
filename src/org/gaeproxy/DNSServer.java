@@ -21,8 +21,16 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Random;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 
 import android.util.Log;
 
@@ -132,6 +140,10 @@ public class DNSServer implements WrapServer {
 
 	private DatagramSocket srvSocket;
 
+	private volatile int threadNum = 0;
+	private final static int MAX_THREAD_NUM = 5;
+	public HashSet<String> domains;
+
 	private int srvPort = 8153;
 	private String name;
 	protected String dnsHost;
@@ -145,6 +157,7 @@ public class DNSServer implements WrapServer {
 	final private int IP_SECTION_LEN = 4;
 
 	private boolean inService = false;
+	private boolean httpMode = false;
 
 	private Hashtable<String, DnsResponse> dnsCache = new Hashtable<String, DnsResponse>();
 
@@ -156,15 +169,34 @@ public class DNSServer implements WrapServer {
 
 	private String target = "8.8.8.8:53";
 
-	private String appHost = "203.208.39.99";
+	private String appHost = "203.208.39.104";
+	private String dnsRelay = "174.129.17.131";
+
+	private static final String CANT_RESOLVE = "Error";
 
 	public DNSServer(String name, int port, String dnsHost, int dnsPort,
-			String appHost) {
+			String appHost, boolean httpMode) {
 		this.name = name;
 		this.srvPort = port;
 		this.dnsHost = dnsHost;
 		this.dnsPort = dnsPort;
 		this.appHost = appHost;
+		this.httpMode = httpMode;
+
+		domains = new HashSet<String>();
+
+		initOrgCache();
+
+		// upper dns server not reachable, so use http mode
+		// if (httpMode) {
+		// try {
+		// InetAddress addr = InetAddress
+		// .getByName("www.hosts.dotcloud.com");
+		// dnsRelay = addr.getHostAddress();
+		// } catch (Exception ignore) {
+		// dnsRelay = "174.129.17.131";
+		// }
+		// }
 
 		if (dnsHost != null && !dnsHost.equals(""))
 			target = dnsHost + ":" + dnsPort;
@@ -172,8 +204,11 @@ public class DNSServer implements WrapServer {
 		try {
 			srvSocket = new DatagramSocket(srvPort,
 					InetAddress.getByName("127.0.0.1"));
-			Log.e(TAG, this.name + "启动于端口： " + port);
+
+			Log.d(TAG, this.name + "启动于端口： " + port);
+
 			inService = true;
+
 		} catch (SocketException e) {
 			Log.e(TAG, "DNSServer初始化错误，端口号" + port, e);
 		} catch (UnknownHostException e) {
@@ -189,7 +224,7 @@ public class DNSServer implements WrapServer {
 	 * @param answer
 	 *            解析结果
 	 */
-	private void addToCache(String questDomainName, byte[] answer) {
+	private synchronized void addToCache(String questDomainName, byte[] answer) {
 		DnsResponse response = new DnsResponse(questDomainName);
 		response.setDnsResponse(answer);
 		dnsCache.put(questDomainName, response);
@@ -287,6 +322,7 @@ public class DNSServer implements WrapServer {
 				while ((b = in.read()) != -1) {
 					bout.write(b);
 				}
+
 				byte[] tcpdnsr = bout.toByteArray();
 				if (tcpdnsr != null && tcpdnsr.length > 2) {
 					result = new byte[tcpdnsr.length - 2];
@@ -325,34 +361,47 @@ public class DNSServer implements WrapServer {
 		return this.srvPort;
 	}
 
-	private void initOrgCache() {
-		try {
-			URL aURL = new URL("http://myhosts.sinaapp.com/hosts");
-			HttpURLConnection conn = (HttpURLConnection) aURL.openConnection();
-			conn.connect();
-			InputStream is = conn.getInputStream();
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(is));
-			String line = reader.readLine();
+	private void loadOrgCache(InputStream is) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		String line = reader.readLine();
+		if (line == null)
+			return;
+		if (!line.startsWith("#SSHTunnel"))
+			return;
+		while (true) {
+			line = reader.readLine();
 			if (line == null)
-				return;
-			if (!line.startsWith("#SSHTunnel"))
-				return;
-			while (true) {
-				line = reader.readLine();
-				if (line == null)
-					break;
-				if (line.startsWith("#"))
-					continue;
-				line = line.trim().toLowerCase();
-				if (line.equals(""))
-					continue;
-				String[] hosts = line.split(" ");
-				if (hosts.length == 2) {
-					orgCache.put(hosts[1], hosts[0]);
-					Log.d(TAG, hosts[0] + " " + hosts[1]);
-				}
+				break;
+			if (line.startsWith("#"))
+				continue;
+			line = line.trim().toLowerCase();
+			if (line.equals(""))
+				continue;
+			String[] hosts = line.split(" ");
+			if (hosts.length == 2) {
+				orgCache.put(hosts[1], hosts[0]);
+				Log.d(TAG, hosts[0] + " " + hosts[1]);
 			}
+		}
+	}
+
+	private void initOrgCache() {
+		InputStream is = null;
+		try {
+			File f = new File("/data/data/org.gaeproxy/hosts");
+			if (!f.exists()) {
+				URL aURL = new URL("http://myhosts.sinaapp.com/hosts");
+				HttpURLConnection conn = (HttpURLConnection) aURL
+						.openConnection();
+				conn.setConnectTimeout(2000);
+				conn.setReadTimeout(5000);
+				conn.connect();
+				is = conn.getInputStream();
+			} else {
+				is = new FileInputStream(f);
+			}
+			loadOrgCache(is);
+			is.close();
 		} catch (Exception e) {
 			Log.e(TAG, "cannot get remote host files", e);
 		}
@@ -485,7 +534,6 @@ public class DNSServer implements WrapServer {
 	@Override
 	public void run() {
 
-		initOrgCache();
 		loadCache();
 
 		byte[] qbuffer = new byte[576];
@@ -493,58 +541,97 @@ public class DNSServer implements WrapServer {
 
 		while (true) {
 			try {
-				DatagramPacket dnsq = new DatagramPacket(qbuffer,
+				final DatagramPacket dnsq = new DatagramPacket(qbuffer,
 						qbuffer.length);
 
 				srvSocket.receive(dnsq);
+
 				// 连接外部DNS进行解析。
 
 				byte[] data = dnsq.getData();
 				int dnsqLength = dnsq.getLength();
-				byte[] udpreq = new byte[dnsqLength];
+				final byte[] udpreq = new byte[dnsqLength];
 				System.arraycopy(data, 0, udpreq, 0, dnsqLength);
 				// 尝试从缓存读取域名解析
-				String questDomain = getRequestDomain(udpreq);
+				final String questDomain = getRequestDomain(udpreq);
 
-				Log.d(TAG, "解析" + questDomain);
+				Log.d(TAG, "Resolving: " + questDomain);
 
-				// if (questDomain.toLowerCase().contains("appspot.com")) {
-				// byte[] ips = parseIPString(appHost);
-				// byte[] answer = createDNSResponse(udpreq, ips);
-				// addToCache(questDomain, answer);
-				// }
-
-				if (questDomain.toLowerCase().contains("google.cn")) {
-					
-					byte[] ips = parseIPString(appHost);
-					byte[] answer = createDNSResponse(udpreq, ips);
-					sendDns(answer, dnsq, srvSocket);
-					
-				} else if (dnsCache.containsKey(questDomain)) {
+				if (dnsCache.containsKey(questDomain)) {
 
 					sendDns(dnsCache.get(questDomain).getDnsResponse(), dnsq,
 							srvSocket);
 
-					Log.d(TAG, "命中缓存");
+					Log.d(TAG, "DNS cache hit");
 
 				} else if (orgCache.containsKey(questDomain)) { // 如果为自定义域名解析
 					byte[] ips = parseIPString(orgCache.get(questDomain));
 					byte[] answer = createDNSResponse(udpreq, ips);
 					addToCache(questDomain, answer);
 					sendDns(answer, dnsq, srvSocket);
-					Log.d(TAG, "自定义解析" + orgCache);
+					Log.d(TAG, "Custom DNS resolver" + orgCache);
+				} else if (questDomain.toLowerCase().contains("appspot.com")) { // 如果为apphost域名解析
+					byte[] ips = parseIPString(appHost);
+					byte[] answer = createDNSResponse(udpreq, ips);
+					addToCache(questDomain, answer);
+					sendDns(answer, dnsq, srvSocket);
+					Log.d(TAG, "Custom DNS resolver" + orgCache);
+					// } else if
+					// (questDomain.toLowerCase().contains("dotcloud.com")) { //
+					// 如果为apphost域名解析
+					// byte[] ips = parseIPString(dnsRelay);
+					// byte[] answer = createDNSResponse(udpreq, ips);
+					// addToCache(questDomain, answer);
+					// sendDns(answer, dnsq, srvSocket);
+					// Log.d(TAG, "Custom DNS resolver" + orgCache);
 				} else {
-					starTime = System.currentTimeMillis();
-					byte[] answer = fetchAnswer(udpreq);
-					if (answer != null && answer.length != 0) {
-						addToCache(questDomain, answer);
-						sendDns(answer, dnsq, srvSocket);
-						Log.d(TAG, "正确返回DNS解析，长度：" + answer.length + "  耗时："
-								+ (System.currentTimeMillis() - starTime)
-								/ 1000 + "s");
-					} else {
-						Log.e(TAG, "返回DNS包长为0");
+
+					synchronized (this) {
+						if (domains.contains(questDomain))
+							continue;
+						else
+							domains.add(questDomain);
 					}
+
+					while (threadNum >= MAX_THREAD_NUM) {
+						Thread.sleep(2000);
+					}
+
+					threadNum++;
+
+					new Thread() {
+						public void run() {
+							long startTime = System.currentTimeMillis();
+							try {
+								byte[] answer;
+								if (httpMode)
+									answer = fetchAnswerHTTP(udpreq);
+								else
+									answer = fetchAnswer(udpreq);
+
+								if (answer != null && answer.length != 0) {
+									addToCache(questDomain, answer);
+									sendDns(answer, dnsq, srvSocket);
+									Log.d(TAG,
+											"Success to get DNS response，length:"
+													+ answer.length
+													+ "  cost："
+													+ (System
+															.currentTimeMillis() - startTime)
+													/ 1000 + "s");
+								} else {
+									Log.e(TAG,
+											"The size of DNS packet returned is 0");
+								}
+							} catch (Exception e) {
+								// Nothing
+							}
+							synchronized (DNSServer.this) {
+								domains.remove(questDomain);
+							}
+							threadNum--;
+						}
+					}.start();
 
 				}
 
@@ -562,11 +649,130 @@ public class DNSServer implements WrapServer {
 			} catch (SocketException e) {
 				Log.e(TAG, e.getLocalizedMessage());
 				break;
+			} catch (NullPointerException e) {
+				Log.e(TAG, "Srvsocket wrong", e);
+				break;
 			} catch (IOException e) {
 				Log.e(TAG, e.getLocalizedMessage());
+			} catch (InterruptedException e) {
+				Log.e(TAG, "Interrupted", e);
+				break;
 			}
 		}
 
+	}
+
+	/*
+	 * Resolve host name by access a DNSRelay running on GAE:
+	 * 
+	 * Example:
+	 * 
+	 * http://www.hosts.dotcloud.com/lookup.php?(domain name encoded)
+	 * http://gaednsproxy.appspot.com/?d=(domain name encoded)
+	 */
+	private String resolveDomainName(String domain) {
+		String ip = null;
+
+		InputStream is;
+
+		String encode_host = URLEncoder.encode(Base64.encodeBytes(Base64
+				.encodeBytesToBytes(domain.getBytes())));
+
+		String url = "http://gaednsproxy.appspot.com/?d=" + encode_host;
+
+		Random random = new Random(System.currentTimeMillis());
+		int n = random.nextInt(2);
+		if (n == 1)
+			url = "http://gaednsproxy1.appspot.com/?d=" + encode_host;
+
+		Log.d(TAG, "DNS Relay URL: " + url);
+
+		try {
+			URL aURL = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection) aURL.openConnection();
+			conn.connect();
+			is = conn.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			ip = br.readLine();
+		} catch (SocketException e) {
+			Log.e(TAG, "Failed to request URI: " + url, e);
+		} catch (IOException e) {
+			Log.e(TAG, "Failed to request URI: " + url, e);
+		} catch (NullPointerException e) {
+			Log.e(TAG, "Failed to request URI: " + url, e);
+		}
+
+		return ip;
+	}
+
+	/*
+	 * Switch char[n] and char[n+1] one by one, for Fucking GFW.
+	 * 
+	 * example: www.google.com ->ww.woggoelc.mo
+	 */
+	private String shake(String src) {
+		int i, n;
+		byte[] ret = null;
+		byte[] str = null;
+		String shaked = null;
+
+		if (src.length() == 0) {
+			return null;
+		}
+
+		str = src.getBytes();
+		ret = new byte[str.length];
+
+		i = n = 0;
+		while (n < str.length / 2) {
+			ret[i] = str[i + 1];
+			ret[i + 1] = str[i];
+			i += 2;
+			n++;
+		}
+
+		if (str.length % 2 == 1) {
+			ret[str.length - 1] = str[str.length - 1];
+		}
+
+		shaked = new String(ret);
+		Log.d(TAG, "Shaked domain name: " + shaked);
+
+		return shaked;
+	}
+
+	/*
+	 * Implement with http based DNS.
+	 */
+
+	public byte[] fetchAnswerHTTP(byte[] quest) {
+		byte[] result = null;
+		String domain = getRequestDomain(quest);
+		String ip = null;
+
+		DomainValidator dv = DomainValidator.getInstance();
+		/* Not support reverse domain name query */
+		if (domain.endsWith("in-addr.arpa") || !dv.isValid(domain)) {
+			return createDNSResponse(quest, parseIPString("127.0.0.1"));
+		}
+
+		ip = resolveDomainName(domain);
+
+		if (ip == null) {
+			Log.e(TAG, "Failed to resolve domain name: " + domain);
+			return null;
+		}
+
+		if (ip.equals(CANT_RESOLVE)) {
+			return null;
+		}
+
+		byte[] ips = parseIPString(ip);
+		if (ips != null) {
+			result = createDNSResponse(quest, ips);
+		}
+
+		return result;
 	}
 
 	/**
