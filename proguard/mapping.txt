@@ -1,0 +1,2972 @@
+com.flurry.android.AdImage -> com.flurry.android.a:
+    long a -> a
+    int b -> b
+    int c -> c
+    java.lang.String d -> d
+    byte[] e -> e
+    void a(java.io.DataInput) -> a
+com.flurry.android.AppCircle -> com.flurry.android.b:
+com.flurry.android.AppCircleCallback -> com.flurry.android.c:
+com.flurry.android.CallbackEvent -> com.flurry.android.d:
+    int a -> a
+    long b -> b
+    java.lang.String c -> c
+    void setMessage(java.lang.String) -> a
+com.flurry.android.CatalogActivity -> com.flurry.android.CatalogActivity:
+    java.lang.String a -> a
+    android.webkit.WebView b -> b
+    com.flurry.android.t c -> c
+    java.util.List d -> d
+    com.flurry.android.q e -> e
+    com.flurry.android.ag f -> f
+    void onCreate(android.os.Bundle) -> onCreate
+    void finish() -> finish
+    void onDestroy() -> onDestroy
+    void onClick(android.view.View) -> onClick
+    void a(com.flurry.android.u) -> a
+    com.flurry.android.ag a(com.flurry.android.CatalogActivity) -> a
+    long b(com.flurry.android.CatalogActivity) -> b
+    com.flurry.android.q c(com.flurry.android.CatalogActivity) -> c
+com.flurry.android.FlurryAgent -> com.flurry.android.e:
+    java.lang.String a -> a
+    java.lang.String kInsecureReportUrl -> b
+    java.lang.String kSecureReportUrl -> c
+    java.lang.String b -> d
+    java.lang.String c -> e
+    java.lang.String d -> f
+    java.lang.String e -> g
+    com.flurry.android.FlurryAgent f -> h
+    long g -> i
+    boolean h -> j
+    boolean i -> k
+    boolean j -> l
+    android.location.Criteria k -> m
+    boolean l -> n
+    com.flurry.android.AppCircle m -> o
+    android.os.Handler n -> p
+    java.io.File o -> q
+    boolean p -> r
+    boolean q -> s
+    long r -> t
+    java.util.Map s -> u
+    java.lang.String t -> v
+    java.lang.String u -> w
+    java.lang.String v -> x
+    boolean w -> y
+    java.util.List x -> z
+    android.location.LocationManager y -> A
+    java.lang.String z -> B
+    boolean A -> C
+    long B -> D
+    java.util.List C -> E
+    long D -> F
+    long E -> G
+    long F -> H
+    java.lang.String G -> I
+    java.lang.String H -> J
+    byte I -> K
+    java.lang.String J -> L
+    byte K -> M
+    java.lang.Long L -> N
+    int M -> O
+    android.location.Location N -> P
+    java.util.Map O -> Q
+    java.util.List P -> R
+    boolean Q -> S
+    int R -> T
+    java.util.List S -> U
+    int T -> V
+    com.flurry.android.q U -> W
+    java.lang.String V -> X
+    void a(java.lang.Throwable) -> a
+    void onStartSession(android.content.Context,java.lang.String) -> a
+    void onEndSession(android.content.Context) -> a
+    com.flurry.android.q b() -> a
+    void b(android.content.Context,java.lang.String) -> b
+    void a(android.content.Context,boolean) -> a
+    void a(java.lang.Runnable) -> a
+    void a(java.lang.String,java.lang.String,java.lang.String) -> a
+    byte[] b(boolean) -> a
+    boolean a(byte[]) -> a
+    boolean a(byte[],java.lang.String) -> a
+    void a(java.io.DataInputStream) -> a
+    void c(boolean) -> b
+    void b(java.io.DataInputStream) -> b
+    void i() -> e
+    java.lang.String a(android.content.Context) -> b
+    android.location.Location b(android.content.Context) -> c
+    void j() -> f
+    void onLocationChanged(android.location.Location) -> onLocationChanged
+    void onProviderDisabled(java.lang.String) -> onProviderDisabled
+    void onProviderEnabled(java.lang.String) -> onProviderEnabled
+    void onStatusChanged(java.lang.String,int,android.os.Bundle) -> onStatusChanged
+    com.flurry.android.FlurryAgent e() -> b
+    boolean a(com.flurry.android.FlurryAgent) -> a
+    void a$220cd6b8(com.flurry.android.FlurryAgent) -> b
+    void a(com.flurry.android.FlurryAgent,android.content.Context,boolean) -> a
+    java.util.List b(com.flurry.android.FlurryAgent) -> c
+    void c(com.flurry.android.FlurryAgent) -> d
+    void d(com.flurry.android.FlurryAgent) -> e
+    void b$220cd6b8(com.flurry.android.FlurryAgent) -> f
+    long f() -> c
+    android.os.Handler e(com.flurry.android.FlurryAgent) -> g
+    boolean g() -> d
+    com.flurry.android.q f(com.flurry.android.FlurryAgent) -> h
+com.flurry.android.a -> com.flurry.android.f:
+    java.lang.String a -> a
+    java.lang.String b -> b
+    long c -> c
+    long d -> d
+    long e -> e
+    java.lang.String f -> f
+    java.lang.String g -> g
+    android.os.Handler h -> h
+com.flurry.android.aa -> com.flurry.android.g:
+    android.widget.TextView a -> a
+    com.flurry.android.z b -> b
+    void onFocusChange(android.view.View,boolean) -> onFocusChange
+com.flurry.android.ab -> com.flurry.android.h:
+    int a -> a
+    com.flurry.android.q b -> b
+    void run() -> run
+com.flurry.android.ac -> com.flurry.android.i:
+    java.lang.String a -> a
+    com.flurry.android.q b -> b
+    void run() -> run
+com.flurry.android.ad -> com.flurry.android.j:
+    com.flurry.android.q a -> a
+    android.content.Context b -> b
+    java.lang.String c -> c
+    int d -> d
+    boolean e -> e
+    boolean f -> f
+    void a() -> a
+    android.widget.RelativeLayout$LayoutParams b() -> b
+    com.flurry.android.v c() -> c
+com.flurry.android.ae -> com.flurry.android.k:
+    java.util.LinkedHashMap a -> a
+    int b -> b
+    java.lang.Object a(java.lang.Object) -> a
+    void a(java.lang.Object,java.lang.Object) -> a
+    int a() -> a
+    java.util.Collection b() -> b
+    java.util.Set c() -> c
+    int a(com.flurry.android.ae) -> a
+com.flurry.android.af -> com.flurry.android.l:
+    java.util.List a -> a
+    android.os.Handler b -> b
+    android.os.Handler c -> c
+    int d -> d
+    java.lang.Runnable e -> e
+    void a() -> a
+    void b() -> b
+    void a(com.flurry.android.af) -> a
+com.flurry.android.ag -> com.flurry.android.m:
+    java.lang.String a -> a
+    byte e -> e
+    com.flurry.android.s b -> b
+    long c -> c
+    java.util.List d -> d
+    void a(com.flurry.android.j) -> a
+    long a() -> a
+    void a(java.io.DataOutput) -> a
+    java.lang.String toString() -> toString
+com.flurry.android.ah -> com.flurry.android.n:
+    boolean a -> a
+    int b -> b
+    int a(java.lang.String,java.lang.String,java.lang.Throwable) -> a
+    int a(java.lang.String,java.lang.String) -> a
+    int b(java.lang.String,java.lang.String,java.lang.Throwable) -> b
+    int b(java.lang.String,java.lang.String) -> b
+    int c(java.lang.String,java.lang.String,java.lang.Throwable) -> c
+    int c(java.lang.String,java.lang.String) -> c
+    int d(java.lang.String,java.lang.String) -> d
+com.flurry.android.ai -> com.flurry.android.o:
+com.flurry.android.aj -> com.flurry.android.p:
+    java.lang.String a -> a
+    android.content.Context b -> b
+    com.flurry.android.ag c -> c
+    com.flurry.android.q d -> d
+    void run() -> run
+com.flurry.android.ak -> com.flurry.android.q:
+    java.lang.String a -> a
+    java.lang.String b -> b
+    int c -> c
+com.flurry.android.b -> com.flurry.android.r:
+    com.flurry.android.FlurryAgent a -> a
+    void run() -> run
+com.flurry.android.c -> com.flurry.android.s:
+    boolean c -> c
+    android.content.Context a -> a
+    com.flurry.android.FlurryAgent b -> b
+    void run() -> run
+com.flurry.android.d -> com.flurry.android.t:
+    byte a -> a
+    java.lang.String b -> b
+    long c -> c
+    long r -> r
+    java.lang.String d -> d
+    int e -> e
+    int f -> f
+    java.lang.String g -> g
+    int h -> h
+    int i -> i
+    java.lang.String j -> j
+    int k -> k
+    int l -> l
+    java.lang.String s -> s
+    int t -> t
+    int u -> u
+    java.lang.String v -> v
+    int w -> w
+    int x -> x
+    java.lang.String y -> y
+    int z -> z
+    int A -> A
+    int B -> B
+    int C -> C
+    int m -> m
+    int n -> n
+    int o -> o
+    int p -> p
+    int D -> D
+    int E -> E
+    int F -> F
+    int G -> G
+    int H -> H
+    int I -> I
+    int J -> J
+    int K -> K
+    int q -> q
+    int L -> L
+    int M -> M
+    int N -> N
+    int O -> O
+    int P -> P
+    int Q -> Q
+    int R -> R
+    int S -> S
+    int T -> T
+    int U -> U
+    int V -> V
+    int W -> W
+    int X -> X
+    int Y -> Y
+    int Z -> Z
+    int aa -> aa
+    int ab -> ab
+    int ac -> ac
+    int ad -> ad
+    int ae -> ae
+    int af -> af
+    boolean ag -> ag
+    void c(java.io.DataInput) -> c
+    void a(java.io.DataInput) -> a
+    void b(java.io.DataInput) -> b
+    void a(java.io.DataOutput) -> a
+com.flurry.android.e -> com.flurry.android.u:
+    android.content.Context a -> a
+    boolean b -> b
+    com.flurry.android.FlurryAgent c -> c
+    void run() -> run
+com.flurry.android.f -> com.flurry.android.v:
+    java.lang.String a -> a
+    byte b -> b
+    byte c -> c
+    com.flurry.android.d d -> d
+    java.lang.String toString() -> toString
+com.flurry.android.g -> com.flurry.android.w:
+    java.lang.Thread$UncaughtExceptionHandler a -> a
+    void uncaughtException(java.lang.Thread,java.lang.Throwable) -> uncaughtException
+com.flurry.android.h -> com.flurry.android.x:
+    com.flurry.android.CatalogActivity a -> a
+    boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
+    void onReceivedError(android.webkit.WebView,int,java.lang.String,java.lang.String) -> onReceivedError
+    void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+com.flurry.android.i -> com.flurry.android.y:
+    java.lang.String a(java.lang.String,int) -> a
+    java.lang.String a(java.lang.String) -> a
+    void a(java.io.Closeable) -> a
+    void a(android.content.Context,android.widget.ImageView,int,int) -> a
+    int a(android.content.Context,int) -> a
+com.flurry.android.j -> com.flurry.android.z:
+    byte a -> a
+    long b -> b
+    java.lang.String toString() -> toString
+com.flurry.android.k -> com.flurry.android.aa:
+    int a -> a
+com.flurry.android.l -> com.flurry.android.ab:
+    com.flurry.android.ae a -> a
+    boolean removeEldestEntry(java.util.Map$Entry) -> removeEldestEntry
+com.flurry.android.m -> com.flurry.android.ac:
+com.flurry.android.n -> com.flurry.android.ad:
+    java.lang.String a -> a
+    java.util.Map b -> b
+    long c -> c
+    long e -> d
+    byte[] f -> e
+    byte[] b() -> a
+com.flurry.android.o -> com.flurry.android.ae:
+    com.flurry.android.c a -> a
+    void run() -> run
+com.flurry.android.p -> com.flurry.android.af:
+    java.util.List a -> a
+    void run() -> run
+com.flurry.android.q -> com.flurry.android.ag:
+    java.lang.String c -> c
+    java.lang.String d -> d
+    java.lang.String e -> e
+    java.lang.String f -> f
+    java.lang.String a -> a
+    java.util.Random g -> g
+    int h -> h
+    java.lang.String b -> b
+    java.lang.String i -> i
+    java.lang.String j -> j
+    java.lang.String k -> k
+    java.lang.String l -> l
+    long m -> m
+    long n -> n
+    long o -> o
+    com.flurry.android.w p -> p
+    boolean q -> q
+    java.util.Map r -> r
+    android.os.Handler s -> s
+    boolean t -> t
+    java.util.Map u -> u
+    com.flurry.android.af v -> v
+    java.util.List w -> w
+    java.util.Map x -> x
+    com.flurry.android.AppCircleCallback y -> y
+    int z -> z
+    void a() -> a
+    void b() -> b
+    void a(java.util.Map,java.util.Map,java.util.Map,java.util.Map,java.util.Map,java.util.Map) -> a
+    long c() -> c
+    java.util.Set d() -> d
+    com.flurry.android.AdImage a(long) -> a
+    java.util.List e() -> e
+    com.flurry.android.ag b(long) -> b
+    void f() -> f
+    java.lang.String h() -> g
+    void a(java.lang.String) -> a
+    void a(android.content.Context,com.flurry.android.ag,java.lang.String) -> a
+    java.lang.String d(java.lang.String) -> b
+    void e(java.lang.String) -> c
+    java.util.List a(android.content.Context,java.util.List,java.lang.Long,int,boolean) -> a
+    long i() -> h
+    void onClick(android.view.View) -> onClick
+    java.lang.String a$2cdaa3d2(com.flurry.android.ag) -> a
+    java.lang.String a(byte[]) -> a
+    java.lang.String toString() -> toString
+    com.flurry.android.AdImage k() -> i
+    void a(java.lang.Runnable) -> a
+    void a(int) -> a
+    java.lang.String a(com.flurry.android.q,java.lang.String) -> a
+    void a(com.flurry.android.q,android.content.Context,java.lang.String) -> a
+    void b(com.flurry.android.q,java.lang.String) -> b
+    com.flurry.android.AppCircleCallback a(com.flurry.android.q) -> a
+com.flurry.android.r -> com.flurry.android.ah:
+    com.flurry.android.af a -> a
+    void run() -> run
+com.flurry.android.s -> com.flurry.android.ai:
+    long a -> a
+    long b -> b
+    java.lang.String c -> c
+    java.lang.String d -> d
+    long e -> e
+    java.lang.Long f -> f
+    byte[] g -> g
+    com.flurry.android.AdImage h -> h
+    void a(java.io.DataInput) -> a
+    void b(java.io.DataInput) -> b
+    java.lang.String toString() -> toString
+com.flurry.android.t -> com.flurry.android.aj:
+    android.view.View a -> a
+    java.util.List b -> b
+    boolean c -> c
+    com.flurry.android.CatalogActivity d -> d
+    java.util.List a(android.content.Context) -> a
+    void a() -> a
+    void a(java.util.List) -> a
+    void a(java.util.List,boolean) -> a
+    java.util.List b() -> b
+com.flurry.android.u -> com.flurry.android.ak:
+    com.flurry.android.ag a -> a
+    java.lang.String b -> b
+    java.util.List c -> c
+com.flurry.android.v -> com.flurry.android.al:
+    com.flurry.android.q a -> a
+    com.flurry.android.ag b -> b
+    java.lang.String c -> c
+    int d -> d
+    void a(android.content.Context,com.flurry.android.f,com.flurry.android.s,boolean) -> a
+    void a(java.lang.String) -> a
+    java.lang.String b(java.lang.String) -> b
+    com.flurry.android.ag a() -> a
+com.flurry.android.w -> com.flurry.android.am:
+    android.content.Context a -> a
+    com.flurry.android.q b -> b
+    com.flurry.android.a c -> c
+    long d -> d
+    com.flurry.android.ae e -> e
+    com.flurry.android.ae f -> f
+    java.util.Map g -> g
+    java.util.Map h -> h
+    java.util.Map i -> i
+    java.util.Map j -> j
+    boolean k -> k
+    com.flurry.android.s[] a(java.lang.String) -> a
+    com.flurry.android.ak a(long) -> b
+    java.util.Set a() -> a
+    com.flurry.android.AdImage b(long) -> a
+    com.flurry.android.AdImage a$3dba2ef4() -> b
+    com.flurry.android.f b(java.lang.String) -> b
+    boolean b() -> c
+    com.flurry.android.d a(byte) -> a
+    void a(java.util.Map,java.util.Map,java.util.Map,java.util.Map,java.util.Map,java.util.Map) -> a
+    long c() -> d
+    void d() -> e
+    void a(java.io.File) -> a
+    void f() -> g
+    void e() -> f
+    void a(java.io.DataInputStream) -> a
+    void a(java.io.DataOutputStream) -> a
+    java.lang.String g() -> h
+    void a(int) -> a
+com.flurry.android.x -> com.flurry.android.an:
+    java.lang.String a -> a
+    com.flurry.android.aj b -> b
+    void run() -> run
+com.flurry.android.y -> com.flurry.android.ao:
+    long a -> a
+    java.lang.String b -> b
+    java.lang.String c -> c
+    java.lang.String d -> d
+com.flurry.android.z -> com.flurry.android.ap:
+    android.text.SpannedString a -> a
+    android.text.SpannedString b -> b
+    android.text.SpannedString a(com.flurry.android.z) -> a
+    android.text.SpannedString b(com.flurry.android.z) -> b
+com.google.ads.Ad -> com.google.ads.a:
+com.google.ads.AdActivity -> com.google.ads.AdActivity:
+    java.lang.Object a -> a
+    com.google.ads.AdActivity b -> b
+    com.google.ads.d c -> c
+    com.google.ads.AdActivity d -> d
+    com.google.ads.AdActivity e -> e
+    com.google.ads.h f -> f
+    boolean g -> g
+    long h -> h
+    android.widget.RelativeLayout i -> i
+    com.google.ads.AdActivity j -> j
+    boolean k -> k
+    com.google.ads.g l -> l
+    void a(java.lang.String) -> a
+    void a(java.lang.String,java.lang.Throwable) -> a
+    com.google.ads.g getAdVideoView() -> a
+    com.google.ads.h getOpeningAdWebView() -> b
+    boolean isShowing() -> c
+    void launchAdActivity(com.google.ads.d,com.google.ads.e) -> a
+    void a(com.google.ads.d) -> a
+    void moveAdVideoView(int,int,int,int) -> a
+    void newAdVideoView(int,int,int,int) -> b
+    android.widget.RelativeLayout$LayoutParams a(int,int,int,int) -> c
+    void onClick(android.view.View) -> onClick
+    void onCreate(android.os.Bundle) -> onCreate
+    void a(com.google.ads.h,boolean,int) -> a
+    void onDestroy() -> onDestroy
+    void onPause() -> onPause
+    void a() -> d
+    void onWindowFocusChanged(boolean) -> onWindowFocusChanged
+    void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+com.google.ads.AdListener -> com.google.ads.b:
+com.google.ads.AdRequest -> com.google.ads.c:
+    com.google.ads.AdRequest$Gender a -> b
+    java.lang.String b -> c
+    java.util.Set c -> d
+    boolean d -> e
+    java.util.Map e -> f
+    android.location.Location f -> g
+    boolean g -> h
+    boolean h -> i
+    java.lang.String TEST_EMULATOR -> a
+    java.util.Set i -> j
+    void addKeyword(java.lang.String) -> a
+    void addExtra(java.lang.String,java.lang.Object) -> a
+    java.util.Map getRequestMap(android.content.Context) -> a
+    void addTestDevice(java.lang.String) -> b
+com.google.ads.AdRequest$ErrorCode -> com.google.ads.d:
+    com.google.ads.AdRequest$ErrorCode INVALID_REQUEST -> a
+    com.google.ads.AdRequest$ErrorCode NO_FILL -> b
+    com.google.ads.AdRequest$ErrorCode NETWORK_ERROR -> c
+    com.google.ads.AdRequest$ErrorCode INTERNAL_ERROR -> d
+    java.lang.String a -> e
+    com.google.ads.AdRequest$ErrorCode[] b -> f
+    com.google.ads.AdRequest$ErrorCode[] values() -> values
+    com.google.ads.AdRequest$ErrorCode valueOf(java.lang.String) -> valueOf
+    java.lang.String toString() -> toString
+com.google.ads.AdRequest$Gender -> com.google.ads.e:
+    com.google.ads.AdRequest$Gender UNKNOWN -> a
+    com.google.ads.AdRequest$Gender MALE -> b
+    com.google.ads.AdRequest$Gender FEMALE -> c
+    com.google.ads.AdRequest$Gender[] a -> d
+    com.google.ads.AdRequest$Gender[] values() -> values
+    com.google.ads.AdRequest$Gender valueOf(java.lang.String) -> valueOf
+com.google.ads.AdSize -> com.google.ads.f:
+    com.google.ads.AdSize BANNER -> a
+    com.google.ads.AdSize IAB_MRECT -> b
+    com.google.ads.AdSize IAB_BANNER -> c
+    com.google.ads.AdSize IAB_LEADERBOARD -> d
+    int a -> e
+    int b -> f
+    java.lang.String c -> g
+    int getWidth() -> a
+    int getHeight() -> b
+    java.lang.String toString() -> toString
+com.google.ads.AdView -> com.google.ads.AdView:
+    com.google.ads.d a -> a
+    void a(android.content.Context,java.lang.String,int,com.google.ads.AdSize,android.util.AttributeSet) -> a
+    boolean a(android.content.Context,com.google.ads.AdSize,android.util.AttributeSet) -> a
+    boolean b(android.content.Context,com.google.ads.AdSize,android.util.AttributeSet) -> b
+    void destroy() -> a
+    void a(android.content.Context,java.lang.String,com.google.ads.AdSize,android.util.AttributeSet) -> a
+    void a(android.content.Context,android.util.AttributeSet) -> a
+    void a(android.app.Activity,com.google.ads.AdSize,java.lang.String) -> a
+    void loadAd(com.google.ads.AdRequest) -> a
+com.google.ads.InterstitialAd -> com.google.ads.g:
+com.google.ads.a -> com.google.ads.h:
+    java.util.Map a -> a
+    java.util.Map b -> b
+    void a(com.google.ads.d,java.util.Map,android.net.Uri,android.webkit.WebView) -> a
+    boolean a(android.net.Uri) -> a
+    boolean b(android.net.Uri) -> b
+    boolean c(android.net.Uri) -> c
+    void a(android.webkit.WebView,java.lang.String,java.lang.String) -> a
+    void a(android.webkit.WebView,java.lang.String) -> a
+    void a(android.webkit.WebView,java.util.Map) -> a
+    void a(android.webkit.WebView) -> a
+    void b(android.webkit.WebView) -> b
+com.google.ads.aa -> com.google.ads.i:
+    boolean a(android.content.Context) -> a
+    boolean a(android.content.Intent,android.content.Context) -> a
+com.google.ads.ab -> com.google.ads.j:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.ab$a -> com.google.ads.k:
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.google.ads.ab$b -> com.google.ads.l:
+    com.google.ads.ab$b a -> a
+    com.google.ads.ab$b b -> b
+    java.lang.String c -> c
+    com.google.ads.ab$b[] d -> d
+    com.google.ads.ab$b[] values() -> values
+    com.google.ads.ab$b valueOf(java.lang.String) -> valueOf
+com.google.ads.ab$c -> com.google.ads.m:
+    com.google.ads.d a -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.google.ads.b -> com.google.ads.n:
+    com.google.ads.c a -> a
+    com.google.ads.d b -> b
+    boolean c -> c
+    boolean d -> d
+    java.lang.String e -> e
+    void a() -> a
+    void a(java.net.HttpURLConnection) -> a
+    void b(java.net.HttpURLConnection) -> b
+    void a(boolean) -> a
+    void a(java.lang.String) -> a
+    void run() -> run
+com.google.ads.c -> com.google.ads.o:
+    java.lang.String a -> a
+    java.lang.String b -> b
+    com.google.ads.b c -> c
+    com.google.ads.d d -> d
+    com.google.ads.AdRequest e -> e
+    android.webkit.WebView f -> f
+    java.lang.String g -> g
+    java.util.LinkedList h -> h
+    boolean i -> i
+    com.google.ads.AdRequest$ErrorCode j -> j
+    boolean k -> k
+    int l -> l
+    java.lang.Thread m -> m
+    boolean n -> n
+    void a(java.lang.String) -> a
+    void a() -> a
+    void a(com.google.ads.AdRequest) -> a
+    void run() -> run
+    java.lang.String a(com.google.ads.AdRequest,android.app.Activity) -> a
+    void a(com.google.ads.AdRequest$ErrorCode,boolean) -> a
+    void a(java.lang.String,java.lang.String) -> a
+    void b(java.lang.String) -> b
+    void a(com.google.ads.AdRequest$ErrorCode) -> a
+    void b() -> b
+    void a(int) -> a
+    void a(boolean) -> a
+com.google.ads.c$a -> com.google.ads.p:
+    com.google.ads.d b -> b
+    android.webkit.WebView c -> c
+    com.google.ads.b d -> d
+    com.google.ads.AdRequest$ErrorCode e -> e
+    boolean f -> f
+    com.google.ads.c a -> a
+    void run() -> run
+com.google.ads.c$b -> com.google.ads.q:
+    com.google.ads.c a -> a
+com.google.ads.c$c -> com.google.ads.r:
+    java.lang.String b -> b
+    java.lang.String c -> c
+    android.webkit.WebView d -> d
+    com.google.ads.c a -> a
+    void run() -> run
+com.google.ads.c$d -> com.google.ads.s:
+    com.google.ads.c a -> a
+com.google.ads.c$e -> com.google.ads.t:
+    com.google.ads.d b -> b
+    java.util.LinkedList c -> c
+    int d -> d
+    com.google.ads.c a -> a
+    void run() -> run
+com.google.ads.d -> com.google.ads.u:
+    java.lang.Object a -> a
+    java.lang.ref.WeakReference b -> b
+    com.google.ads.Ad c -> c
+    com.google.ads.AdListener d -> d
+    com.google.ads.c e -> e
+    com.google.ads.AdRequest f -> f
+    com.google.ads.AdSize g -> g
+    com.google.ads.f h -> h
+    java.lang.String i -> i
+    com.google.ads.h j -> j
+    com.google.ads.i k -> k
+    android.os.Handler l -> l
+    long m -> m
+    boolean n -> n
+    boolean o -> o
+    android.content.SharedPreferences p -> p
+    long q -> q
+    com.google.ads.x r -> r
+    boolean s -> s
+    java.util.LinkedList t -> t
+    java.util.LinkedList u -> u
+    int v -> v
+    void a(java.lang.String) -> a
+    void a(java.util.LinkedList) -> a
+    void a() -> a
+    void b() -> b
+    void c() -> c
+    void d() -> d
+    android.app.Activity e() -> e
+    com.google.ads.Ad f() -> f
+    com.google.ads.c g() -> g
+    java.lang.String h() -> h
+    com.google.ads.h i() -> i
+    com.google.ads.i j() -> j
+    com.google.ads.AdSize k() -> k
+    com.google.ads.f l() -> l
+    void a(int) -> a
+    int m() -> m
+    long n() -> n
+    boolean A() -> w
+    boolean p() -> o
+    void a(com.google.ads.AdRequest) -> a
+    void a(com.google.ads.AdRequest$ErrorCode) -> a
+    void q() -> p
+    void r() -> q
+    void s() -> r
+    void t() -> s
+    void u() -> t
+    void v() -> x
+    boolean w() -> u
+    void B() -> y
+    void a(java.lang.Runnable) -> a
+    void x() -> v
+    void a$176853ce() -> z
+    void a(long) -> a
+    void a(float) -> a
+    void b(long) -> b
+    void z() -> A
+com.google.ads.e -> com.google.ads.v:
+    java.lang.String a -> a
+    java.util.HashMap b -> b
+    android.os.Bundle a() -> a
+    java.lang.String b() -> b
+    java.util.HashMap c() -> c
+com.google.ads.f -> com.google.ads.w:
+    java.util.LinkedList b -> b
+    long c -> c
+    long d -> d
+    java.util.LinkedList e -> e
+    long f -> f
+    java.lang.String g -> g
+    boolean h -> h
+    boolean i -> i
+    java.lang.String a -> a
+    void a() -> a
+    void b() -> b
+    void c() -> c
+    void d() -> d
+    long e() -> e
+    java.lang.String f() -> f
+    java.lang.String g() -> g
+    long h() -> h
+    long i() -> i
+    java.lang.String j() -> j
+    void a(java.lang.String) -> a
+    boolean k() -> k
+    void l() -> l
+    boolean m() -> m
+    void n() -> n
+    void o() -> o
+    java.lang.String p() -> p
+    void b(java.lang.String) -> b
+com.google.ads.g -> com.google.ads.x:
+    java.lang.ref.WeakReference b -> b
+    com.google.ads.h c -> c
+    android.widget.MediaController a -> a
+    long d -> d
+    android.widget.VideoView e -> e
+    java.lang.String f -> f
+    void a() -> a
+    void a(boolean) -> a
+    void a(java.lang.String) -> a
+    void onCompletion(android.media.MediaPlayer) -> onCompletion
+    boolean onError(android.media.MediaPlayer,int,int) -> onError
+    void onPrepared(android.media.MediaPlayer) -> onPrepared
+    void b() -> b
+    void c() -> c
+    void a(int) -> a
+    void a(android.view.MotionEvent) -> a
+    void d() -> d
+    void e() -> e
+com.google.ads.g$a -> com.google.ads.y:
+    java.lang.ref.WeakReference a -> a
+    android.os.Handler b -> b
+    void run() -> run
+    void a() -> a
+com.google.ads.h -> com.google.ads.z:
+    java.lang.ref.WeakReference a -> a
+    com.google.ads.AdSize b -> b
+    void a() -> a
+    com.google.ads.AdActivity b() -> b
+    void a(com.google.ads.AdActivity) -> a
+    void loadDataWithBaseURL(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> loadDataWithBaseURL
+    void loadUrl(java.lang.String) -> loadUrl
+    void stopLoading() -> stopLoading
+    void destroy() -> destroy
+    void onMeasure(int,int) -> onMeasure
+com.google.ads.i -> com.google.ads.aa:
+    com.google.ads.d a -> a
+    java.util.Map b -> b
+    boolean c -> c
+    boolean d -> d
+    boolean e -> e
+    boolean f -> f
+    boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
+    void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+    void a() -> a
+    void b() -> b
+    void c() -> c
+com.google.ads.j -> com.google.ads.ab:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.k -> com.google.ads.ac:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.l -> com.google.ads.ad:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.m -> com.google.ads.ae:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.n -> com.google.ads.af:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.o -> com.google.ads.ag:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.p -> com.google.ads.ah:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.q -> com.google.ads.ai:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.s -> com.google.ads.aj:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.searchads.SearchAdRequest -> com.google.ads.a.a:
+    java.lang.String a -> b
+    int b -> c
+    android.util.Pair c -> d
+    int d -> e
+    int e -> f
+    int f -> g
+    java.lang.String g -> h
+    int h -> i
+    int i -> j
+    com.google.ads.searchads.SearchAdRequest$BorderType j -> k
+    int k -> l
+    java.util.Map getRequestMap(android.content.Context) -> a
+    java.lang.String a(int) -> a
+com.google.ads.searchads.SearchAdRequest$BorderType -> com.google.ads.a.b:
+    com.google.ads.searchads.SearchAdRequest$BorderType NONE -> a
+    com.google.ads.searchads.SearchAdRequest$BorderType DASHED -> b
+    com.google.ads.searchads.SearchAdRequest$BorderType DOTTED -> c
+    com.google.ads.searchads.SearchAdRequest$BorderType SOLID -> d
+    java.lang.String a -> e
+    com.google.ads.searchads.SearchAdRequest$BorderType[] b -> f
+    com.google.ads.searchads.SearchAdRequest$BorderType[] values() -> values
+    com.google.ads.searchads.SearchAdRequest$BorderType valueOf(java.lang.String) -> valueOf
+    java.lang.String toString() -> toString
+com.google.ads.t -> com.google.ads.ak:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.u -> com.google.ads.al:
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.util.AdUtil -> com.google.ads.util.AdUtil:
+    int a -> a
+    java.lang.Boolean b -> b
+    java.lang.String c -> c
+    java.lang.String d -> d
+    java.lang.String e -> e
+    android.media.AudioManager f -> f
+    boolean g -> g
+    boolean h -> h
+    java.lang.String i -> i
+    java.lang.String a(android.content.Context) -> a
+    int a() -> a
+    int b() -> b
+    int a(android.content.Context,android.util.DisplayMetrics) -> a
+    int b(android.content.Context,android.util.DisplayMetrics) -> b
+    boolean b(android.content.Context) -> b
+    boolean a(int,int,java.lang.String) -> a
+    boolean c(android.content.Context) -> c
+    boolean c() -> c
+    boolean a(android.net.Uri) -> a
+    java.lang.String a(java.lang.String) -> a
+    java.lang.String d(android.content.Context) -> d
+    java.lang.String e(android.content.Context) -> e
+    java.lang.String f(android.content.Context) -> f
+    com.google.ads.util.AdUtil$a g(android.content.Context) -> g
+    android.util.DisplayMetrics a(android.app.Activity) -> a
+    java.lang.String a(android.location.Location) -> a
+    java.lang.String b(java.lang.String) -> b
+    java.util.HashMap b(android.net.Uri) -> b
+    boolean d() -> d
+    void a(boolean) -> a
+    void h(android.content.Context) -> h
+    java.lang.String i(android.content.Context) -> i
+    void a(android.webkit.WebView) -> a
+    void a(java.net.HttpURLConnection,android.content.Context) -> a
+    java.lang.String a(java.util.Map) -> a
+    org.json.JSONObject b(java.util.Map) -> b
+    org.json.JSONArray a(java.util.Set) -> a
+com.google.ads.util.AdUtil$UserActivityReceiver -> com.google.ads.util.AdUtil$UserActivityReceiver:
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.google.ads.util.AdUtil$a -> com.google.ads.util.a:
+    com.google.ads.util.AdUtil$a a -> a
+    com.google.ads.util.AdUtil$a b -> b
+    com.google.ads.util.AdUtil$a c -> c
+    com.google.ads.util.AdUtil$a d -> d
+    com.google.ads.util.AdUtil$a e -> e
+    com.google.ads.util.AdUtil$a f -> f
+    com.google.ads.util.AdUtil$a[] g -> g
+    com.google.ads.util.AdUtil$a[] values() -> values
+    com.google.ads.util.AdUtil$a valueOf(java.lang.String) -> valueOf
+com.google.ads.util.a -> com.google.ads.util.b:
+    void a(java.lang.String) -> a
+    void b(java.lang.String) -> b
+    void a(java.lang.String,java.lang.Throwable) -> a
+    void c(java.lang.String) -> c
+    void d(java.lang.String) -> d
+    void e(java.lang.String) -> e
+    void a(java.lang.Throwable) -> a
+    void b(java.lang.String,java.lang.Throwable) -> b
+    boolean a(java.lang.String,int) -> a
+com.google.ads.util.b -> com.google.ads.util.c:
+    boolean a -> a
+    java.lang.String a(byte[]) -> a
+com.google.ads.util.b$a -> com.google.ads.util.d:
+    byte[] a -> a
+    int b -> b
+com.google.ads.util.b$b -> com.google.ads.util.e:
+    byte[] h -> h
+    byte[] i -> i
+    byte[] j -> j
+    int c -> c
+    int k -> k
+    boolean d -> d
+    boolean e -> e
+    boolean f -> f
+    byte[] l -> l
+    boolean g -> g
+    boolean a(byte[],int) -> a
+com.google.ads.util.c -> com.google.ads.util.f:
+    int a(android.content.Context,android.util.DisplayMetrics) -> a
+    int b(android.content.Context,android.util.DisplayMetrics) -> b
+    int a(android.content.Context,float,int) -> a
+com.google.ads.v -> com.google.ads.am:
+    int a(java.util.HashMap,java.lang.String,int,android.util.DisplayMetrics) -> a
+    void a(com.google.ads.d,java.util.HashMap,android.webkit.WebView) -> a
+com.google.ads.w -> com.google.ads.an:
+    android.content.Context a -> a
+    java.lang.String b -> b
+    void run() -> run
+com.google.ads.x -> com.google.ads.ao:
+    java.lang.ref.WeakReference a -> a
+    void run() -> run
+com.google.ads.y -> com.google.ads.ap:
+    android.net.Uri a -> a
+    android.net.Uri b -> b
+    java.lang.String[] c -> c
+    java.lang.String[] d -> d
+com.google.ads.z -> com.google.ads.aq:
+    void a(android.webkit.WebView,boolean) -> a
+com.google.ads.z$a -> com.google.ads.ar:
+    java.lang.ref.WeakReference a -> a
+    void run() -> run
+com.google.ads.z$b -> com.google.ads.as:
+    java.lang.ref.WeakReference a -> a
+    android.webkit.WebView b -> b
+    java.lang.String c -> c
+    void run() -> run
+com.google.ads.z$c -> com.google.ads.at:
+    boolean a -> a
+    android.webkit.WebView b -> b
+    void run() -> run
+com.google.android.apps.analytics.AnalyticsParameterEncoder -> com.google.android.apps.analytics.a:
+    java.lang.String encode(java.lang.String,java.lang.String) -> a
+com.google.android.apps.analytics.AnalyticsReceiver -> com.google.android.apps.analytics.AnalyticsReceiver:
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.google.android.apps.analytics.CustomVariable -> com.google.android.apps.analytics.b:
+    int scope -> a
+    java.lang.String name -> b
+    java.lang.String value -> c
+    int index -> d
+    int getScope() -> a
+    java.lang.String getName() -> b
+    java.lang.String getValue() -> c
+    int getIndex() -> d
+com.google.android.apps.analytics.CustomVariableBuffer -> com.google.android.apps.analytics.c:
+    com.google.android.apps.analytics.CustomVariable[] customVariables -> a
+    boolean isIndexAvailable(int) -> a
+    void setCustomVariable(com.google.android.apps.analytics.CustomVariable) -> a
+    com.google.android.apps.analytics.CustomVariable getCustomVariableAt(int) -> b
+    com.google.android.apps.analytics.CustomVariable[] getCustomVariableArray() -> a
+    void throwOnInvalidIndex(int) -> c
+    boolean hasCustomVariables() -> b
+com.google.android.apps.analytics.Dispatcher -> com.google.android.apps.analytics.d:
+    void dispatchHits(com.google.android.apps.analytics.Hit[]) -> a
+    void init(com.google.android.apps.analytics.Dispatcher$Callbacks) -> a
+    void stop() -> a
+    void setDryRun(boolean) -> a
+com.google.android.apps.analytics.Dispatcher$Callbacks -> com.google.android.apps.analytics.e:
+    void hitDispatched(long) -> a
+    void dispatchFinished() -> a
+com.google.android.apps.analytics.Event -> com.google.android.apps.analytics.f:
+    long eventId -> a
+    java.lang.String accountId -> b
+    int randomVal -> j
+    int timestampFirst -> k
+    int timestampPrevious -> l
+    int timestampCurrent -> m
+    int visits -> n
+    int userId -> o
+    boolean anonymizeIp -> p
+    java.lang.String category -> c
+    java.lang.String action -> d
+    java.lang.String label -> e
+    int value -> f
+    int screenWidth -> g
+    int screenHeight -> h
+    com.google.android.apps.analytics.CustomVariableBuffer customVariableBuffer -> i
+    com.google.android.apps.analytics.Transaction transaction -> q
+    com.google.android.apps.analytics.Item item -> r
+    void setRandomVal(int) -> a
+    int getRandomVal() -> a
+    void setTimestampFirst(int) -> b
+    int getTimestampFirst() -> b
+    void setTimestampPrevious(int) -> c
+    int getTimestampPrevious() -> c
+    void setTimestampCurrent(int) -> d
+    int getTimestampCurrent() -> d
+    void setVisits(int) -> e
+    int getVisits() -> e
+    void setUserId(int) -> f
+    int getUserId() -> f
+    void setAnonymizeIp(boolean) -> a
+    boolean getAnonymizeIp() -> g
+    java.lang.String toString() -> toString
+    com.google.android.apps.analytics.Transaction getTransaction() -> h
+    void setTransaction(com.google.android.apps.analytics.Transaction) -> a
+    com.google.android.apps.analytics.Item getItem() -> i
+    void setItem(com.google.android.apps.analytics.Item) -> a
+    boolean isSessionInitialized() -> j
+com.google.android.apps.analytics.GoogleAnalyticsTracker -> com.google.android.apps.analytics.g:
+    com.google.android.apps.analytics.GoogleAnalyticsTracker INSTANCE -> a
+    boolean debug -> b
+    boolean dryRun -> c
+    boolean anonymizeIp -> d
+    int sampleRate -> e
+    java.lang.String accountId -> f
+    android.content.Context parent -> g
+    android.net.ConnectivityManager connetivityManager -> h
+    java.lang.String userAgentProduct -> i
+    java.lang.String userAgentVersion -> j
+    int dispatchPeriod -> k
+    com.google.android.apps.analytics.HitStore hitStore -> l
+    com.google.android.apps.analytics.Dispatcher dispatcher -> m
+    boolean powerSaveMode -> n
+    boolean dispatcherIsBusy -> o
+    com.google.android.apps.analytics.CustomVariableBuffer customVariableBuffer -> p
+    java.util.Map transactionMap -> q
+    java.util.Map itemMap -> r
+    android.os.Handler handler -> s
+    java.lang.Runnable dispatchRunner -> t
+    com.google.android.apps.analytics.GoogleAnalyticsTracker getInstance() -> a
+    void startNewSession(java.lang.String,android.content.Context) -> a
+    void trackPageView(java.lang.String) -> a
+    void maybeScheduleNextDispatch() -> f
+    void cancelPendingDispatches() -> g
+    boolean dispatch() -> b
+    void dispatchFinished() -> c
+    void stopSession() -> d
+    boolean getDebug() -> e
+    android.os.Handler access$000(com.google.android.apps.analytics.GoogleAnalyticsTracker) -> a
+    com.google.android.apps.analytics.HitStore access$100(com.google.android.apps.analytics.GoogleAnalyticsTracker) -> b
+com.google.android.apps.analytics.GoogleAnalyticsTracker$1 -> com.google.android.apps.analytics.h:
+    com.google.android.apps.analytics.GoogleAnalyticsTracker this$0 -> a
+    void run() -> run
+com.google.android.apps.analytics.GoogleAnalyticsTracker$DispatcherCallbacks -> com.google.android.apps.analytics.i:
+    com.google.android.apps.analytics.GoogleAnalyticsTracker this$0 -> a
+    void dispatchFinished() -> a
+    void hitDispatched(long) -> a
+com.google.android.apps.analytics.GoogleAnalyticsTracker$DispatcherCallbacks$1 -> com.google.android.apps.analytics.j:
+    com.google.android.apps.analytics.GoogleAnalyticsTracker$DispatcherCallbacks this$1 -> a
+    void run() -> run
+com.google.android.apps.analytics.Hit -> com.google.android.apps.analytics.k:
+    java.lang.String hitString -> a
+    long hitId -> b
+com.google.android.apps.analytics.HitBuilder -> com.google.android.apps.analytics.l:
+    void appendStringValue(java.lang.StringBuilder,java.lang.String,java.lang.String) -> a
+    void appendCurrencyValue(java.lang.StringBuilder,java.lang.String,double) -> a
+    java.lang.String constructHitRequestPath(com.google.android.apps.analytics.Event,com.google.android.apps.analytics.Referrer) -> a
+    java.lang.String getCustomVariableParams(com.google.android.apps.analytics.Event) -> a
+    void createX10Project(com.google.android.apps.analytics.CustomVariable[],java.lang.StringBuilder,int) -> a
+    java.lang.String x10Escape(java.lang.String) -> a
+    java.lang.String getEscapedCookieString(com.google.android.apps.analytics.Event,com.google.android.apps.analytics.Referrer) -> b
+com.google.android.apps.analytics.HitStore -> com.google.android.apps.analytics.m:
+    void putEvent(com.google.android.apps.analytics.Event) -> a
+    com.google.android.apps.analytics.Hit[] peekHits() -> a
+    void deleteHit(long) -> a
+    int getNumStoredHits() -> b
+    boolean setReferrer(java.lang.String) -> a
+    void startNewVisit() -> c
+    void setAnonymizeIp(boolean) -> a
+    void setSampleRate(int) -> a
+com.google.android.apps.analytics.Item -> com.google.android.apps.analytics.n:
+    java.lang.String orderId -> a
+    java.lang.String itemSKU -> b
+    java.lang.String itemName -> c
+    java.lang.String itemCategory -> d
+    double itemPrice -> e
+    long itemCount -> f
+    java.lang.String getOrderId() -> a
+    java.lang.String getItemSKU() -> b
+    java.lang.String getItemName() -> c
+    java.lang.String getItemCategory() -> d
+    double getItemPrice() -> e
+    long getItemCount() -> f
+com.google.android.apps.analytics.Item$Builder -> com.google.android.apps.analytics.o:
+    java.lang.String orderId -> a
+    java.lang.String itemSKU -> b
+    double itemPrice -> c
+    long itemCount -> d
+    java.lang.String itemName -> e
+    java.lang.String itemCategory -> f
+    com.google.android.apps.analytics.Item$Builder setItemName(java.lang.String) -> a
+    com.google.android.apps.analytics.Item$Builder setItemCategory(java.lang.String) -> b
+    java.lang.String access$000(com.google.android.apps.analytics.Item$Builder) -> a
+    java.lang.String access$100(com.google.android.apps.analytics.Item$Builder) -> b
+    double access$200(com.google.android.apps.analytics.Item$Builder) -> c
+    long access$300(com.google.android.apps.analytics.Item$Builder) -> d
+    java.lang.String access$400(com.google.android.apps.analytics.Item$Builder) -> e
+    java.lang.String access$500(com.google.android.apps.analytics.Item$Builder) -> f
+com.google.android.apps.analytics.NetworkDispatcher -> com.google.android.apps.analytics.p:
+    java.lang.String userAgent -> a
+    org.apache.http.HttpHost googleAnalyticsHost -> b
+    com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread dispatcherThread -> c
+    boolean dryRun -> d
+    void init(com.google.android.apps.analytics.Dispatcher$Callbacks) -> a
+    void dispatchHits(com.google.android.apps.analytics.Hit[]) -> a
+    void setDryRun(boolean) -> a
+    boolean isDryRun() -> b
+    void stop() -> a
+    org.apache.http.HttpHost access$200(com.google.android.apps.analytics.NetworkDispatcher) -> a
+com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread -> com.google.android.apps.analytics.q:
+    android.os.Handler handlerExecuteOnDispatcherThread -> a
+    com.google.android.apps.analytics.PipelinedRequester pipelinedRequester -> b
+    java.lang.String userAgent -> c
+    int lastStatusCode -> d
+    int maxEventsPerRequest -> e
+    long retryInterval -> f
+    com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread$AsyncDispatchTask currentTask -> g
+    com.google.android.apps.analytics.Dispatcher$Callbacks callbacks -> h
+    com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread$RequesterCallbacks requesterCallBacks -> i
+    com.google.android.apps.analytics.NetworkDispatcher parent -> j
+    void onLooperPrepared() -> onLooperPrepared
+    void dispatchHits(com.google.android.apps.analytics.Hit[]) -> a
+    com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread$AsyncDispatchTask access$402(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread,com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread$AsyncDispatchTask) -> a
+    int access$500(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> a
+    long access$600(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> b
+    long access$630$78cf8d4e(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> c
+    long access$602$78cf8d4e(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> d
+    com.google.android.apps.analytics.NetworkDispatcher access$700(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> e
+    com.google.android.apps.analytics.PipelinedRequester access$800(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> f
+    com.google.android.apps.analytics.Dispatcher$Callbacks access$900(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> g
+    int access$1000(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> h
+    java.lang.String access$1100(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> i
+    com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread$RequesterCallbacks access$1200(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> j
+    int access$1002$78cf9110(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> k
+    com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread$AsyncDispatchTask access$400(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread) -> l
+    int access$502(com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread,int) -> a
+com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread$AsyncDispatchTask -> com.google.android.apps.analytics.r:
+    java.util.LinkedList hits -> b
+    com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread this$0 -> a
+    void run() -> run
+    com.google.android.apps.analytics.Hit removeNextHit() -> a
+com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread$RequesterCallbacks -> com.google.android.apps.analytics.s:
+    com.google.android.apps.analytics.NetworkDispatcher$DispatcherThread this$0 -> a
+    void pipelineModeChanged$1385ff() -> a
+    void requestSent() -> b
+    void serverError(int) -> a
+com.google.android.apps.analytics.PersistentHitStore -> com.google.android.apps.analytics.t:
+    com.google.android.apps.analytics.PersistentHitStore$DataBaseHelper databaseHelper -> a
+    int storeId -> b
+    long timestampFirst -> c
+    long timestampPrevious -> d
+    long timestampCurrent -> e
+    int visits -> f
+    int numStoredHits -> g
+    boolean sessionStarted -> h
+    boolean useStoredVisitorVars -> i
+    boolean anonymizeIp -> j
+    int sampleRate -> k
+    java.lang.String CREATE_EVENTS_TABLE -> l
+    java.lang.String CREATE_SESSION_TABLE -> m
+    java.lang.String CREATE_CUSTOM_VARIABLES_TABLE -> n
+    java.lang.String CREATE_CUSTOM_VAR_CACHE_TABLE -> o
+    java.lang.String CREATE_TRANSACTION_EVENTS_TABLE -> p
+    java.lang.String CREATE_ITEM_EVENTS_TABLE -> q
+    java.lang.String CREATE_HITS_TABLE -> r
+    void deleteHit(long) -> a
+    com.google.android.apps.analytics.Hit[] peekHits() -> a
+    com.google.android.apps.analytics.Hit[] peekHits$7612f821() -> k
+    com.google.android.apps.analytics.Event[] peekEvents$3798dea(android.database.sqlite.SQLiteDatabase,int) -> a
+    com.google.android.apps.analytics.Transaction getTransaction(long,android.database.sqlite.SQLiteDatabase) -> a
+    com.google.android.apps.analytics.Item getItem(long,android.database.sqlite.SQLiteDatabase) -> b
+    com.google.android.apps.analytics.CustomVariableBuffer getCustomVariables(long,android.database.sqlite.SQLiteDatabase) -> c
+    void putEvent(com.google.android.apps.analytics.Event) -> a
+    void putEvent(com.google.android.apps.analytics.Event,android.database.sqlite.SQLiteDatabase,boolean) -> a
+    com.google.android.apps.analytics.CustomVariableBuffer getVisitorVarBuffer() -> l
+    int getNumStoredHits() -> b
+    void loadExistingSession(android.database.sqlite.SQLiteDatabase) -> a
+    void startNewVisit() -> c
+    com.google.android.apps.analytics.Referrer readCurrentReferrer(android.database.sqlite.SQLiteDatabase) -> b
+    boolean setReferrerDatabase(android.database.sqlite.SQLiteDatabase,android.content.ContentValues) -> a
+    boolean setReferrer(java.lang.String) -> a
+    void setAnonymizeIp(boolean) -> a
+    void setSampleRate(int) -> a
+    java.lang.String access$000() -> d
+    java.lang.String access$100() -> e
+    java.lang.String access$200() -> f
+    java.lang.String access$300() -> g
+    java.lang.String access$400() -> h
+    java.lang.String access$500() -> i
+    java.lang.String access$600() -> j
+com.google.android.apps.analytics.PersistentHitStore$DataBaseHelper -> com.google.android.apps.analytics.u:
+    int databaseVersion -> a
+    com.google.android.apps.analytics.PersistentHitStore store -> b
+    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    void onOpen(android.database.sqlite.SQLiteDatabase) -> onOpen
+    void createCustomVariableTables(android.database.sqlite.SQLiteDatabase) -> a
+    void createECommerceTables(android.database.sqlite.SQLiteDatabase) -> b
+    void createHitTable(android.database.sqlite.SQLiteDatabase) -> c
+    void createReferrerTable(android.database.sqlite.SQLiteDatabase) -> d
+    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
+    void onDowngrade(android.database.sqlite.SQLiteDatabase,int,int) -> onDowngrade
+com.google.android.apps.analytics.PipelinedRequester -> com.google.android.apps.analytics.v:
+    org.apache.http.impl.DefaultHttpClientConnection connection -> a
+    com.google.android.apps.analytics.PipelinedRequester$Callbacks callbacks -> b
+    int lastStatusCode -> c
+    boolean canPipeline -> d
+    org.apache.http.HttpHost host -> e
+    org.apache.http.conn.scheme.SocketFactory socketFactory -> f
+    void sendRequests() -> a
+    void finishedCurrentRequests() -> b
+    void closeConnection() -> c
+com.google.android.apps.analytics.PipelinedRequester$Callbacks -> com.google.android.apps.analytics.w:
+    void pipelineModeChanged$1385ff() -> a
+    void serverError(int) -> a
+    void requestSent() -> b
+com.google.android.apps.analytics.Referrer -> com.google.android.apps.analytics.x:
+    java.lang.String referrer -> a
+    long timeStamp -> b
+    int visit -> c
+    int index -> d
+    java.lang.String getReferrerString() -> a
+    long getTimeStamp() -> b
+    int getVisit() -> c
+    int getIndex() -> d
+com.google.android.apps.analytics.Transaction -> com.google.android.apps.analytics.y:
+    java.lang.String orderId -> a
+    java.lang.String storeName -> b
+    double totalCost -> c
+    double totalTax -> d
+    double shippingCost -> e
+    java.lang.String getOrderId() -> a
+    java.lang.String getStoreName() -> b
+    double getTotalCost() -> c
+    double getTotalTax() -> d
+    double getShippingCost() -> e
+com.google.android.apps.analytics.Transaction$Builder -> com.google.android.apps.analytics.z:
+    java.lang.String orderId -> a
+    java.lang.String storeName -> b
+    double totalCost -> c
+    double totalTax -> d
+    double shippingCost -> e
+    com.google.android.apps.analytics.Transaction$Builder setStoreName(java.lang.String) -> a
+    com.google.android.apps.analytics.Transaction$Builder setTotalTax(double) -> a
+    com.google.android.apps.analytics.Transaction$Builder setShippingCost(double) -> b
+    java.lang.String access$000(com.google.android.apps.analytics.Transaction$Builder) -> a
+    double access$100(com.google.android.apps.analytics.Transaction$Builder) -> b
+    java.lang.String access$200(com.google.android.apps.analytics.Transaction$Builder) -> c
+    double access$300(com.google.android.apps.analytics.Transaction$Builder) -> d
+    double access$400(com.google.android.apps.analytics.Transaction$Builder) -> e
+com.google.android.apps.analytics.Utils -> com.google.android.apps.analytics.aa:
+    java.lang.String addQueueTimeParameter(java.lang.String,long) -> a
+org.emergent.android.weave.client.Base32 -> org.a.a.a.a.a:
+    int[] base32Lookup -> a
+    byte[] decodeModified(java.lang.String) -> a
+    byte[] encode(byte[]) -> a
+org.emergent.android.weave.client.Base64 -> org.a.a.a.a.b:
+    org.emergent.android.weave.client.Base64Encoder encoder -> a
+    byte[] decode(java.lang.String) -> a
+org.emergent.android.weave.client.Base64Encoder -> org.a.a.a.a.c:
+    byte[] encodingTable -> a
+    byte padding -> b
+    byte[] decodingTable -> c
+    int decode(java.lang.String,java.io.OutputStream) -> a
+    boolean ignore(char) -> a
+    void initialiseDecodingTable() -> a
+    int nextI(java.lang.String,int,int) -> a
+org.emergent.android.weave.client.BulkKeyCouplet -> org.a.a.a.a.d:
+    java.security.Key cipherKey -> a
+    java.security.Key hmacKey -> b
+org.emergent.android.weave.client.Dbg -> org.a.a.a.a.e:
+    java.util.logging.Level LEVEL_ANDROID_VERBOSE -> a
+    java.util.logging.Level LEVEL_ANDROID_DEBUG -> b
+    java.util.logging.Level LEVEL_ANDROID_INFO -> c
+    java.util.logging.Level LEVEL_ANDROID_WARN -> d
+    java.util.logging.Level LEVEL_ANDROID_ERROR -> e
+    java.util.logging.Level LEVEL_V -> f
+    java.util.logging.Level LEVEL_D -> g
+    java.util.logging.Level LEVEL_W -> h
+    java.util.logging.Logger sm_logger -> i
+    void d(java.lang.Throwable) -> a
+    void log(java.util.logging.Level,java.lang.Throwable) -> a
+    void w(java.lang.String,java.lang.Object[]) -> a
+    void w(java.lang.Throwable) -> b
+org.emergent.android.weave.client.Dbg$DebugLogRecord -> org.a.a.a.a.f:
+    java.lang.String sourceClassName -> a
+    java.lang.String sourceMethodName -> b
+    boolean needToInferCaller -> c
+    java.lang.String getSourceClassName() -> getSourceClassName
+    java.lang.String getSourceMethodName() -> getSourceMethodName
+    void inferCaller() -> a
+    void setSourceClassName(java.lang.String) -> setSourceClassName
+    void setSourceMethodName(java.lang.String) -> setSourceMethodName
+org.emergent.android.weave.client.Hex -> org.a.a.a.a.g:
+    org.emergent.android.weave.client.HexEncoder encoder -> a
+    byte[] encode(byte[]) -> a
+    byte[] encode$7dcc7401(byte[],int) -> a
+org.emergent.android.weave.client.HexEncoder -> org.a.a.a.a.h:
+    byte[] encodingTable -> a
+    byte[] decodingTable -> b
+    int encode$7112a941(byte[],int,java.io.OutputStream) -> a
+    void initialiseDecodingTable() -> a
+org.emergent.android.weave.client.QueryParams -> org.a.a.a.a.i:
+    java.util.Date m_older -> a
+    java.util.Date m_newer -> b
+    boolean m_full -> c
+    java.lang.String m_sort -> d
+    org.emergent.android.weave.client.QueryParams setFull$12fd15d2() -> a
+    org.emergent.android.weave.client.QueryParams setNewer(java.util.Date) -> a
+    java.lang.String toQueryString() -> b
+    java.lang.String toString() -> toString
+org.emergent.android.weave.client.QueryResult -> org.a.a.a.a.j:
+    java.net.URI m_uri -> a
+    java.util.Date m_serverTimestamp -> b
+    java.lang.Object m_value -> c
+    java.lang.Object getValue() -> a
+    void setValue(java.lang.Object) -> a
+org.emergent.android.weave.client.UserWeave -> org.a.a.a.a.k:
+    org.emergent.android.weave.client.WeaveTransport m_transport -> a
+    java.net.URI m_authUri -> b
+    java.lang.String m_userId -> c
+    java.lang.String m_password -> d
+    java.lang.String m_legalUsername -> e
+    java.util.concurrent.atomic.AtomicReference m_clusterUri -> f
+    java.net.URI buildSyncUriFromSubpath(java.lang.String) -> a
+    java.net.URI buildUserUriFromSubpath(java.lang.String) -> b
+    org.emergent.android.weave.client.BulkKeyCouplet getBulkKeyPair(byte[]) -> a
+    java.net.URI getClusterUriSafe() -> a
+    java.net.URI getClusterUriUnsafe() -> b
+    org.json.JSONObject getCryptoKeys() -> c
+    org.emergent.android.weave.client.QueryResult getNode(org.emergent.android.weave.client.UserWeave$HashNode) -> a
+    org.emergent.android.weave.client.WeaveResponse getNode(java.net.URI) -> b
+    org.emergent.android.weave.client.QueryResult getWboCollection(java.net.URI) -> a
+org.emergent.android.weave.client.UserWeave$HashNode -> org.a.a.a.a.l:
+    org.emergent.android.weave.client.UserWeave$HashNode INFO_COLLECTIONS -> a
+    org.emergent.android.weave.client.UserWeave$HashNode META_GLOBAL -> b
+    boolean userServer -> c
+    java.lang.String nodePath -> d
+    org.emergent.android.weave.client.UserWeave$HashNode[] ENUM$VALUES -> e
+    org.emergent.android.weave.client.UserWeave$HashNode[] values() -> values
+    org.emergent.android.weave.client.UserWeave$HashNode valueOf(java.lang.String) -> valueOf
+org.emergent.android.weave.client.WeaveAccountInfo -> org.a.a.a.a.m:
+    java.net.URI m_server -> a
+    java.lang.String m_username -> b
+    java.lang.String m_password -> c
+    char[] m_secret -> d
+    org.emergent.android.weave.client.WeaveAccountInfo createWeaveAccountInfo(java.lang.String) -> a
+    java.lang.String getPassword() -> a
+    char[] getSecret() -> b
+    java.net.URI getServer() -> c
+    java.lang.String getUsername() -> d
+    java.lang.String toAuthToken() -> e
+    java.lang.String toString() -> toString
+org.emergent.android.weave.client.WeaveBasicObject -> org.a.a.a.a.n:
+    java.net.URI m_uri -> a
+    java.net.URI m_queryUri -> b
+    org.json.JSONObject m_nodeObj -> c
+    org.json.JSONObject getEncryptedPayload(org.emergent.android.weave.client.UserWeave,char[]) -> a
+    org.json.JSONObject getPayload() -> a
+org.emergent.android.weave.client.WeaveBasicObject$WeaveEncryptedObject -> org.a.a.a.a.o:
+    org.json.JSONObject m_nodeObj -> a
+    org.json.JSONObject decryptObject(java.security.Key,java.security.Key) -> a
+org.emergent.android.weave.client.WeaveConstants -> org.a.a.a.a.p:
+    java.lang.String PACKAGE_NAME -> c
+    java.lang.String APP_VERSION_STRING -> d
+    java.lang.String USER_AGENT_DEFAULT -> e
+    java.lang.String LOGGER_NAME -> f
+    java.lang.String LOGGER_NAME_FULL -> a
+    java.lang.String USER_AGENT -> b
+    java.lang.String getProperty(java.lang.String,java.lang.String) -> a
+org.emergent.android.weave.client.WeaveCryptoUtil -> org.a.a.a.a.q:
+    byte[] HMAC_INPUT -> a
+    java.util.regex.Pattern ILLEGAL_USERNAME_PATTERN -> b
+    org.emergent.android.weave.client.WeaveCryptoUtil sm_instance -> c
+    byte[] deriveSyncHmacKey(byte[],byte[],java.lang.String) -> a
+    byte[] deriveSyncKey(byte[],java.lang.String) -> a
+    org.emergent.android.weave.client.WeaveCryptoUtil getInstance() -> a
+    boolean initProvider(java.lang.String,java.lang.String) -> a
+    byte[] decrypt(java.security.Key,java.security.Key,java.lang.String,java.lang.String,java.lang.String) -> a
+    java.lang.String legalizeUsername(java.lang.String) -> a
+org.emergent.android.weave.client.WeaveException -> org.a.a.a.a.r:
+    org.emergent.android.weave.client.WeaveException$ExceptionType m_type -> a
+org.emergent.android.weave.client.WeaveException$ExceptionType -> org.a.a.a.a.s:
+    org.emergent.android.weave.client.WeaveException$ExceptionType GENERAL -> a
+    org.emergent.android.weave.client.WeaveException$ExceptionType BACKOFF -> b
+    org.emergent.android.weave.client.WeaveException$ExceptionType[] ENUM$VALUES -> c
+    org.emergent.android.weave.client.WeaveException$ExceptionType[] values() -> values
+    org.emergent.android.weave.client.WeaveException$ExceptionType valueOf(java.lang.String) -> valueOf
+org.emergent.android.weave.client.WeaveFactory -> org.a.a.a.a.t:
+    org.emergent.android.weave.client.WeaveTransport m_transport -> a
+    boolean m_acceptInvalidCerts -> b
+    boolean m_useConnectionPool -> c
+    org.emergent.android.weave.client.UserWeave createUserWeave(java.net.URI,java.lang.String,java.lang.String) -> a
+    org.emergent.android.weave.client.WeaveTransport getWeaveTransport() -> a
+org.emergent.android.weave.client.WeaveHeader -> org.a.a.a.a.u:
+    org.emergent.android.weave.client.WeaveHeader X_WEAVE_BACKOFF -> a
+    org.emergent.android.weave.client.WeaveHeader X_WEAVE_ALERT -> b
+    org.emergent.android.weave.client.WeaveHeader X_WEAVE_TIMESTAMP -> c
+    org.emergent.android.weave.client.WeaveHeader X_WEAVE_RECORDS -> d
+    org.emergent.android.weave.client.WeaveHeader X_WEAVE_IF_UNMODIFIED_SINCE -> e
+    java.lang.String m_name -> f
+    org.emergent.android.weave.client.WeaveHeader[] ENUM$VALUES -> g
+    java.lang.String getName() -> a
+    org.emergent.android.weave.client.WeaveHeader[] values() -> values
+    org.emergent.android.weave.client.WeaveHeader valueOf(java.lang.String) -> valueOf
+org.emergent.android.weave.client.WeaveResponse -> org.a.a.a.a.v:
+    org.emergent.android.weave.client.WeaveTransport$WeaveResponseHeaders m_responseHeaders -> a
+    java.lang.String m_body -> b
+    java.net.URI m_uri -> c
+    java.lang.String getBody() -> a
+    org.emergent.android.weave.client.WeaveTransport$WeaveResponseHeaders getResponseHeaders() -> b
+    java.util.Date getServerTimestamp() -> c
+    java.net.URI getUri() -> d
+    void setUri(java.net.URI) -> a
+org.emergent.android.weave.client.WeaveSSLSocketFactory -> org.a.a.a.a.w:
+    javax.net.ssl.SSLContext m_sslcontext -> a
+    javax.net.ssl.SSLContext createEasySSLContext() -> a
+    java.net.Socket connectSocket(java.net.Socket,java.lang.String,int,java.net.InetAddress,int,org.apache.http.params.HttpParams) -> connectSocket
+    java.net.Socket createSocket() -> createSocket
+    java.net.Socket createSocket(java.net.Socket,java.lang.String,int,boolean) -> createSocket
+    boolean equals(java.lang.Object) -> equals
+    javax.net.ssl.SSLContext getSSLContext() -> b
+    int hashCode() -> hashCode
+    boolean isSecure(java.net.Socket) -> isSecure
+org.emergent.android.weave.client.WeaveSSLSocketFactory$WeaveX509TrustManager -> org.a.a.a.a.x:
+    javax.net.ssl.X509TrustManager m_standardTrustManager -> a
+    void checkClientTrusted(java.security.cert.X509Certificate[],java.lang.String) -> checkClientTrusted
+    void checkServerTrusted(java.security.cert.X509Certificate[],java.lang.String) -> checkServerTrusted
+    java.security.cert.X509Certificate[] getAcceptedIssuers() -> getAcceptedIssuers
+org.emergent.android.weave.client.WeaveTransport -> org.a.a.a.a.y:
+    org.apache.http.HttpRequestInterceptor sm_preemptiveAuth -> a
+    org.emergent.android.weave.client.WeaveTransport$MyResponseHandler sm_responseHandler -> b
+    org.apache.http.params.HttpParams sm_httpParams -> c
+    org.apache.http.conn.scheme.SocketFactory m_sslSocketFactory -> d
+    org.apache.http.conn.ClientConnectionManager m_clientConMgr -> e
+    org.apache.http.conn.ClientConnectionManager createClientConnectionManager(boolean) -> a
+    org.emergent.android.weave.client.WeaveResponse execGenericMethod(org.apache.http.client.HttpClient,java.net.URI,org.apache.http.client.methods.HttpRequestBase) -> a
+    org.emergent.android.weave.client.WeaveResponse execGenericMethod(java.lang.String,java.lang.String,java.net.URI,org.apache.http.client.methods.HttpRequestBase) -> a
+    org.emergent.android.weave.client.WeaveResponse execGetMethod(java.lang.String,java.lang.String,java.net.URI) -> a
+org.emergent.android.weave.client.WeaveTransport$MyInterceptor -> org.a.a.a.a.z:
+    void process(org.apache.http.HttpRequest,org.apache.http.protocol.HttpContext) -> process
+org.emergent.android.weave.client.WeaveTransport$MyResponseHandler -> org.a.a.a.a.aa:
+    java.lang.Object handleResponse(org.apache.http.HttpResponse) -> handleResponse
+org.emergent.android.weave.client.WeaveTransport$WeaveHostnameVerifier -> org.a.a.a.a.ab:
+    void resolveHostAddresses(java.lang.String,java.util.Collection) -> a
+    void verify(java.lang.String,java.lang.String[],java.lang.String[]) -> verify
+org.emergent.android.weave.client.WeaveTransport$WeaveResponseException -> org.a.a.a.a.ac:
+    org.emergent.android.weave.client.WeaveTransport$WeaveResponseHeaders m_responseHeaders -> a
+    org.emergent.android.weave.client.WeaveTransport$WeaveResponseHeaders getResponseHeaders() -> a
+    java.lang.String toString() -> toString
+org.emergent.android.weave.client.WeaveTransport$WeaveResponseHeaders -> org.a.a.a.a.ad:
+    org.apache.http.Header[] m_headers -> a
+    java.util.Date getServerTimestamp() -> a
+org.emergent.android.weave.client.WeaveUtil -> org.a.a.a.a.ae:
+    org.emergent.android.weave.client.WeaveUtil$UriBuilder buildUpon(java.net.URI) -> a
+    void checkNull(java.net.URI) -> b
+    byte[] toAsciiBytes(java.lang.String) -> a
+    java.lang.String toAsciiString(byte[]) -> a
+    java.util.Date toModifiedTimeDate(java.lang.String) -> b
+    java.lang.String toModifiedTimeString(java.util.Date) -> a
+    java.lang.String toUtf8String(byte[]) -> b
+org.emergent.android.weave.client.WeaveUtil$UriBuilder -> org.a.a.a.a.af:
+    java.lang.String m_val -> a
+    void appendEncodedPath(java.lang.String) -> a
+    java.net.URI build() -> a
+org.gaeproxy.AppManager -> org.gaeproxy.AppManager:
+    org.gaeproxy.ProxyedApp[] apps -> b
+    android.widget.ListView listApps -> c
+    org.gaeproxy.AppManager mAppManager -> d
+    android.widget.TextView overlay -> e
+    android.app.ProgressDialog pd -> f
+    android.widget.ListAdapter adapter -> g
+    org.gaeproxy.ImageLoader dm -> h
+    boolean appsLoaded -> i
+    android.os.Handler handler -> a
+    org.gaeproxy.ProxyedApp[] getProxyedApps(android.content.Context) -> a
+    void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
+    void onClick(android.view.View) -> onClick
+    void onCreate(android.os.Bundle) -> onCreate
+    void onResume() -> onResume
+    void onStop() -> onStop
+    void saveAppSettings$faab20d() -> a
+    void access$0(org.gaeproxy.AppManager,android.app.ProgressDialog) -> a
+    android.widget.ListView access$1(org.gaeproxy.AppManager) -> a
+    android.widget.ListAdapter access$2(org.gaeproxy.AppManager) -> b
+    org.gaeproxy.ProxyedApp[] access$3(org.gaeproxy.AppManager) -> c
+    android.widget.TextView access$4(org.gaeproxy.AppManager) -> d
+    android.app.ProgressDialog access$5(org.gaeproxy.AppManager) -> e
+    org.gaeproxy.AppManager access$6(org.gaeproxy.AppManager) -> f
+    org.gaeproxy.ImageLoader access$7(org.gaeproxy.AppManager) -> g
+    void access$8(org.gaeproxy.AppManager,android.widget.ListView) -> a
+    boolean access$9(org.gaeproxy.AppManager) -> h
+    void access$10(org.gaeproxy.AppManager) -> i
+org.gaeproxy.AppManager$1 -> org.gaeproxy.a:
+    org.gaeproxy.AppManager this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+    org.gaeproxy.AppManager access$0(org.gaeproxy.AppManager$1) -> a
+org.gaeproxy.AppManager$1$1 -> org.gaeproxy.b:
+    boolean visible -> a
+    org.gaeproxy.AppManager$1 this$1 -> b
+    void onScroll(android.widget.AbsListView,int,int,int) -> onScroll
+    void onScrollStateChanged(android.widget.AbsListView,int) -> onScrollStateChanged
+org.gaeproxy.AppManager$2 -> org.gaeproxy.c:
+    org.gaeproxy.AppManager this$0 -> a
+    int compare(java.lang.Object,java.lang.Object) -> compare
+org.gaeproxy.AppManager$3 -> org.gaeproxy.d:
+    org.gaeproxy.AppManager this$0 -> a
+    android.view.LayoutInflater val$inflater -> b
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+org.gaeproxy.AppManager$4 -> org.gaeproxy.e:
+    org.gaeproxy.AppManager this$0 -> a
+    void run() -> run
+org.gaeproxy.AppManager$ListEntry -> org.gaeproxy.f:
+    android.widget.CheckBox box -> a
+    android.widget.TextView text -> b
+    android.widget.ImageView icon -> c
+    void access$1(org.gaeproxy.AppManager$ListEntry,android.widget.ImageView) -> a
+    void access$2(org.gaeproxy.AppManager$ListEntry,android.widget.CheckBox) -> a
+    void access$3(org.gaeproxy.AppManager$ListEntry,android.widget.TextView) -> a
+    android.widget.TextView access$4(org.gaeproxy.AppManager$ListEntry) -> a
+    android.widget.CheckBox access$5(org.gaeproxy.AppManager$ListEntry) -> b
+    android.widget.ImageView access$6(org.gaeproxy.AppManager$ListEntry) -> c
+org.gaeproxy.Base64 -> org.gaeproxy.g:
+    byte[] _STANDARD_ALPHABET -> b
+    byte[] _STANDARD_DECODABET -> c
+    byte[] _URL_SAFE_ALPHABET -> d
+    byte[] _URL_SAFE_DECODABET -> e
+    byte[] _ORDERED_ALPHABET -> f
+    byte[] _ORDERED_DECODABET -> g
+    boolean $assertionsDisabled -> a
+    byte[] decode$3bcfdf96$7dcc7401(byte[],int) -> a
+    byte[] decode(java.lang.String) -> a
+    byte[] decode$44bd1c79(java.lang.String) -> b
+    int decode4to3$5c8eef61(byte[],byte[],int,int) -> b
+    byte[] encode3to4(byte[],int,int,byte[],int,int) -> a
+    java.lang.String encodeBytes(byte[]) -> a
+    java.lang.String encodeBytes$5fb0bea7(byte[],int) -> b
+    byte[] encodeBytesToBytes(byte[]) -> b
+    byte[] encodeBytesToBytes$3bcfdf96(byte[],int) -> c
+    byte[] getDecodabet(int) -> a
+    int access$2$5c8eef61(byte[],byte[],int) -> a
+    byte[] access$3(byte[],byte[],int,int) -> a
+org.gaeproxy.Base64$OutputStream -> org.gaeproxy.h:
+    boolean encode -> a
+    int position -> b
+    byte[] buffer -> c
+    int bufferLength -> d
+    int lineLength -> e
+    boolean breakLines -> f
+    byte[] b4 -> g
+    boolean suspendEncoding -> h
+    int options -> i
+    byte[] decodabet -> j
+    void close() -> close
+    void write(byte[],int,int) -> write
+    void write(int) -> write
+org.gaeproxy.DNSServer -> org.gaeproxy.i:
+    java.lang.String TAG -> e
+    java.lang.String homePath -> f
+    java.lang.String CACHE_PATH -> g
+    java.lang.String CACHE_FILE -> h
+    java.net.DatagramSocket srvSocket -> i
+    int threadNum -> j
+    java.util.HashSet domains -> a
+    int srvPort -> k
+    java.lang.String name -> l
+    java.lang.String dnsHost -> b
+    int dnsPort -> c
+    int DNS_PKG_HEADER_LEN -> d
+    int[] DNS_HEADERS -> m
+    int[] DNS_PAYLOAD -> n
+    int IP_SECTION_LEN -> o
+    int DNS_ERROR_LIMIT -> p
+    boolean inService -> q
+    boolean httpMode -> r
+    int dnsError -> s
+    java.util.Hashtable dnsCache -> t
+    java.util.Hashtable orgCache -> u
+    java.lang.String target -> v
+    java.lang.String appHost -> w
+    java.lang.String dnsRelay -> x
+    void addToCache(java.lang.String,byte[]) -> a
+    void close() -> a
+    byte[] createDNSResponse(byte[],byte[]) -> a
+    byte[] fetchAnswer(byte[]) -> a
+    byte[] fetchAnswerHTTP(byte[]) -> b
+    java.lang.String getRequestDomain(byte[]) -> c
+    void loadOrgCache(java.io.InputStream) -> a
+    java.lang.String parseDomain(byte[]) -> d
+    byte[] parseIPString(java.lang.String) -> b
+    java.lang.String resolveDomainName(java.lang.String) -> c
+    void run() -> run
+    void saveCache() -> b
+    void sendDns(byte[],java.net.DatagramPacket,java.net.DatagramSocket) -> b
+    void setBasePath(java.lang.String) -> a
+    boolean access$0(org.gaeproxy.DNSServer) -> a
+    void access$1(org.gaeproxy.DNSServer,java.lang.String,byte[]) -> a
+    java.net.DatagramSocket access$2(org.gaeproxy.DNSServer) -> b
+    void access$3$6737d5f5(byte[],java.net.DatagramPacket,java.net.DatagramSocket) -> a
+    int access$4(org.gaeproxy.DNSServer) -> c
+    void access$5(org.gaeproxy.DNSServer,int) -> a
+    int access$6(org.gaeproxy.DNSServer) -> d
+    void access$7(org.gaeproxy.DNSServer,int) -> b
+org.gaeproxy.DNSServer$1 -> org.gaeproxy.j:
+    org.gaeproxy.DNSServer this$0 -> a
+    byte[] val$udpreq -> b
+    java.lang.String val$questDomain -> c
+    java.net.DatagramPacket val$dnsq -> d
+    void run() -> run
+org.gaeproxy.DnsResponse -> org.gaeproxy.k:
+    java.lang.String request -> a
+    long timestamp -> b
+    int reqTimes -> c
+    byte[] dnsResponse -> d
+    byte[] getDnsResponse() -> a
+    java.lang.String getRequest() -> b
+    long getTimestamp() -> c
+    void setDnsResponse(byte[]) -> a
+org.gaeproxy.DomainValidator -> org.gaeproxy.l:
+    org.gaeproxy.DomainValidator DOMAIN_VALIDATOR -> a
+    java.lang.String[] INFRASTRUCTURE_TLDS -> b
+    java.lang.String[] GENERIC_TLDS -> c
+    java.lang.String[] COUNTRY_CODE_TLDS -> d
+    java.util.List INFRASTRUCTURE_TLD_LIST -> e
+    java.util.List GENERIC_TLD_LIST -> f
+    java.util.List COUNTRY_CODE_TLD_LIST -> g
+    org.gaeproxy.RegexValidator domainRegex -> h
+    org.gaeproxy.DomainValidator getInstance() -> a
+    java.lang.String chompLeadingDot(java.lang.String) -> b
+    boolean isValid(java.lang.String) -> a
+org.gaeproxy.Exec -> org.gaeproxy.Exec:
+    java.io.FileDescriptor createSubprocess(java.lang.String,java.lang.String[],java.lang.String[],int[]) -> createSubprocess
+    int waitFor(int) -> waitFor
+    void close(java.io.FileDescriptor) -> close
+    void hangupProcessGroup(int) -> hangupProcessGroup
+org.gaeproxy.GAEProxy -> org.gaeproxy.GAEProxy:
+    java.lang.String proxy -> e
+    int port -> f
+    java.lang.String sitekey -> g
+    java.lang.String proxyType -> h
+    boolean isGlobalProxy -> i
+    boolean isHTTPSProxy -> j
+    boolean isGFWList -> k
+    int notification_id -> a
+    android.app.NotificationManager nm -> b
+    android.app.Notification notification -> c
+    android.os.Handler handler -> d
+    android.app.ProgressDialog pd -> l
+    android.preference.CheckBoxPreference isAutoConnectCheck -> m
+    android.preference.CheckBoxPreference isGlobalProxyCheck -> n
+    android.preference.CheckBoxPreference isInstalledCheck -> o
+    android.preference.EditTextPreference proxyText -> p
+    android.preference.EditTextPreference portText -> q
+    android.preference.EditTextPreference sitekeyText -> r
+    android.preference.ListPreference proxyTypeList -> s
+    android.preference.CheckBoxPreference isHTTPSProxyCheck -> t
+    android.preference.CheckBoxPreference isGFWListCheck -> u
+    android.preference.CheckBoxPreference isRunningCheck -> v
+    com.google.ads.AdView adView -> w
+    android.preference.Preference proxyedApps -> x
+    android.preference.Preference browser -> y
+    void copyFile(java.io.InputStream,java.io.OutputStream) -> a
+    void disableAll() -> c
+    void enableAll() -> d
+    boolean isTextEmpty(java.lang.String,java.lang.String) -> a
+    void onCreate(android.os.Bundle) -> onCreate
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onDestroy() -> onDestroy
+    boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onPause() -> onPause
+    boolean onPreferenceTreeClick(android.preference.PreferenceScreen,android.preference.Preference) -> onPreferenceTreeClick
+    void onResume() -> onResume
+    void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+    void onStart() -> onStart
+    void onStop() -> onStop
+    boolean serviceStart() -> e
+    void showAToast(java.lang.String) -> b
+    android.preference.CheckBoxPreference access$0(org.gaeproxy.GAEProxy) -> a
+    android.app.ProgressDialog access$1() -> a
+    void access$2$7db20201() -> b
+    void access$3$1e3e0312(java.lang.String) -> a
+    void access$4(org.gaeproxy.GAEProxy,java.lang.String) -> a
+    void access$5(org.gaeproxy.GAEProxy) -> b
+org.gaeproxy.GAEProxy$1 -> org.gaeproxy.m:
+    org.gaeproxy.GAEProxy this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.GAEProxy$2 -> org.gaeproxy.n:
+    org.gaeproxy.GAEProxy this$0 -> a
+    void run() -> run
+org.gaeproxy.GAEProxy$3 -> org.gaeproxy.o:
+    org.gaeproxy.GAEProxy this$0 -> a
+    void run() -> run
+org.gaeproxy.GAEProxy$4 -> org.gaeproxy.p:
+    org.gaeproxy.GAEProxy this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.GAEProxy$5 -> org.gaeproxy.q:
+    org.gaeproxy.GAEProxy this$0 -> a
+    android.os.Handler val$h -> b
+    void run() -> run
+org.gaeproxy.GAEProxy$6 -> org.gaeproxy.r:
+    org.gaeproxy.GAEProxy this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.GAEProxy$7 -> org.gaeproxy.s:
+    org.gaeproxy.GAEProxy this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.GAEProxy$DownloadFileRunnable -> org.gaeproxy.t:
+    java.lang.String[] path -> b
+    int progress_count -> c
+    org.gaeproxy.GAEProxy this$0 -> a
+    void publishProgress(java.lang.String) -> a
+    void run() -> run
+    void unzip(java.lang.String,java.lang.String) -> a
+org.gaeproxy.GAEProxyContext -> org.gaeproxy.GAEProxyContext:
+    android.content.Context context -> a
+    void onCreate() -> onCreate
+org.gaeproxy.GAEProxyReceiver -> org.gaeproxy.GAEProxyReceiver:
+    java.lang.String proxy -> a
+    java.lang.String proxyType -> b
+    int port -> c
+    boolean isAutoConnect -> d
+    boolean isInstalled -> e
+    java.lang.String sitekey -> f
+    boolean isGlobalProxy -> g
+    boolean isHTTPSProxy -> h
+    boolean isGFWList -> i
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+org.gaeproxy.GAEProxyService -> org.gaeproxy.GAEProxyService:
+    android.app.Notification notification -> d
+    android.app.NotificationManager notificationManager -> e
+    android.content.Intent intent -> f
+    android.app.PendingIntent pendIntent -> g
+    android.os.PowerManager$WakeLock mWakeLock -> h
+    boolean statusLock -> a
+    java.lang.Process httpProcess -> i
+    java.io.DataOutputStream httpOS -> j
+    java.lang.String proxy -> k
+    java.lang.String appHost -> l
+    java.lang.String appMask -> m
+    int port -> n
+    java.lang.String sitekey -> o
+    java.lang.String proxyType -> p
+    org.gaeproxy.DNSServer dnsServer -> q
+    android.content.SharedPreferences settings -> r
+    boolean hasRedirectSupport -> s
+    boolean isGlobalProxy -> t
+    boolean isHTTPSProxy -> u
+    boolean isDNSBlocked -> v
+    boolean isGFWList -> w
+    com.google.android.apps.analytics.GoogleAnalyticsTracker tracker -> b
+    org.gaeproxy.ProxyedApp[] apps -> x
+    java.lang.Class[] mStartForegroundSignature -> y
+    java.lang.Class[] mStopForegroundSignature -> z
+    java.lang.Class[] mSetForegroundSignature -> A
+    java.lang.reflect.Method mSetForeground -> B
+    java.lang.reflect.Method mStartForeground -> C
+    java.lang.reflect.Method mStopForeground -> D
+    java.lang.Object[] mSetForegroundArgs -> E
+    java.lang.Object[] mStartForegroundArgs -> F
+    java.lang.Object[] mStopForegroundArgs -> G
+    java.lang.ref.WeakReference sRunningInstance -> H
+    android.os.Handler handler -> c
+    boolean isServiceStarted() -> a
+    boolean connect() -> c
+    boolean handleConnection() -> b
+    void initSoundVibrateLights(android.app.Notification) -> a
+    void invokeMethod$9fc51b4(java.lang.reflect.Method) -> a
+    android.os.IBinder onBind(android.content.Intent) -> onBind
+    java.lang.String getVersionName() -> d
+    void onCreate() -> onCreate
+    void onDestroy() -> onDestroy
+    void onStart(android.content.Intent,int) -> onStart
+    int onStartCommand(android.content.Intent,int,int) -> onStartCommand
+    void handleCommand(android.content.Intent) -> a
+    boolean preConnection() -> e
+    android.content.SharedPreferences access$0(org.gaeproxy.GAEProxyService) -> a
+    void access$1(org.gaeproxy.GAEProxyService,android.os.PowerManager$WakeLock) -> a
+    android.os.PowerManager$WakeLock access$2(org.gaeproxy.GAEProxyService) -> b
+    java.lang.String access$3(org.gaeproxy.GAEProxyService) -> c
+    void access$4(org.gaeproxy.GAEProxyService,boolean) -> a
+    void access$5(org.gaeproxy.GAEProxyService,boolean) -> b
+    void access$6(org.gaeproxy.GAEProxyService,java.lang.String,java.lang.String) -> a
+org.gaeproxy.GAEProxyService$1 -> org.gaeproxy.u:
+    org.gaeproxy.GAEProxyService this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.GAEProxyService$2 -> org.gaeproxy.v:
+    org.gaeproxy.GAEProxyService this$0 -> a
+    void run() -> run
+org.gaeproxy.GAEProxyWidgetProvider -> org.gaeproxy.GAEProxyWidgetProvider:
+    java.lang.String proxy -> a
+    java.lang.String proxyType -> b
+    int port -> c
+    java.lang.String sitekey -> d
+    boolean isGlobalProxy -> e
+    boolean isHTTPSProxy -> f
+    boolean isGFWList -> g
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+    void onUpdate(android.content.Context,android.appwidget.AppWidgetManager,int[]) -> onUpdate
+org.gaeproxy.ImageLoader -> org.gaeproxy.w:
+    java.util.HashMap cache -> d
+    java.io.File cacheDir -> e
+    android.content.Context context -> f
+    int stub_id -> a
+    org.gaeproxy.ImageLoader$PhotosQueue photosQueue -> b
+    org.gaeproxy.ImageLoader$PhotosLoader photoLoaderThread -> c
+    android.graphics.Bitmap decodeFile(java.io.File) -> a
+    void DisplayImage$3a8592ba(int,android.widget.ImageView) -> a
+    android.graphics.Bitmap getBitmap(int) -> a
+    android.graphics.Bitmap access$0(org.gaeproxy.ImageLoader,int) -> a
+    java.util.HashMap access$1(org.gaeproxy.ImageLoader) -> a
+org.gaeproxy.ImageLoader$BitmapDisplayer -> org.gaeproxy.x:
+    android.graphics.Bitmap bitmap -> a
+    android.widget.ImageView imageView -> b
+    org.gaeproxy.ImageLoader this$0 -> c
+    void run() -> run
+org.gaeproxy.ImageLoader$PhotoToLoad -> org.gaeproxy.y:
+    int uid -> a
+    android.widget.ImageView imageView -> b
+    org.gaeproxy.ImageLoader this$0 -> c
+org.gaeproxy.ImageLoader$PhotosLoader -> org.gaeproxy.z:
+    org.gaeproxy.ImageLoader this$0 -> a
+    void run() -> run
+org.gaeproxy.ImageLoader$PhotosQueue -> org.gaeproxy.aa:
+    java.util.Stack photosToLoad -> b
+    org.gaeproxy.ImageLoader this$0 -> a
+    void Clean(android.widget.ImageView) -> a
+    java.util.Stack access$0(org.gaeproxy.ImageLoader$PhotosQueue) -> a
+org.gaeproxy.ImageLoaderFactory -> org.gaeproxy.ab:
+    org.gaeproxy.ImageLoader il -> a
+    org.gaeproxy.ImageLoader getImageLoader(android.content.Context) -> a
+org.gaeproxy.InnerSocketBuilder -> org.gaeproxy.ac:
+    java.lang.String proxyHost -> a
+    int proxyPort -> b
+    java.net.Socket innerSocket -> c
+    boolean isConnected -> d
+    java.lang.String TAG -> e
+    java.net.Socket getSocket() -> a
+org.gaeproxy.ProxySettings -> org.gaeproxy.ad:
+    java.lang.Object getRequestQueue(android.content.Context) -> b
+    void resetProxy(android.content.Context) -> a
+    void setDeclaredField(java.lang.Object,java.lang.String,java.lang.Object) -> a
+    boolean setProxy(android.content.Context,java.lang.String,int) -> a
+org.gaeproxy.ProxyedApp -> org.gaeproxy.ae:
+    boolean enabled -> a
+    int uid -> b
+    java.lang.String username -> c
+    java.lang.String procname -> d
+    java.lang.String name -> e
+    boolean proxyed -> f
+    java.lang.String getName() -> a
+    int getUid() -> b
+    java.lang.String getUsername() -> c
+    boolean isProxyed() -> d
+    void setEnabled(boolean) -> a
+    void setName(java.lang.String) -> a
+    void setProcname(java.lang.String) -> b
+    void setProxyed(boolean) -> b
+    void setUid(int) -> a
+    void setUsername(java.lang.String) -> c
+org.gaeproxy.RegexValidator -> org.gaeproxy.af:
+    java.util.regex.Pattern[] patterns -> a
+    java.lang.String[] match(java.lang.String) -> a
+    java.lang.String toString() -> toString
+org.gaeproxy.Utils -> org.gaeproxy.ag:
+    boolean initialized -> a
+    int hasRedirectSupport -> b
+    int isRoot -> c
+    java.lang.String shell -> d
+    java.lang.String root_shell -> e
+    java.lang.String iptables -> f
+    java.lang.String data_path -> g
+    android.graphics.drawable.Drawable getAppIcon(android.content.Context,int) -> a
+    java.lang.String getDataPath(android.content.Context) -> a
+    boolean getHasRedirectSupport() -> a
+    java.lang.String getIptables() -> b
+    java.lang.String getSignature(android.content.Context) -> b
+    boolean isInitialized() -> c
+    boolean isRoot() -> d
+    boolean runCommand(java.lang.String) -> a
+    boolean runRootCommand(java.lang.String) -> b
+    int runScript$3050d48f(java.lang.String,java.lang.StringBuilder,boolean) -> a
+    java.lang.String access$0() -> e
+    java.lang.String access$1() -> f
+org.gaeproxy.Utils$ScriptRunner -> org.gaeproxy.ah:
+    java.io.File file -> b
+    java.lang.String script -> c
+    java.lang.StringBuilder res -> d
+    boolean asroot -> e
+    int exitcode -> a
+    int mProcId -> f
+    java.io.FileDescriptor mTermFd -> g
+    int createSubprocess(int[],java.lang.String) -> a
+    void destroy() -> destroy
+    void run() -> run
+org.gaeproxy.WrapServer -> org.gaeproxy.ai:
+org.gaeproxy.zirco.controllers.Controller -> org.gaeproxy.zirco.a.a:
+    android.content.SharedPreferences mPreferences -> a
+    java.util.List mWebViewList -> b
+    java.util.List mDownloadList -> c
+    java.util.List mAdBlockWhiteList -> d
+    java.util.List mMobileViewUrlList -> e
+    org.gaeproxy.zirco.controllers.Controller getInstance() -> a
+    void addToDownload(org.gaeproxy.zirco.model.items.DownloadItem) -> a
+    void clearCompletedDownloads() -> b
+    java.util.List getAdBlockWhiteList(android.content.Context) -> a
+    java.util.List getDownloadList() -> c
+    java.util.List getMobileViewUrlList(android.content.Context) -> b
+    android.content.SharedPreferences getPreferences() -> d
+    java.util.List getWebViewList() -> e
+    void resetAdBlockWhiteList() -> f
+    void resetMobileViewUrlList() -> g
+    void setPreferences(android.content.SharedPreferences) -> a
+    void setWebViewList(java.util.List) -> a
+org.gaeproxy.zirco.controllers.Controller$ControllerHolder -> org.gaeproxy.zirco.a.b:
+    org.gaeproxy.zirco.controllers.Controller INSTANCE -> a
+    org.gaeproxy.zirco.controllers.Controller access$0() -> a
+org.gaeproxy.zirco.events.EventController -> org.gaeproxy.zirco.b.a:
+    java.util.List mDownloadListeners -> a
+    org.gaeproxy.zirco.events.EventController getInstance() -> a
+    void addDownloadListener(org.gaeproxy.zirco.events.IDownloadEventsListener) -> a
+    void fireDownloadEvent(java.lang.String,java.lang.Object) -> a
+    void removeDownloadListener(org.gaeproxy.zirco.events.IDownloadEventsListener) -> b
+org.gaeproxy.zirco.events.EventController$EventControllerHolder -> org.gaeproxy.zirco.b.b:
+    org.gaeproxy.zirco.events.EventController INSTANCE -> a
+    org.gaeproxy.zirco.events.EventController access$0() -> a
+org.gaeproxy.zirco.events.IDownloadEventsListener -> org.gaeproxy.zirco.b.c:
+    void onDownloadEvent(java.lang.String,java.lang.Object) -> a
+org.gaeproxy.zirco.model.DbAdapter -> org.gaeproxy.zirco.c.a:
+    boolean mAdBlockListNeedPopulate -> a
+    org.gaeproxy.zirco.model.DbAdapter$DatabaseHelper mDbHelper -> b
+    android.database.sqlite.SQLiteDatabase mDb -> c
+    android.content.Context mContext -> d
+    void clearMobileViewUrlList() -> a
+    void clearWhiteList() -> b
+    void close() -> c
+    void deleteFromMobileViewUrlList(long) -> a
+    void deleteFromWhiteList(long) -> b
+    android.database.Cursor getMobileViewUrlCursor() -> d
+    java.lang.String getMobileViewUrlItemById(long) -> c
+    android.database.Cursor getWhiteListCursor() -> e
+    java.lang.String getWhiteListItemById(long) -> d
+    void insertInMobileViewUrlList(java.lang.String) -> a
+    void insertInWhiteList(java.lang.String) -> b
+    org.gaeproxy.zirco.model.DbAdapter open() -> f
+    android.content.Context access$0(org.gaeproxy.zirco.model.DbAdapter) -> a
+org.gaeproxy.zirco.model.DbAdapter$DatabaseHelper -> org.gaeproxy.zirco.c.b:
+    org.gaeproxy.zirco.model.DbAdapter mParent -> a
+    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
+org.gaeproxy.zirco.model.UrlSuggestionItemComparator -> org.gaeproxy.zirco.c.c:
+    int compare(java.lang.Object,java.lang.Object) -> compare
+org.gaeproxy.zirco.model.adapters.BookmarksCursorAdapter -> org.gaeproxy.zirco.c.a.a:
+    int mFaviconSize -> a
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+org.gaeproxy.zirco.model.adapters.DownloadListAdapter -> org.gaeproxy.zirco.c.a.b:
+    android.content.Context mContext -> a
+    java.util.List mDownloads -> b
+    java.util.Map mTitleMap -> c
+    java.util.Map mBarMap -> d
+    java.util.Map mButtonMap -> e
+    java.util.Map getBarMap() -> a
+    java.util.Map getButtonMap() -> b
+    int getCount() -> getCount
+    java.lang.Object getItem(int) -> getItem
+    long getItemId(int) -> getItemId
+    java.util.Map getTitleMap() -> c
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+    android.content.Context access$0(org.gaeproxy.zirco.model.adapters.DownloadListAdapter) -> a
+org.gaeproxy.zirco.model.adapters.DownloadListAdapter$1 -> org.gaeproxy.zirco.c.a.c:
+    org.gaeproxy.zirco.model.adapters.DownloadListAdapter this$0 -> a
+    org.gaeproxy.zirco.model.items.DownloadItem val$item -> b
+    android.widget.ImageButton val$stopButton -> c
+    android.widget.TextView val$fileNameView -> d
+    android.widget.ProgressBar val$progressBar -> e
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.model.adapters.HistoryExpandableListAdapter -> org.gaeproxy.zirco.c.a.d:
+    android.view.LayoutInflater mInflater -> a
+    int[] mItemMap -> b
+    int mNumberOfBins -> c
+    int mIdIndex -> d
+    android.webkit.DateSorter mDateSorter -> e
+    android.content.Context mContext -> f
+    android.database.Cursor mCursor -> g
+    int mDateIndex -> h
+    int mFaviconSize -> i
+    void buildMap() -> a
+    java.lang.Object getChild(int,int) -> getChild
+    long getChildId(int,int) -> getChildId
+    int getChildrenCount(int) -> getChildrenCount
+    android.view.View getChildView(int,int,boolean,android.view.View,android.view.ViewGroup) -> getChildView
+    java.lang.Object getGroup(int) -> getGroup
+    int getGroupCount() -> getGroupCount
+    long getGroupId(int) -> getGroupId
+    android.view.View getGroupView(int,boolean,android.view.View,android.view.ViewGroup) -> getGroupView
+    long getLong(int) -> a
+    int groupPositionToBin(int) -> b
+    boolean hasStableIds() -> hasStableIds
+    boolean isChildSelectable(int,int) -> isChildSelectable
+    boolean moveCursorToChildPosition(int,int) -> a
+org.gaeproxy.zirco.model.adapters.UrlSuggestionCursorAdapter -> org.gaeproxy.zirco.c.a.e:
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+org.gaeproxy.zirco.model.adapters.WeaveBookmarksCursorAdapter -> org.gaeproxy.zirco.c.a.f:
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+org.gaeproxy.zirco.model.items.BookmarkItem -> org.gaeproxy.zirco.c.b.a:
+    java.lang.String mTitle -> a
+    java.lang.String mUrl -> b
+    java.lang.String getTitle() -> a
+    java.lang.String getUrl() -> b
+org.gaeproxy.zirco.model.items.DownloadItem -> org.gaeproxy.zirco.c.b.b:
+    android.content.Context mContext -> a
+    java.lang.String mUrl -> b
+    java.lang.String mFileName -> c
+    int mProgress -> d
+    java.lang.String mErrorMessage -> e
+    org.gaeproxy.zirco.ui.runnables.DownloadRunnable mRunnable -> f
+    boolean mIsFinished -> g
+    boolean mIsAborted -> h
+    android.app.NotificationManager mNotificationManager -> i
+    android.app.Notification mNotification -> j
+    int mNotificationId -> k
+    void abortDownload() -> a
+    java.lang.String getErrorMessage() -> b
+    java.lang.String getFileName() -> c
+    int getProgress() -> d
+    java.lang.String getUrl() -> e
+    boolean isAborted() -> f
+    boolean isFinished() -> g
+    void onFinished() -> h
+    void onProgress(int) -> a
+    void onStart() -> i
+    void setErrorMessage(java.lang.String) -> a
+    void startDownload() -> j
+org.gaeproxy.zirco.model.items.HistoryItem -> org.gaeproxy.zirco.c.b.c:
+    long mId -> a
+    java.lang.String mTitle -> b
+    java.lang.String mUrl -> c
+    android.graphics.Bitmap mFavicon -> d
+    android.graphics.Bitmap getFavicon() -> a
+    long getId() -> b
+    java.lang.String getTitle() -> c
+    java.lang.String getUrl() -> d
+org.gaeproxy.zirco.model.items.UrlSuggestionItem -> org.gaeproxy.zirco.c.b.d:
+    java.lang.String mPattern -> a
+    java.lang.String mTitle -> b
+    java.lang.String mUrl -> c
+    int mType -> d
+    float mNote -> e
+    boolean mNoteComputed -> f
+    float getNote() -> a
+    java.lang.String getTitle() -> b
+    int getType() -> c
+    java.lang.String getUrl() -> d
+org.gaeproxy.zirco.model.items.WeaveBookmarkItem -> org.gaeproxy.zirco.c.b.e:
+    java.lang.String mTitle -> a
+    java.lang.String mUrl -> b
+    boolean mIsFolder -> c
+    java.lang.String mWeaveId -> d
+    java.lang.String getTitle() -> a
+    java.lang.String getUrl() -> b
+    java.lang.String getWeaveId() -> c
+    boolean isFolder() -> d
+org.gaeproxy.zirco.providers.BookmarksProviderWrapper -> org.gaeproxy.zirco.providers.a:
+    java.lang.String[] sHistoryBookmarksProjection -> a
+    void clearHistoryAndOrBookmarks(android.content.ContentResolver,boolean,boolean) -> a
+    void clearWeaveBookmarks(android.content.ContentResolver) -> a
+    void deleteHistoryRecord(android.content.ContentResolver,long) -> a
+    void deleteStockBookmark(android.content.ContentResolver,long) -> b
+    void deleteWeaveBookmarkByWeaveId(android.content.ContentResolver,java.lang.String) -> a
+    android.database.Cursor getAllStockRecords(android.content.ContentResolver) -> b
+    org.gaeproxy.zirco.model.items.BookmarkItem getStockBookmarkById(android.content.ContentResolver,long) -> c
+    android.database.Cursor getStockBookmarks(android.content.ContentResolver,int) -> a
+    java.util.List getStockBookmarksWithLimit(android.content.ContentResolver,int) -> b
+    android.database.Cursor getStockHistory(android.content.ContentResolver) -> c
+    java.util.List getStockHistoryWithLimit(android.content.ContentResolver,int) -> c
+    android.database.Cursor getUrlSuggestions(android.content.ContentResolver,java.lang.String,boolean) -> a
+    org.gaeproxy.zirco.model.items.WeaveBookmarkItem getWeaveBookmarkById(android.content.ContentResolver,long) -> d
+    long getWeaveBookmarkIdByWeaveId(android.content.ContentResolver,java.lang.String) -> b
+    android.database.Cursor getWeaveBookmarksByParentId(android.content.ContentResolver,java.lang.String) -> c
+    void insertRawRecord(android.content.ContentResolver,java.lang.String,java.lang.String,int,long,long,int) -> a
+    void insertWeaveBookmark(android.content.ContentResolver,android.content.ContentValues) -> a
+    void setAsBookmark$7bb3ee41(android.content.ContentResolver,long,java.lang.String,java.lang.String) -> a
+    void truncateHistory(android.content.ContentResolver,java.lang.String) -> d
+    void updateFavicon(android.app.Activity,java.lang.String,java.lang.String,android.graphics.Bitmap) -> a
+    void updateHistory(android.content.ContentResolver,java.lang.String,java.lang.String,java.lang.String) -> a
+    void updateWeaveBookmark(android.content.ContentResolver,long,android.content.ContentValues) -> a
+org.gaeproxy.zirco.providers.WeaveColumns -> org.gaeproxy.zirco.providers.b:
+    android.net.Uri CONTENT_URI -> a
+    java.lang.String[] WEAVE_BOOKMARKS_PROJECTION -> b
+org.gaeproxy.zirco.providers.WeaveContentProvider -> org.gaeproxy.zirco.providers.WeaveContentProvider:
+    android.content.UriMatcher sUriMatcher -> a
+    android.database.sqlite.SQLiteDatabase mDb -> b
+    org.gaeproxy.zirco.providers.WeaveContentProvider$DatabaseHelper mDbHelper -> c
+    android.content.Context mContext -> d
+    int delete(android.net.Uri,java.lang.String,java.lang.String[]) -> delete
+    java.lang.String getType(android.net.Uri) -> getType
+    android.net.Uri insert(android.net.Uri,android.content.ContentValues) -> insert
+    boolean onCreate() -> onCreate
+    android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String) -> query
+    int update(android.net.Uri,android.content.ContentValues,java.lang.String,java.lang.String[]) -> update
+org.gaeproxy.zirco.providers.WeaveContentProvider$DatabaseHelper -> org.gaeproxy.zirco.providers.c:
+    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
+org.gaeproxy.zirco.sync.ISyncListener -> org.gaeproxy.zirco.d.a:
+    void onSyncCancelled() -> a
+    void onSyncEnd(java.lang.Throwable) -> a
+    void onSyncProgress(int,int,int) -> a
+org.gaeproxy.zirco.sync.WeaveSyncTask -> org.gaeproxy.zirco.d.b:
+    org.emergent.android.weave.client.WeaveFactory mWeaveFactory -> a
+    android.content.Context mContext -> b
+    android.content.ContentResolver mContentResolver -> c
+    org.gaeproxy.zirco.sync.ISyncListener mListener -> d
+    boolean mFullSync -> e
+    java.lang.Throwable doInBackground(org.emergent.android.weave.client.WeaveAccountInfo[]) -> a
+    void doSync(org.emergent.android.weave.client.WeaveAccountInfo,org.emergent.android.weave.client.UserWeave,java.util.List) -> a
+    void doSyncByDelta(org.emergent.android.weave.client.WeaveAccountInfo,org.emergent.android.weave.client.UserWeave,java.util.List) -> b
+    java.util.Date getLastModified(org.emergent.android.weave.client.UserWeave) -> a
+    boolean isFullSync() -> a
+    void onCancelled() -> onCancelled
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+    void onProgressUpdate(java.lang.Object[]) -> onProgressUpdate
+org.gaeproxy.zirco.ui.activities.AboutActivity -> org.gaeproxy.zirco.ui.activities.AboutActivity:
+    java.lang.String getVersion() -> a
+    void onCreate(android.os.Bundle) -> onCreate
+org.gaeproxy.zirco.ui.activities.AboutActivity$1 -> org.gaeproxy.zirco.ui.activities.a:
+    org.gaeproxy.zirco.ui.activities.AboutActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity -> org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity:
+    android.database.Cursor mCursor -> a
+    org.gaeproxy.zirco.model.DbAdapter mDbAdapter -> b
+    android.widget.SimpleCursorAdapter mCursorAdapter -> c
+    void fillData() -> a
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void onCreate(android.os.Bundle) -> onCreate
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onDestroy() -> onDestroy
+    boolean onMenuItemSelected(int,android.view.MenuItem) -> onMenuItemSelected
+    void access$0(org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity,java.lang.String) -> a
+    void access$1(org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity) -> a
+org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity$1 -> org.gaeproxy.zirco.ui.activities.b:
+    org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity this$0 -> a
+    android.widget.EditText val$input -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity$2 -> org.gaeproxy.zirco.ui.activities.c:
+    org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity$3 -> org.gaeproxy.zirco.ui.activities.d:
+    org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.BookmarksHistoryActivity -> org.gaeproxy.zirco.ui.activities.BookmarksHistoryActivity:
+    void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
+    void onCreate(android.os.Bundle) -> onCreate
+org.gaeproxy.zirco.ui.activities.BookmarksHistoryActivity$1 -> org.gaeproxy.zirco.ui.activities.e:
+    org.gaeproxy.zirco.ui.activities.BookmarksHistoryActivity this$0 -> a
+    void onTabChanged(java.lang.String) -> onTabChanged
+org.gaeproxy.zirco.ui.activities.BookmarksListActivity -> org.gaeproxy.zirco.ui.activities.BookmarksListActivity:
+    android.database.Cursor mCursor -> a
+    org.gaeproxy.zirco.model.adapters.BookmarksCursorAdapter mCursorAdapter -> b
+    android.widget.ListView mList -> c
+    void fillData() -> a
+    void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void onCreate(android.os.Bundle) -> onCreate
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onDestroy() -> onDestroy
+    boolean onMenuItemSelected(int,android.view.MenuItem) -> onMenuItemSelected
+    void access$0(org.gaeproxy.zirco.ui.activities.BookmarksListActivity,int) -> a
+org.gaeproxy.zirco.ui.activities.BookmarksListActivity$1 -> org.gaeproxy.zirco.ui.activities.f:
+    org.gaeproxy.zirco.ui.activities.BookmarksListActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.BookmarksListActivity$2 -> org.gaeproxy.zirco.ui.activities.g:
+    org.gaeproxy.zirco.ui.activities.BookmarksListActivity this$0 -> a
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+org.gaeproxy.zirco.ui.activities.ChangelogActivity -> org.gaeproxy.zirco.ui.activities.ChangelogActivity:
+    void onCreate(android.os.Bundle) -> onCreate
+org.gaeproxy.zirco.ui.activities.ChangelogActivity$1 -> org.gaeproxy.zirco.ui.activities.h:
+    org.gaeproxy.zirco.ui.activities.ChangelogActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.DownloadsListActivity -> org.gaeproxy.zirco.ui.activities.DownloadsListActivity:
+    org.gaeproxy.zirco.model.adapters.DownloadListAdapter mAdapter -> a
+    void fillData() -> a
+    void onCreate(android.os.Bundle) -> onCreate
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onDestroy() -> onDestroy
+    void onDownloadEvent(java.lang.String,java.lang.Object) -> a
+    boolean onMenuItemSelected(int,android.view.MenuItem) -> onMenuItemSelected
+org.gaeproxy.zirco.ui.activities.EditBookmarkActivity -> org.gaeproxy.zirco.ui.activities.EditBookmarkActivity:
+    android.widget.EditText mTitleEditText -> a
+    android.widget.EditText mUrlEditText -> b
+    android.widget.Button mOkButton -> c
+    android.widget.Button mCancelButton -> d
+    long mRowId -> e
+    void onCreate(android.os.Bundle) -> onCreate
+    void access$0(org.gaeproxy.zirco.ui.activities.EditBookmarkActivity) -> a
+org.gaeproxy.zirco.ui.activities.EditBookmarkActivity$1 -> org.gaeproxy.zirco.ui.activities.i:
+    org.gaeproxy.zirco.ui.activities.EditBookmarkActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.EditBookmarkActivity$2 -> org.gaeproxy.zirco.ui.activities.j:
+    org.gaeproxy.zirco.ui.activities.EditBookmarkActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.HistoryListActivity -> org.gaeproxy.zirco.ui.activities.HistoryListActivity:
+    android.widget.ExpandableListAdapter mAdapter -> a
+    android.app.ProgressDialog mProgressDialog -> b
+    void doNavigateToUrl(java.lang.String,boolean) -> a
+    void fillData() -> a
+    boolean onChildClick(android.widget.ExpandableListView,android.view.View,int,int,long) -> onChildClick
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void onCreate(android.os.Bundle) -> onCreate
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onMenuItemSelected(int,android.view.MenuItem) -> onMenuItemSelected
+    android.app.ProgressDialog access$0(org.gaeproxy.zirco.ui.activities.HistoryListActivity) -> a
+    void access$1(org.gaeproxy.zirco.ui.activities.HistoryListActivity) -> b
+    void access$2(org.gaeproxy.zirco.ui.activities.HistoryListActivity) -> c
+org.gaeproxy.zirco.ui.activities.HistoryListActivity$1 -> org.gaeproxy.zirco.ui.activities.k:
+    org.gaeproxy.zirco.ui.activities.HistoryListActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.HistoryListActivity$HistoryClearer -> org.gaeproxy.zirco.ui.activities.l:
+    android.os.Handler handler -> b
+    org.gaeproxy.zirco.ui.activities.HistoryListActivity this$0 -> a
+    void run() -> run
+    org.gaeproxy.zirco.ui.activities.HistoryListActivity access$0(org.gaeproxy.zirco.ui.activities.HistoryListActivity$HistoryClearer) -> a
+org.gaeproxy.zirco.ui.activities.HistoryListActivity$HistoryClearer$1 -> org.gaeproxy.zirco.ui.activities.m:
+    org.gaeproxy.zirco.ui.activities.HistoryListActivity$HistoryClearer this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.activities.IToolbarsContainer -> org.gaeproxy.zirco.ui.activities.n:
+    void hideToolbars() -> a
+org.gaeproxy.zirco.ui.activities.MainActivity -> org.gaeproxy.zirco.ui.activities.MainActivity:
+    org.gaeproxy.zirco.ui.activities.MainActivity INSTANCE -> a
+    android.view.LayoutInflater mInflater -> b
+    android.widget.LinearLayout mTopBar -> c
+    android.widget.LinearLayout mBottomBar -> d
+    android.widget.LinearLayout mFindBar -> e
+    android.widget.ImageButton mFindPreviousButton -> f
+    android.widget.ImageButton mFindNextButton -> g
+    android.widget.ImageButton mFindCloseButton -> h
+    android.widget.EditText mFindText -> i
+    android.widget.ImageView mPreviousTabView -> j
+    android.widget.ImageView mNextTabView -> k
+    android.widget.ImageButton mToolsButton -> l
+    android.widget.AutoCompleteTextView mUrlEditText -> m
+    android.widget.ImageButton mGoButton -> n
+    android.widget.ProgressBar mProgressBar -> o
+    android.widget.ImageView mBubbleRightView -> p
+    android.widget.ImageView mBubbleLeftView -> q
+    org.gaeproxy.zirco.ui.components.CustomWebView mCurrentWebView -> r
+    java.util.List mWebViews -> s
+    android.widget.ImageButton mPreviousButton -> t
+    android.widget.ImageButton mNextButton -> u
+    android.widget.ImageButton mNewTabButton -> v
+    android.widget.ImageButton mRemoveTabButton -> w
+    android.widget.ImageButton mQuickButton -> x
+    android.graphics.drawable.Drawable mCircularProgress -> y
+    boolean mUrlBarVisible -> z
+    boolean mToolsActionGridVisible -> A
+    boolean mFindDialogVisible -> B
+    android.text.TextWatcher mUrlTextWatcher -> C
+    org.gaeproxy.zirco.ui.runnables.HideToolbarsRunnable mHideToolbarsRunnable -> D
+    android.widget.ViewFlipper mViewFlipper -> E
+    android.view.GestureDetector mGestureDetector -> F
+    org.gaeproxy.zirco.ui.activities.MainActivity$SwitchTabsMethod mSwitchTabsMethod -> G
+    org.greendroid.QuickActionGrid mToolsActionGrid -> H
+    android.webkit.ValueCallback mUploadMessage -> I
+    void addTab(boolean,int) -> a
+    void applyPreferences() -> b
+    void closeFindDialog() -> f
+    void doDownloadStart$2ed9abc7(java.lang.String) -> e
+    void doFind() -> g
+    void hideKeyboard(boolean) -> a
+    void hideKeyboardFromFindDialog() -> h
+    void hideToolbars() -> a
+    boolean isSwitchTabsByButtonsEnabled() -> i
+    void navigateToHome() -> j
+    void navigateToUrl(java.lang.String) -> f
+    void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void onCreate(android.os.Bundle) -> onCreate
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onDestroy() -> onDestroy
+    void onDownloadEvent(java.lang.String,java.lang.Object) -> a
+    boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
+    boolean onKeyLongPress(int,android.view.KeyEvent) -> onKeyLongPress
+    boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
+    void onMailTo(java.lang.String) -> a
+    boolean onMenuItemSelected(int,android.view.MenuItem) -> onMenuItemSelected
+    void onNewIntent(android.content.Intent) -> onNewIntent
+    void onPageFinished(java.lang.String) -> b
+    void onPageStarted(java.lang.String) -> c
+    void onPause() -> onPause
+    void onResume() -> onResume
+    boolean onTouch(android.view.View,android.view.MotionEvent) -> onTouch
+    void onUrlLoading$552c4e01() -> c
+    void onVndUrl(java.lang.String) -> d
+    void openBookmarksHistoryActivity() -> k
+    void restartApplication() -> d
+    void setFindBarVisibility(boolean) -> b
+    void setToolbarsVisibility(boolean) -> c
+    void showFindDialog() -> l
+    void showNextTab(boolean) -> d
+    void showPreviousTab(boolean) -> e
+    void showToastOnTabSwitch() -> m
+    void startToolbarsHideRunnable() -> n
+    void swithToSelectAndCopyTextMode() -> e
+    void updateFavIcon() -> o
+    void updateGoButton() -> p
+    void updatePreviousNextTabViewsVisibility() -> q
+    void updateSwitchTabsMethod() -> r
+    void updateUI() -> s
+    org.gaeproxy.zirco.ui.components.CustomWebView access$0(org.gaeproxy.zirco.ui.activities.MainActivity) -> a
+    boolean access$1(org.gaeproxy.zirco.ui.activities.MainActivity) -> b
+    void access$2(org.gaeproxy.zirco.ui.activities.MainActivity,boolean) -> a
+    void access$3(org.gaeproxy.zirco.ui.activities.MainActivity,boolean) -> b
+    void access$4(org.gaeproxy.zirco.ui.activities.MainActivity) -> c
+    void access$5(org.gaeproxy.zirco.ui.activities.MainActivity) -> d
+    android.widget.AutoCompleteTextView access$6(org.gaeproxy.zirco.ui.activities.MainActivity) -> e
+    void access$7(org.gaeproxy.zirco.ui.activities.MainActivity,java.lang.String) -> a
+    void access$8(org.gaeproxy.zirco.ui.activities.MainActivity,boolean) -> c
+    void access$9(org.gaeproxy.zirco.ui.activities.MainActivity) -> f
+    void access$10$6c2040b8(org.gaeproxy.zirco.ui.activities.MainActivity) -> g
+    void access$11(org.gaeproxy.zirco.ui.activities.MainActivity) -> h
+    void access$12(org.gaeproxy.zirco.ui.activities.MainActivity) -> i
+    org.greendroid.QuickActionGrid access$13(org.gaeproxy.zirco.ui.activities.MainActivity) -> j
+    void access$14(org.gaeproxy.zirco.ui.activities.MainActivity) -> k
+    void access$15(org.gaeproxy.zirco.ui.activities.MainActivity) -> l
+    void access$16$6c2040b8(org.gaeproxy.zirco.ui.activities.MainActivity) -> m
+    void access$17(org.gaeproxy.zirco.ui.activities.MainActivity) -> n
+    void access$18(org.gaeproxy.zirco.ui.activities.MainActivity) -> o
+    void access$19(org.gaeproxy.zirco.ui.activities.MainActivity) -> p
+    void access$20(org.gaeproxy.zirco.ui.activities.MainActivity) -> q
+    void access$21(org.gaeproxy.zirco.ui.activities.MainActivity) -> r
+    void access$22$13a9aa80(org.gaeproxy.zirco.ui.activities.MainActivity,java.lang.String) -> b
+    android.widget.ViewFlipper access$23(org.gaeproxy.zirco.ui.activities.MainActivity) -> s
+    void access$24$17e8494b(org.gaeproxy.zirco.ui.activities.MainActivity,int) -> a
+    android.widget.ProgressBar access$25(org.gaeproxy.zirco.ui.activities.MainActivity) -> t
+    void access$26(org.gaeproxy.zirco.ui.activities.MainActivity) -> u
+    void access$27(org.gaeproxy.zirco.ui.activities.MainActivity,java.lang.String,java.lang.String,java.lang.String) -> a
+    void access$29(org.gaeproxy.zirco.ui.activities.MainActivity) -> v
+org.gaeproxy.zirco.ui.activities.MainActivity$1 -> org.gaeproxy.zirco.ui.activities.o:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onQuickActionClicked$7f1568fb(int) -> a
+org.gaeproxy.zirco.ui.activities.MainActivity$10 -> org.gaeproxy.zirco.ui.activities.p:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    android.database.Cursor runQuery(java.lang.CharSequence) -> runQuery
+org.gaeproxy.zirco.ui.activities.MainActivity$11 -> org.gaeproxy.zirco.ui.activities.q:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    boolean onKey(android.view.View,int,android.view.KeyEvent) -> onKey
+org.gaeproxy.zirco.ui.activities.MainActivity$12 -> org.gaeproxy.zirco.ui.activities.r:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void afterTextChanged(android.text.Editable) -> afterTextChanged
+    void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
+    void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
+org.gaeproxy.zirco.ui.activities.MainActivity$13 -> org.gaeproxy.zirco.ui.activities.s:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onFocusChange(android.view.View,boolean) -> onFocusChange
+org.gaeproxy.zirco.ui.activities.MainActivity$14 -> org.gaeproxy.zirco.ui.activities.t:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$15 -> org.gaeproxy.zirco.ui.activities.u:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$16 -> org.gaeproxy.zirco.ui.activities.v:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$17 -> org.gaeproxy.zirco.ui.activities.w:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$18 -> org.gaeproxy.zirco.ui.activities.x:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$19 -> org.gaeproxy.zirco.ui.activities.y:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$2 -> org.gaeproxy.zirco.ui.activities.z:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onDismiss() -> onDismiss
+org.gaeproxy.zirco.ui.activities.MainActivity$20 -> org.gaeproxy.zirco.ui.activities.aa:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$21 -> org.gaeproxy.zirco.ui.activities.ab:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$22 -> org.gaeproxy.zirco.ui.activities.ac:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$23 -> org.gaeproxy.zirco.ui.activities.ad:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$24 -> org.gaeproxy.zirco.ui.activities.ae:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void afterTextChanged(android.text.Editable) -> afterTextChanged
+    void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
+    void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
+org.gaeproxy.zirco.ui.activities.MainActivity$25 -> org.gaeproxy.zirco.ui.activities.af:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+org.gaeproxy.zirco.ui.activities.MainActivity$26 -> org.gaeproxy.zirco.ui.activities.ag:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onDownloadStart(java.lang.String,java.lang.String,java.lang.String,java.lang.String,long) -> onDownloadStart
+org.gaeproxy.zirco.ui.activities.MainActivity$27 -> org.gaeproxy.zirco.ui.activities.ah:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    android.app.Activity val$activity -> b
+    boolean onCreateWindow(android.webkit.WebView,boolean,boolean,android.os.Message) -> onCreateWindow
+    boolean onJsAlert(android.webkit.WebView,java.lang.String,java.lang.String,android.webkit.JsResult) -> onJsAlert
+    boolean onJsConfirm(android.webkit.WebView,java.lang.String,java.lang.String,android.webkit.JsResult) -> onJsConfirm
+    boolean onJsPrompt(android.webkit.WebView,java.lang.String,java.lang.String,java.lang.String,android.webkit.JsPromptResult) -> onJsPrompt
+    void onProgressChanged(android.webkit.WebView,int) -> onProgressChanged
+    void onReceivedIcon(android.webkit.WebView,android.graphics.Bitmap) -> onReceivedIcon
+    void onReceivedTitle(android.webkit.WebView,java.lang.String) -> onReceivedTitle
+org.gaeproxy.zirco.ui.activities.MainActivity$27$1 -> org.gaeproxy.zirco.ui.activities.ai:
+    org.gaeproxy.zirco.ui.activities.MainActivity$27 this$1 -> a
+    android.webkit.JsResult val$result -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$27$2 -> org.gaeproxy.zirco.ui.activities.aj:
+    org.gaeproxy.zirco.ui.activities.MainActivity$27 this$1 -> a
+    android.webkit.JsResult val$result -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$27$3 -> org.gaeproxy.zirco.ui.activities.ak:
+    org.gaeproxy.zirco.ui.activities.MainActivity$27 this$1 -> a
+    android.webkit.JsResult val$result -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$27$4 -> org.gaeproxy.zirco.ui.activities.al:
+    org.gaeproxy.zirco.ui.activities.MainActivity$27 this$1 -> a
+    android.view.View val$v -> b
+    android.webkit.JsPromptResult val$result -> c
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$27$5 -> org.gaeproxy.zirco.ui.activities.am:
+    org.gaeproxy.zirco.ui.activities.MainActivity$27 this$1 -> a
+    android.webkit.JsPromptResult val$result -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$27$6 -> org.gaeproxy.zirco.ui.activities.an:
+    org.gaeproxy.zirco.ui.activities.MainActivity$27 this$1 -> a
+    android.webkit.JsPromptResult val$result -> b
+    void onCancel(android.content.DialogInterface) -> onCancel
+org.gaeproxy.zirco.ui.activities.MainActivity$28 -> org.gaeproxy.zirco.ui.activities.ao:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$29 -> org.gaeproxy.zirco.ui.activities.ap:
+    android.os.Handler mHandler -> b
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void run() -> run
+    org.gaeproxy.zirco.ui.activities.MainActivity access$0(org.gaeproxy.zirco.ui.activities.MainActivity$29) -> a
+org.gaeproxy.zirco.ui.activities.MainActivity$29$1 -> org.gaeproxy.zirco.ui.activities.aq:
+    org.gaeproxy.zirco.ui.activities.MainActivity$29 this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.activities.MainActivity$3 -> org.gaeproxy.zirco.ui.activities.ar:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$4 -> org.gaeproxy.zirco.ui.activities.as:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$5 -> org.gaeproxy.zirco.ui.activities.at:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$6 -> org.gaeproxy.zirco.ui.activities.au:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$7 -> org.gaeproxy.zirco.ui.activities.av:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$8 -> org.gaeproxy.zirco.ui.activities.aw:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.MainActivity$9 -> org.gaeproxy.zirco.ui.activities.ax:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    java.lang.CharSequence convertToString(android.database.Cursor) -> convertToString
+org.gaeproxy.zirco.ui.activities.MainActivity$GestureListener -> org.gaeproxy.zirco.ui.activities.ay:
+    org.gaeproxy.zirco.ui.activities.MainActivity this$0 -> a
+    boolean onDoubleTap(android.view.MotionEvent) -> onDoubleTap
+    boolean onFling(android.view.MotionEvent,android.view.MotionEvent,float,float) -> onFling
+org.gaeproxy.zirco.ui.activities.MainActivity$SwitchTabsMethod -> org.gaeproxy.zirco.ui.activities.az:
+    org.gaeproxy.zirco.ui.activities.MainActivity$SwitchTabsMethod BUTTONS -> a
+    org.gaeproxy.zirco.ui.activities.MainActivity$SwitchTabsMethod FLING -> b
+    org.gaeproxy.zirco.ui.activities.MainActivity$SwitchTabsMethod BOTH -> c
+    org.gaeproxy.zirco.ui.activities.MainActivity$SwitchTabsMethod[] ENUM$VALUES -> d
+    org.gaeproxy.zirco.ui.activities.MainActivity$SwitchTabsMethod[] values() -> values
+    org.gaeproxy.zirco.ui.activities.MainActivity$SwitchTabsMethod valueOf(java.lang.String) -> valueOf
+org.gaeproxy.zirco.ui.activities.MobileViewListActivity -> org.gaeproxy.zirco.ui.activities.MobileViewListActivity:
+    android.database.Cursor mCursor -> a
+    org.gaeproxy.zirco.model.DbAdapter mDbAdapter -> b
+    android.widget.SimpleCursorAdapter mCursorAdapter -> c
+    void fillData() -> a
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void onCreate(android.os.Bundle) -> onCreate
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onDestroy() -> onDestroy
+    boolean onMenuItemSelected(int,android.view.MenuItem) -> onMenuItemSelected
+    void access$0(org.gaeproxy.zirco.ui.activities.MobileViewListActivity,java.lang.String) -> a
+    void access$1(org.gaeproxy.zirco.ui.activities.MobileViewListActivity) -> a
+org.gaeproxy.zirco.ui.activities.MobileViewListActivity$1 -> org.gaeproxy.zirco.ui.activities.ba:
+    org.gaeproxy.zirco.ui.activities.MobileViewListActivity this$0 -> a
+    android.widget.EditText val$input -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.MobileViewListActivity$2 -> org.gaeproxy.zirco.ui.activities.bb:
+    org.gaeproxy.zirco.ui.activities.MobileViewListActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.MobileViewListActivity$3 -> org.gaeproxy.zirco.ui.activities.bc:
+    org.gaeproxy.zirco.ui.activities.MobileViewListActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity -> org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity:
+    android.widget.LinearLayout mNavigationView -> a
+    android.widget.TextView mNavigationText -> b
+    android.widget.ImageButton mNavigationBack -> c
+    android.widget.ListView mListView -> d
+    android.widget.Button mSetupButton -> e
+    android.widget.Button mSyncButton -> f
+    android.view.View mEmptyView -> g
+    android.view.View mEmptyFolderView -> h
+    java.util.List mNavigationList -> i
+    android.app.ProgressDialog mProgressDialog -> j
+    org.gaeproxy.zirco.model.DbAdapter mDbAdapter -> k
+    android.database.Cursor mCursor -> l
+    org.gaeproxy.zirco.sync.WeaveSyncTask mSyncTask -> m
+    java.util.concurrent.atomic.AtomicReference mSyncThread -> n
+    void doNavigationBack() -> b
+    void doSync() -> c
+    void fillData() -> d
+    java.lang.String getNavigationText() -> e
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void onCreate(android.os.Bundle) -> onCreate
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onDestroy() -> onDestroy
+    boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
+    boolean onMenuItemSelected(int,android.view.MenuItem) -> onMenuItemSelected
+    void onSyncCancelled() -> a
+    void onSyncEnd(java.lang.Throwable) -> a
+    void onSyncProgress(int,int,int) -> a
+    android.app.ProgressDialog access$0(org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity) -> a
+    void access$1(org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity) -> b
+    org.gaeproxy.zirco.sync.WeaveSyncTask access$2(org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity) -> c
+    void access$3(org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity) -> d
+    java.util.List access$4(org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity) -> e
+    void access$5(org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity) -> f
+org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$1 -> org.gaeproxy.zirco.ui.activities.bd:
+    org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity this$0 -> a
+    void onCancel(android.content.DialogInterface) -> onCancel
+org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$2 -> org.gaeproxy.zirco.ui.activities.be:
+    org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$3 -> org.gaeproxy.zirco.ui.activities.bf:
+    org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity this$0 -> a
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$4 -> org.gaeproxy.zirco.ui.activities.bg:
+    org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$5 -> org.gaeproxy.zirco.ui.activities.bh:
+    org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$Clearer -> org.gaeproxy.zirco.ui.activities.bi:
+    android.os.Handler mHandler -> b
+    org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity this$0 -> a
+    void run() -> run
+    org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity access$0(org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$Clearer) -> a
+org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$Clearer$1 -> org.gaeproxy.zirco.ui.activities.bj:
+    org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity$Clearer this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.activities.preferences.BaseSpinnerCustomPreferenceActivity -> org.gaeproxy.zirco.ui.activities.preferences.BaseSpinnerCustomPreferenceActivity:
+    android.widget.Spinner mSpinner -> a
+    android.widget.EditText mCustomEditText -> b
+    int getSpinnerPromptId() -> a
+    int getSpinnerValuesArrayId() -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    void onOk() -> c
+    void onSpinnerItemSelected(int) -> a
+    void setSpinnerValueFromPreferences() -> d
+org.gaeproxy.zirco.ui.activities.preferences.BaseSpinnerCustomPreferenceActivity$1 -> org.gaeproxy.zirco.ui.activities.preferences.a:
+    org.gaeproxy.zirco.ui.activities.preferences.BaseSpinnerCustomPreferenceActivity this$0 -> a
+    void onItemSelected(android.widget.AdapterView,android.view.View,int,long) -> onItemSelected
+    void onNothingSelected(android.widget.AdapterView) -> onNothingSelected
+org.gaeproxy.zirco.ui.activities.preferences.BaseSpinnerCustomPreferenceActivity$2 -> org.gaeproxy.zirco.ui.activities.preferences.b:
+    org.gaeproxy.zirco.ui.activities.preferences.BaseSpinnerCustomPreferenceActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.BaseSpinnerCustomPreferenceActivity$3 -> org.gaeproxy.zirco.ui.activities.preferences.c:
+    org.gaeproxy.zirco.ui.activities.preferences.BaseSpinnerCustomPreferenceActivity this$0 -> a
+    void onClick(android.view.View) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.HomepagePreferenceActivity -> org.gaeproxy.zirco.ui.activities.preferences.HomepagePreferenceActivity:
+    int getSpinnerPromptId() -> a
+    int getSpinnerValuesArrayId() -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    void onOk() -> c
+    void onSpinnerItemSelected(int) -> a
+    void setSpinnerValueFromPreferences() -> d
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity -> org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity:
+    android.app.ProgressDialog mProgressDialog -> a
+    android.content.SharedPreferences$OnSharedPreferenceChangeListener mPreferenceChangeListener -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    android.app.ProgressDialog access$0(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> a
+    void access$1(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> b
+    void access$2(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> c
+    void access$3(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> d
+    void access$4(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> e
+    void access$5(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity,int) -> a
+    void access$6(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> f
+    void access$7(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity,java.lang.String) -> a
+    void access$8(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> g
+    void access$9(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> h
+    void access$10(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> i
+    void access$11(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> j
+    void access$12(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> k
+    void access$13(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> l
+    void access$14(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> m
+    void access$15(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> n
+    void access$16(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> o
+    void access$17(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> p
+    void access$18(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> q
+    void access$19(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> r
+    void access$20(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> s
+    void access$21(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> t
+    void access$22(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> u
+    void access$23(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity) -> v
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$1 -> org.gaeproxy.zirco.ui.activities.preferences.d:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$10 -> org.gaeproxy.zirco.ui.activities.preferences.e:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$11 -> org.gaeproxy.zirco.ui.activities.preferences.f:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$12 -> org.gaeproxy.zirco.ui.activities.preferences.g:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$13 -> org.gaeproxy.zirco.ui.activities.preferences.h:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$14 -> org.gaeproxy.zirco.ui.activities.preferences.i:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$15 -> org.gaeproxy.zirco.ui.activities.preferences.j:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$16 -> org.gaeproxy.zirco.ui.activities.preferences.k:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$17 -> org.gaeproxy.zirco.ui.activities.preferences.l:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$18 -> org.gaeproxy.zirco.ui.activities.preferences.m:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$19 -> org.gaeproxy.zirco.ui.activities.preferences.n:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$2 -> org.gaeproxy.zirco.ui.activities.preferences.o:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$20 -> org.gaeproxy.zirco.ui.activities.preferences.p:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$21 -> org.gaeproxy.zirco.ui.activities.preferences.q:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$22 -> org.gaeproxy.zirco.ui.activities.preferences.r:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$23 -> org.gaeproxy.zirco.ui.activities.preferences.s:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$24 -> org.gaeproxy.zirco.ui.activities.preferences.t:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$25 -> org.gaeproxy.zirco.ui.activities.preferences.u:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$26 -> org.gaeproxy.zirco.ui.activities.preferences.v:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$3 -> org.gaeproxy.zirco.ui.activities.preferences.w:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$4 -> org.gaeproxy.zirco.ui.activities.preferences.x:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$5 -> org.gaeproxy.zirco.ui.activities.preferences.y:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$6 -> org.gaeproxy.zirco.ui.activities.preferences.z:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$7 -> org.gaeproxy.zirco.ui.activities.preferences.aa:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$8 -> org.gaeproxy.zirco.ui.activities.preferences.ab:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    java.lang.String[] val$choices -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$9 -> org.gaeproxy.zirco.ui.activities.preferences.ac:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$AbstractClearer -> org.gaeproxy.zirco.ui.activities.preferences.ad:
+    android.os.Handler mHandler -> a
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> b
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity access$0(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$AbstractClearer) -> a
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$AbstractClearer$1 -> org.gaeproxy.zirco.ui.activities.preferences.ae:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$AbstractClearer this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$CacheClearer -> org.gaeproxy.zirco.ui.activities.preferences.af:
+    android.os.Handler handler -> b
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void run() -> run
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity access$0(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$CacheClearer) -> a
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$CacheClearer$1 -> org.gaeproxy.zirco.ui.activities.preferences.ag:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$CacheClearer this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$CookiesClearer -> org.gaeproxy.zirco.ui.activities.preferences.ah:
+    android.os.Handler handler -> b
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void run() -> run
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity access$0(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$CookiesClearer) -> a
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$CookiesClearer$1 -> org.gaeproxy.zirco.ui.activities.preferences.ai:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$CookiesClearer this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$FormDataClearer -> org.gaeproxy.zirco.ui.activities.preferences.aj:
+    android.os.Handler handler -> b
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void run() -> run
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity access$0(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$FormDataClearer) -> a
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$FormDataClearer$1 -> org.gaeproxy.zirco.ui.activities.preferences.ak:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$FormDataClearer this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$HistoryBookmarksClearer -> org.gaeproxy.zirco.ui.activities.preferences.al:
+    int mChoice -> d
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> c
+    void run() -> run
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$HistoryClearer -> org.gaeproxy.zirco.ui.activities.preferences.am:
+    android.os.Handler handler -> b
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity this$0 -> a
+    void run() -> run
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity access$0(org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$HistoryClearer) -> a
+org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$HistoryClearer$1 -> org.gaeproxy.zirco.ui.activities.preferences.an:
+    org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity$HistoryClearer this$1 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.activities.preferences.SearchUrlPreferenceActivity -> org.gaeproxy.zirco.ui.activities.preferences.SearchUrlPreferenceActivity:
+    int getSpinnerPromptId() -> a
+    int getSpinnerValuesArrayId() -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    void onOk() -> c
+    void onSpinnerItemSelected(int) -> a
+    void setSpinnerValueFromPreferences() -> d
+org.gaeproxy.zirco.ui.activities.preferences.UserAgentPreferenceActivity -> org.gaeproxy.zirco.ui.activities.preferences.UserAgentPreferenceActivity:
+    int getSpinnerPromptId() -> a
+    int getSpinnerValuesArrayId() -> b
+    void onOk() -> c
+    void onSpinnerItemSelected(int) -> a
+    void setSpinnerValueFromPreferences() -> d
+org.gaeproxy.zirco.ui.activities.preferences.WeavePreferencesActivity -> org.gaeproxy.zirco.ui.activities.preferences.WeavePreferencesActivity:
+    void onCreate(android.os.Bundle) -> onCreate
+    void access$0(org.gaeproxy.zirco.ui.activities.preferences.WeavePreferencesActivity) -> a
+org.gaeproxy.zirco.ui.activities.preferences.WeavePreferencesActivity$1 -> org.gaeproxy.zirco.ui.activities.preferences.ao:
+    org.gaeproxy.zirco.ui.activities.preferences.WeavePreferencesActivity this$0 -> a
+    boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
+org.gaeproxy.zirco.ui.activities.preferences.WeaveServerPreferenceActivity -> org.gaeproxy.zirco.ui.activities.preferences.WeaveServerPreferenceActivity:
+    int getSpinnerPromptId() -> a
+    int getSpinnerValuesArrayId() -> b
+    void onCreate(android.os.Bundle) -> onCreate
+    void onOk() -> c
+    void onSpinnerItemSelected(int) -> a
+    void setSpinnerValueFromPreferences() -> d
+org.gaeproxy.zirco.ui.components.CustomWebView -> org.gaeproxy.zirco.ui.components.CustomWebView:
+    android.content.Context mContext -> a
+    int mProgress -> b
+    boolean mIsLoading -> c
+    java.lang.String mLoadedUrl -> d
+    boolean mBoMethodsLoaded -> e
+    java.lang.reflect.Method mOnPauseMethod -> f
+    java.lang.reflect.Method mOnResumeMethod -> g
+    java.lang.reflect.Method mSetFindIsUp -> h
+    java.lang.reflect.Method mNotifyFindDialogDismissed -> i
+    void doNotifyFindDialogDismissed() -> a
+    void doOnPause() -> b
+    void doOnResume() -> c
+    void doSetFindIsUp$1385ff() -> d
+    int getProgress() -> getProgress
+    void initializeOptions() -> e
+    boolean isLoading() -> f
+    boolean isSameUrl(java.lang.String) -> a
+    void loadAdSweep() -> g
+    void loadUrl(java.lang.String) -> loadUrl
+    void notifyPageFinished() -> h
+    void notifyPageStarted() -> i
+    boolean onTouchEvent(android.view.MotionEvent) -> onTouchEvent
+    void resetLoadedUrl() -> j
+    void setProgress(int) -> a
+org.gaeproxy.zirco.ui.components.CustomWebViewClient -> org.gaeproxy.zirco.ui.components.a:
+    org.gaeproxy.zirco.ui.activities.MainActivity mMainActivity -> a
+    void onLoadResource(android.webkit.WebView,java.lang.String) -> onLoadResource
+    void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
+    void onPageStarted(android.webkit.WebView,java.lang.String,android.graphics.Bitmap) -> onPageStarted
+    void onReceivedSslError(android.webkit.WebView,android.webkit.SslErrorHandler,android.net.http.SslError) -> onReceivedSslError
+    boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
+org.gaeproxy.zirco.ui.runnables.DownloadRunnable -> org.gaeproxy.zirco.ui.a.a:
+    org.gaeproxy.zirco.model.items.DownloadItem mParent -> a
+    boolean mAborted -> b
+    android.os.Handler mHandler -> c
+    void abort() -> a
+    void run() -> run
+    org.gaeproxy.zirco.model.items.DownloadItem access$0(org.gaeproxy.zirco.ui.runnables.DownloadRunnable) -> a
+org.gaeproxy.zirco.ui.runnables.DownloadRunnable$1 -> org.gaeproxy.zirco.ui.a.b:
+    org.gaeproxy.zirco.ui.runnables.DownloadRunnable this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.runnables.FaviconUpdaterRunnable -> org.gaeproxy.zirco.ui.a.c:
+    android.app.Activity mActivity -> a
+    java.lang.String mUrl -> b
+    java.lang.String mOriginalUrl -> c
+    android.graphics.Bitmap mFavIcon -> d
+    void run() -> run
+org.gaeproxy.zirco.ui.runnables.HideToolbarsRunnable -> org.gaeproxy.zirco.ui.a.d:
+    org.gaeproxy.zirco.ui.activities.IToolbarsContainer mParent -> a
+    boolean mDisabled -> b
+    int mDelay -> c
+    android.os.Handler mHandler -> d
+    void run() -> run
+    void setDisabled() -> a
+    org.gaeproxy.zirco.ui.activities.IToolbarsContainer access$0(org.gaeproxy.zirco.ui.runnables.HideToolbarsRunnable) -> a
+    boolean access$1(org.gaeproxy.zirco.ui.runnables.HideToolbarsRunnable) -> b
+org.gaeproxy.zirco.ui.runnables.HideToolbarsRunnable$1 -> org.gaeproxy.zirco.ui.a.e:
+    org.gaeproxy.zirco.ui.runnables.HideToolbarsRunnable this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.runnables.HistoryUpdater -> org.gaeproxy.zirco.ui.a.f:
+    android.content.Context mContext -> a
+    java.lang.String mTitle -> b
+    java.lang.String mUrl -> c
+    java.lang.String mOriginalUrl -> d
+    void run() -> run
+org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksExporter -> org.gaeproxy.zirco.ui.a.g:
+    android.content.Context mContext -> a
+    android.app.ProgressDialog mProgressDialog -> b
+    java.lang.String mFileName -> c
+    android.database.Cursor mCursor -> d
+    java.io.File mFile -> e
+    java.lang.String mErrorMessage -> f
+    android.os.Handler mHandler -> g
+    void run() -> run
+    android.app.ProgressDialog access$0(org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksExporter) -> a
+    android.content.Context access$1(org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksExporter) -> b
+    java.lang.String access$2(org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksExporter) -> c
+    java.io.File access$3(org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksExporter) -> d
+org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksExporter$1 -> org.gaeproxy.zirco.ui.a.h:
+    org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksExporter this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksImporter -> org.gaeproxy.zirco.ui.a.i:
+    android.content.Context mContext -> a
+    java.lang.String mFileName -> b
+    android.app.ProgressDialog mProgressDialog -> c
+    java.lang.String mErrorMessage -> d
+    android.os.Handler mHandler -> e
+    java.lang.String getNodeContent(org.w3c.dom.Node) -> a
+    void run() -> run
+    android.app.ProgressDialog access$0(org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksImporter) -> a
+    java.lang.String access$1(org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksImporter) -> b
+    android.content.Context access$2(org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksImporter) -> c
+org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksImporter$1 -> org.gaeproxy.zirco.ui.a.j:
+    org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksImporter this$0 -> a
+    void handleMessage(android.os.Message) -> handleMessage
+org.gaeproxy.zirco.utils.AnimationManager -> org.gaeproxy.zirco.e.a:
+    android.view.animation.Animation mTopBarShowAnimation -> a
+    android.view.animation.Animation mTopBarHideAnimation -> b
+    android.view.animation.Animation mBottomBarShowAnimation -> c
+    android.view.animation.Animation mBottomBarHideAnimation -> d
+    android.view.animation.Animation mPreviousTabViewShowAnimation -> e
+    android.view.animation.Animation mPreviousTabViewHideAnimation -> f
+    android.view.animation.Animation mNextTabViewShowAnimation -> g
+    android.view.animation.Animation mNextTabViewHideAnimation -> h
+    android.view.animation.Animation mInFromRightAnimation -> i
+    android.view.animation.Animation mOutToLeftAnimation -> j
+    android.view.animation.Animation mInFromLeftAnimation -> k
+    android.view.animation.Animation mOutToRightAnimation -> l
+    org.gaeproxy.zirco.utils.AnimationManager getInstance() -> a
+    android.view.animation.Animation getBottomBarHideAnimation() -> b
+    android.view.animation.Animation getBottomBarShowAnimation() -> c
+    android.view.animation.Animation getInFromLeftAnimation() -> d
+    android.view.animation.Animation getInFromRightAnimation() -> e
+    android.view.animation.Animation getNextTabViewHideAnimation() -> f
+    android.view.animation.Animation getNextTabViewShowAnimation() -> g
+    android.view.animation.Animation getOutToLeftAnimation() -> h
+    android.view.animation.Animation getOutToRightAnimation() -> i
+    android.view.animation.Animation getPreviousTabViewHideAnimation() -> j
+    android.view.animation.Animation getPreviousTabViewShowAnimation() -> k
+    android.view.animation.Animation getTopBarHideAnimation() -> l
+    android.view.animation.Animation getTopBarShowAnimation() -> m
+org.gaeproxy.zirco.utils.AnimationManager$AnimationManagerHolder -> org.gaeproxy.zirco.e.b:
+    org.gaeproxy.zirco.utils.AnimationManager INSTANCE -> a
+    org.gaeproxy.zirco.utils.AnimationManager access$0() -> a
+org.gaeproxy.zirco.utils.ApplicationUtils -> org.gaeproxy.zirco.e.c:
+    java.lang.String mAdSweepString -> a
+    java.lang.String mRawStartPage -> b
+    java.lang.String mRawStartPageStyles -> c
+    java.lang.String mRawStartPageBookmarks -> d
+    java.lang.String mRawStartPageHistory -> e
+    java.lang.String mRawStartPageSearch -> f
+    int mFaviconSize -> g
+    int mImageButtonSize -> h
+    int mFaviconSizeForBookmarks -> i
+    boolean checkCardState(android.content.Context,boolean) -> a
+    void copyTextToClipboard(android.content.Context,java.lang.String,java.lang.String) -> a
+    java.lang.String getAdSweepString(android.content.Context) -> a
+    int getApplicationVersionCode(android.content.Context) -> b
+    java.lang.String getBookmarksHtml(android.content.Context) -> f
+    java.lang.String getChangelogString(android.content.Context) -> c
+    int getFaviconSize(android.app.Activity) -> a
+    int getFaviconSizeForBookmarks(android.app.Activity) -> b
+    java.lang.String getHistoryHtml(android.content.Context) -> g
+    int getImageButtonSize(android.app.Activity) -> c
+    java.lang.String getStartPage(android.content.Context) -> d
+    java.lang.String getStringFromRawResource(android.content.Context,int) -> a
+    java.lang.String getWeaveAuthToken(android.content.Context) -> e
+    void sharePage(android.app.Activity,java.lang.String,java.lang.String) -> a
+    void showErrorDialog(android.content.Context,int,int) -> a
+    void showErrorDialog$3f52113a(android.content.Context,java.lang.String) -> a
+    void showOkDialog(android.content.Context,int,java.lang.String,java.lang.String) -> a
+    void showYesNoDialog(android.content.Context,int,int,int,android.content.DialogInterface$OnClickListener) -> a
+org.gaeproxy.zirco.utils.ApplicationUtils$2 -> org.gaeproxy.zirco.e.d:
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.utils.ApplicationUtils$3 -> org.gaeproxy.zirco.e.e:
+    void onClick(android.content.DialogInterface,int) -> onClick
+org.gaeproxy.zirco.utils.Constants -> org.gaeproxy.zirco.e.f:
+    java.lang.String URL_SEARCH_GOOGLE -> a
+    java.lang.String URL_SEARCH_WIKIPEDIA -> b
+    java.lang.String USER_AGENT_DEFAULT -> c
+    java.lang.String USER_AGENT_DESKTOP -> d
+    void initializeConstantsFromResources(android.content.Context) -> a
+org.gaeproxy.zirco.utils.DateUtils -> org.gaeproxy.zirco.e.g:
+    java.util.Date convertFromDatabase(android.content.Context,java.lang.String) -> a
+    java.lang.String getNowForFileName() -> a
+org.gaeproxy.zirco.utils.IOUtils -> org.gaeproxy.zirco.e.h:
+    java.io.File getApplicationFolder() -> a
+    java.io.File getBookmarksExportFolder() -> b
+    java.util.List getExportedBookmarksFileList() -> c
+org.gaeproxy.zirco.utils.IOUtils$1 -> org.gaeproxy.zirco.e.i:
+    boolean accept(java.io.File) -> accept
+org.gaeproxy.zirco.utils.IOUtils$2 -> org.gaeproxy.zirco.e.j:
+    int compare(java.lang.Object,java.lang.Object) -> compare
+org.gaeproxy.zirco.utils.UrlUtils -> org.gaeproxy.zirco.e.k:
+    boolean checkInMobileViewUrlList(android.content.Context,java.lang.String) -> a
+    boolean isUrl(java.lang.String) -> a
+org.greendroid.QuickAction -> org.b.a:
+    android.graphics.drawable.Drawable mDrawable -> a
+    java.lang.CharSequence mTitle -> b
+org.greendroid.QuickActionGrid -> org.b.b:
+    android.widget.GridView mGridView -> a
+    android.widget.AdapterView$OnItemClickListener mInternalItemClickListener -> b
+    void onMeasureAndLayout(android.graphics.Rect,android.view.View) -> a
+    void populateQuickActions(java.util.List) -> a
+    android.widget.GridView access$0(org.greendroid.QuickActionGrid) -> a
+org.greendroid.QuickActionGrid$1 -> org.b.c:
+    org.greendroid.QuickActionGrid this$0 -> a
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+org.greendroid.QuickActionGrid$2 -> org.b.d:
+    org.greendroid.QuickActionGrid this$0 -> a
+    java.util.List val$quickActions -> b
+    int getCount() -> getCount
+    java.lang.Object getItem(int) -> getItem
+    long getItemId(int) -> getItemId
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+org.greendroid.QuickActionWidget -> org.b.e:
+    int[] mLocation -> a
+    android.graphics.Rect mRect -> b
+    int mPrivateFlags -> c
+    android.content.Context mContext -> d
+    boolean mDismissOnClick -> e
+    int mArrowOffsetY -> f
+    int mPopupY -> g
+    boolean mIsOnTop -> h
+    int mScreenHeight -> i
+    int mScreenWidth -> j
+    boolean mIsDirty -> k
+    org.greendroid.QuickActionWidget$OnQuickActionClickListener mOnQuickActionClickListener -> l
+    java.util.ArrayList mQuickActions -> m
+    void addQuickAction(org.greendroid.QuickAction) -> a
+    int getArrowOffsetY() -> a
+    android.content.Context getContext() -> b
+    boolean getDismissOnClick() -> c
+    org.greendroid.QuickActionWidget$OnQuickActionClickListener getOnQuickActionClickListener() -> d
+    int getScreenHeight() -> e
+    int getScreenWidth() -> f
+    void onMeasureAndLayout(android.graphics.Rect,android.view.View) -> a
+    void populateQuickActions(java.util.List) -> a
+    void setContentView$13462e() -> g
+    void setOnQuickActionClickListener(org.greendroid.QuickActionWidget$OnQuickActionClickListener) -> a
+    void setWidgetSpecs(int,boolean) -> a
+    void show(android.view.View) -> a
+org.greendroid.QuickActionWidget$OnQuickActionClickListener -> org.b.f:
+    void onQuickActionClicked$7f1568fb(int) -> a

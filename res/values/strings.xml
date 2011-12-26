@@ -1,115 +1,651 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="service_running">GAEProxy service is running now.</string>
-	<string name="app_name">GAEProxy</string>
-	<string name="forward_success">Proxy Service Successed.</string>
-	<string name="forward_fail">Proxy Service Failed.</string>
-	<string name="service_stopped">GAEProxy service stopped.</string>
-	<string name="auto_reconnected">Auto Reconnected</string>
-	<string name="reconnect_success">Reconnected successfully.</string>
-	<string name="already_stopped">Service has been stopped already.</string>
-	<string name="already_running">Service has been started already.</string>
-	<string name="forward_stop">Proxy Service Stopped</string>
-	<string name="service_failed">Please check your network and login information
-	</string>
-	<string name="reconnect_fail">Cannot reconnect</string>
-	<string name="ok_iknow">OK, I know</string>
-	<string name="proxy">Proxy</string>
-	<string name="port">Local Port</string>
-	<string name="sitekey">Site Key</string>
-	<string name="auto_connect">Connect at boot</string>
-	<string name="auto_reconnect">Auto reconnect</string>
-	<string name="auto_set_proxy">Global Proxy</string>
-	<string name="disconnect">Disconnect</string>
-	<string name="connect">Connect</string>
-	<string name="feedback">Feedback @ofmax</string>
-	<string name="proxy_cat">GAE Proxy Settings</string>
-	<string name="fearute_cat">Feature Settings</string>
-	<string name="service_controller">Proxy Switch</string>
-	<string name="function_cat">Service Controller</string>
-	<string name="service_summary">Enable / Disable Proxy</string>
-	<string name="proxy_summary">GAE Proxy URL</string>
-	<string name="port_summary">Listening port</string>
-	<string name="sitekey_summary">Site key for WallProxy / GoAgent</string>
-	<string name="port_alert">The port number should be greater than 1024
-	</string>
-	<string name="auto_connect_summary">Start GAE Proxy at the startup</string>
-	<string name="auto_set_proxy_summary">Set up the global proxy (needs ROOT permission and
-		IPTABLES support)</string>
-	<string name="port_empty">Port should not be empty</string>
-	<string name="proxy_empty">Proxy should not be empty</string>
-	<string name="install_cat">Package configure</string>
-	<string name="isInstalled">Install / Uninstall</string>
-	<string name="download">Downloading</string>
-	<string name="downloading">Downloading, Patient Please...</string>
-	<string name="isInstalled_summary">Install / Uninstall extra packages (need SD CARD)
-	</string>
-	<string name="install_alert">Please install dependent module first! (Scroll to
-		the bottom, and select to install)</string>
-	<string name="sdcard_alert">Please make sure you have a SD CARD!</string>
-	<string name="recovery">Recover the status</string>
-	<string name="unzip">Unzipping...</string>
-	<string name="proxyed_apps">Individual Proxy</string>
-	<string name="proxyed_apps_summary">Set individual proxy for apps (needs ROOT
-		permission and
-		IPTABLES support)</string>
-	<string name="proxyed_help">Select apps to use with GAEProxy:</string>
 
-	<string name="crash_alert">An unexpected exit detected, context has been
+    <string name="service_running">Running in the background.</string>
+    <string name="app_name">GAEProxy</string>
+    <string name="forward_success">Proxy Service Successed.</string>
+    <string name="forward_fail">Proxy Service Failed.</string>
+    <string name="service_stopped">GAEProxy service stopped.</string>
+    <string name="auto_reconnected">Auto Reconnected</string>
+    <string name="reconnect_success">Reconnected successfully.</string>
+    <string name="already_stopped">Service has been stopped already.</string>
+    <string name="already_running">Service has been started already.</string>
+    <string name="forward_stop">Proxy Service Stopped</string>
+    <string name="service_failed">Please check your network and login information
+	</string>
+    <string name="reconnect_fail">Cannot reconnect</string>
+    <string name="ok_iknow">OK, I know</string>
+    <string name="proxy">Proxy</string>
+    <string name="port">Local Port</string>
+    <string name="sitekey">Site Key</string>
+    <string name="auto_connect">Connect at boot</string>
+    <string name="auto_reconnect">Auto reconnect</string>
+    <string name="auto_set_proxy">Global Proxy</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="connect">Connect</string>
+    <string name="feedback">Feedback @ofmax</string>
+    <string name="proxy_cat">GAE Proxy Settings</string>
+    <string name="fearute_cat">Feature Settings</string>
+    <string name="service_controller">Proxy Switch</string>
+    <string name="function_cat">Service Controller</string>
+    <string name="service_summary">Enable / Disable Proxy</string>
+    <string name="proxy_summary">GAE Proxy URL</string>
+    <string name="port_summary">Listening port</string>
+    <string name="sitekey_summary">Site key for WallProxy / GoAgent</string>
+    <string name="port_alert">The port number should be greater than 1024
+	</string>
+    <string name="auto_connect_summary">Start GAE Proxy at the startup</string>
+    <string name="auto_set_proxy_summary">Set up the global proxy (needs ROOT permission and
+		IPTABLES support)
+	</string>
+    <string name="port_empty">Port should not be empty</string>
+    <string name="proxy_empty">Proxy should not be empty</string>
+    <string name="install_cat">Package configure</string>
+    <string name="isInstalled">Install / Uninstall</string>
+    <string name="download">Downloading</string>
+    <string name="downloading">Downloading, Patient Please...</string>
+    <string name="isInstalled_summary">Install / Uninstall extra packages (need SD card)
+	</string>
+    <string name="install_alert">Please install dependent module first! (Scroll to
+		the bottom, and select to install)
+	</string>
+    <string name="sdcard_alert">Please make sure you have a SD CARD!</string>
+    <string name="recovery">Recover the status</string>
+    <string name="unzip">Unzipping...</string>
+    <string name="proxyed_apps">Individual Proxy</string>
+    <string name="proxyed_apps_summary">Set individual proxy for apps (needs ROOT
+		permission and
+		IPTABLES support)
+	</string>
+    <string name="proxyed_help">Select apps to use with GAEProxy:</string>
+    <string name="crash_alert">An unexpected exit detected, context has been
 		recovered
 	</string>
-	<string name="copy_rights">About:\n\nGAEProxy is an open source project
+    <string name="copy_rights">GAEProxy is an open source project
 		published under
-		the GPLV3. \n\nIf you have any question, please visit
+		the GPLv3. \n\nIf you have any questions, please visit
 		our project page on
-		googlecode. \n\n(gaeproxy.googlecode.com)</string>
-	<string name="about">About</string>
+		googlecode. \n\n(gaeproxy.googlecode.com)
+	</string>
+    <string name="about">About</string>
+    <string name="proxy_type">Choose your proxy type</string>
 
-	<string name="proxy_type">Choose your proxy type</string>
-	<array name="proxy_type_entry">
-		<item>GAppProxy</item>
-		<item>WallProxy</item>
-		<item>GoAgent</item>
-	</array>
+    <array name="proxy_type_entry">
+        <item>GAppProxy</item>
+        <item>WallProxy</item>
+        <item>GoAgent</item>
+    </array>
 
-	<string-array name="gfw_list">
-		<item>209.0.0.0/8</item>
-		<item>72.0.0.0/8</item>
-		<item>74.0.0.0/8</item>
-		<item>68.0.0.0/8</item>
-		<item>69.0.0.0/8</item>
-		<item>66.0.0.0/8</item>
-		<item>64.0.0.0/8</item>
-		<item>199.0.0.0/8</item>
-		<item>168.0.0.0/8</item>
-		<item>67.0.0.0/8</item>
-		<item>173.0.0.0/8</item>
-		<item>202.248.0.0/16</item>
-	</string-array>
+    <string-array name="gfw_list">
+        <item>209.0.0.0/8</item>
+        <item>72.0.0.0/8</item>
+        <item>74.0.0.0/8</item>
+        <item>68.0.0.0/8</item>
+        <item>69.0.0.0/8</item>
+        <item>66.0.0.0/8</item>
+        <item>64.0.0.0/8</item>
+        <item>199.0.0.0/8</item>
+        <item>168.0.0.0/8</item>
+        <item>67.0.0.0/8</item>
+        <item>173.0.0.0/8</item>
+        <item>202.248.0.0/16</item>
+    </string-array>
+    
+    <string-array name="chn_list">
+        <item>1.0.0.0/8</item>
+        <item>14.0.0.0/8</item>
+        <item>27.0.0.0/8</item>
+        <item>36.0.0.0/8</item>
+        <item>39.0.0.0/8</item>
+        <item>42.0.0.0/8</item>
+        <item>49.0.0.0/8</item>
+        <item>58.0.0.0/7</item>
+        <item>60.0.0.0/7</item>
+        <item>101.0.0.0/8</item>
+        <item>103.0.0.0/8</item>
+        <item>106.0.0.0/8</item>
+        <item>110.0.0.0/8</item>
+        <item>111.0.0.0/8</item>
+        <item>112.0.0.0/4</item>
+        <item>139.0.0.0/8</item>
+        <item>140.0.0.0/8</item>
+        <item>144.0.0.0/8</item>
+        <item>150.0.0.0/8</item>
+        <item>171.0.0.0/8</item>
+        <item>175.0.0.0/8</item>
+        <item>180.0.0.0/8</item>
+        <item>182.0.0.0/8</item>
+        <item>183.0.0.0/8</item>
+        <item>202.0.0.0/8</item>
+        <item>203.0.0.0/8</item>
+        <item>210.0.0.0/8</item>
+        <item>211.0.0.0/8</item>
+        <item>216.0.0.0/5</item>
+    </string-array>
 
-	<string name="connecting">Connecting...</string>
-	<string name="https_alert">Please modify your proxy host to start with
-		"https://"</string>
-
-	<string name="https_proxy">Enable HTTPS proxy</string>
-	<string name="https_proxy_summary">Proxy HTTPS through GAE, not compatible with most
-		apps</string>
-
-	<!-- settings notification category -->
-	<string name="notif_cat">Notification settings</string>
-	<string name="notif_ringtone_title">Select ringtone</string>
-	<string name="notif_vibrate_title">Vibrate</string>
-	<string name="notif_vibrate_summary">Also vibrate when connection status changes
+    <string name="mirror_list">ZmNhcGpwfHBzd3N3ZXxzdG9ybWZhdHdvd3xrZWRpZ3VvfGdmd2Rhb3xiZWFyYmVhcmhqMXxjYW9nb2FnZW50fHByb3h5NjY3fGFlbHhzYW18bWF4bWFydGFpbmdvYWdlbnR8bWV0YWxqb2tlcjEwMDJ8c2hlbmRhbnB1ZmYxfHJveHNreWZxfGZsb3VzZXByb3h5fHRhb2Vyc2h1fGhxeTUxMjI4fGxpaGFuZzkxMnxmcmVlNG0yZ298cGV0ZXJtYXBsZXxnb2FnZW50LWR1cDAwMXxvaWNxZGFuaWVsfGxpYW5neXk4ODg4fGNhdGFtZWk2fHN1bm55aGFuODIwfHBpYW9oYW44NHxibGluZGNoaW5hfHB1YmxpY2dvYWdlbnQxfHl1c2h1bnlhb3pob25nZ3VvfHN0ZWZ3b28tZnVjay1nZnd8Y29tcHV0ZXJ4YW18bGFvbGlhbm5hbmFwcDF8Y2ZhbnMxOTgyfHh1ZXJvbnx6cWhzZnp8c3dhZ21vbnxmb3JqYXBhbmZvbnxpMzMwNjIwMDk4OHx5dW1pbmc1MjAxMzR8YXpyYWVsZ3p8YmVlcmdvYWdlbnR8Y29taXRjbnxnb291dGJhYWF8d2hzaG1kc2ZzdGNzaDE2M3xocS1nb2FnZW50fGJic2NjYnN8Y2x5aHkxOTczfHZpcC0xMTE1fG15bmVjcXF8bXluZWN0dHx6MTY0OTgwMzE2fGNvZGluZ3RpbWVsZXNzfGNhaWh1aTA4MDE=
+	</string>
+    <string name="connecting">Connecting...</string>
+    <string name="initializing">Initializing...</string>
+    <string name="recovering">Recovering...</string>
+    <string name="https_alert">Please modify your proxy host to start with
+		"https://"
+	</string>
+    <string name="https_proxy">Enable HTTPS proxy</string>
+    <string name="https_proxy_summary">Proxy HTTPS through GAE, not compatible with most
+		apps
 	</string>
 
-	<string name="loading">Loading app list...</string>
-	<string name="enable_market">Enable Market</string>
-	<string name="enable_market_summary">Only for users in China, help to update app from
-		Android Market (need reboot)</string>
-
-	<string name="auto_set_gfwlist">Enable GFW List</string>
-	<string name="auto_set_gfwlist_summary">Set proxy only for blocked sites (needs ROOT
+    <!-- settings notification category -->
+    <string name="notif_cat">Notification settings</string>
+    <string name="notif_ringtone_title">Select ringtone</string>
+    <string name="notif_vibrate_title">Vibrate</string>
+    <string name="notif_vibrate_summary">Also vibrate when connection status changes
+	</string>
+    <string name="loading">Loading app list...</string>
+    <string name="enable_market">Enable Market</string>
+    <string name="enable_market_summary">Only for users in China, help to update app from
+		Android Market (need reboot)
+	</string>
+    <string name="auto_set_gfwlist">Enable CHN Route</string>
+    <string name="auto_set_gfwlist_summary">Bypass all sites located in China (needs ROOT
 		permission and
-		IPTABLES support)</string>
-	<string name="toast_start">Connecting to GAE Proxy</string>
+		IPTABLES support)
+	</string>
+    <string name="toast_start">Connecting to GAE Proxy</string>
+    <string name="toast_restart">Reconnecting to GAE Proxy</string>
+    <string name="browser">Start GAE Browser</string>
+    <string name="browser_summary">Start a browser through GAE proxy, for users
+		without root permission or iptables support
+	</string>
+    <string name="default_proxy_alert">You are using the default proxy, which has a quota
+		of only 10G bandwidth every day. Please deploy your own
+		servers to get
+		more free bandwidth quota with Google App Engine.\n\nYou can find more
+		information here: https://github.com/phus/goagent
+	</string>
+    <string name="warning">Warning</string>
+
+    <!--
+         Zirco Browser for Android Copyright (C) 2010 - 2011 J. Devauchelle 
+		and contributors. This program is free software; you can redistribute it 
+		and/or modify it under the terms of the GNU General Public License version 
+		3 as published by the Free Software Foundation. This program is distributed 
+		in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even 
+		the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+		See the GNU General Public License for more details.
+    -->
+
+    <string name="ApplicationName">Zirco Browser</string>
+    <string name="ApplicationNameUrl">Zirco - %s</string>
+    <string name="ApplicationDescription">Zirco is an open-source browser for Android.
+	</string>
+    <string name="AboutActivity.Title">About</string>
+    <string name="AboutActivity.VersionText">Version:</string>
+    <string name="AboutActivity.UrlTextValue">http://code.google.com/p/zirco-browser/</string>
+    <string name="AboutActivity.LicenseText">License:</string>
+    <string name="AboutActivity.LicenseTextValue">GPL v3</string>
+    <string name="Main.MenuAddBookmark">Add bookmark</string>
+    <string name="Main.MenuShowBookmarks">Bookmarks</string>
+    <string name="Main.MenuShowHistory">History</string>
+    <string name="Main.MenuShowDownloads">Downloads</string>
+    <string name="Main.MenuPreferences">Preferences</string>
+    <string name="Main.MenuOpen">Open</string>
+    <string name="Main.MenuOpenNewTab">Open in new tab</string>
+    <string name="Main.MenuDownload">Download</string>
+    <string name="Main.DownloadStartedMsg">Download start.</string>
+    <string name="Main.DownloadFinishedMsg">Download complete.</string>
+    <string name="Main.DownloadErrorMsg">Download error: %s</string>
+    <string name="Main.ToastTabSwitchMessage">Tab %s</string>
+    <string name="Main.ToastTabSwitchFullMessage">Tab %1$s: %2$s</string>
+    <string name="Main.VndErrorTitle">Unable to open url</string>
+    <string name="Main.VndErrorMessage">You may not have an application able to open this
+		url: %s.</string>
+    <string name="BookmarksListActivity.Title">Zirco Browser - Bookmarks</string>
+    <string name="BookmarksListActivity.MenuSortMode">Sort by</string>
+    <string name="BookmarksListActivity.MenuAddBookmark">Add bookmark</string>
+    <string name="BookmarksListActivity.Empty">No bookmarks</string>
+    <string name="BookmarksListActivity.MenuOpenInTab">Open in new tab</string>
+    <string name="BookmarksListActivity.MenuEditBookmark">Edit bookmark</string>
+    <string name="BookmarksListActivity.MenuDeleteBookmark">Delete bookmark</string>
+    <string name="BookmarksListActivity.ImportBookmarks">Import bookmarks</string>
+    <string name="BookmarksListActivity.ExportBookmarks">Export bookmarks</string>
+    <string name="BookmarksListActivity.ClearBookmarks">Clear bookmarks</string>
+    <string name="BookmarksListActivity.ImportingBookmarks">Importing bookmarks...</string>
+    <string name="BookmarksListActivity.ExportingBookmarks">Exporting bookmarks...</string>
+    <string name="BookmarksListActivity.ClearingBookmarks">Clearing bookmarks...</string>
+    <string name="BookmarksListActivity.AlphaSortMode">Alphabetical</string>
+    <string name="BookmarksListActivity.RecentSortMode">Most recent</string>
+    <string name="BookmarksListActivity.ImportSource">Choose the import source</string>
+    <string name="BookmarksListActivity.AndroidImportSource">Android browser bookmarks</string>
+    <string name="BookmarksListActivity.ExportDialogTitle">Choose the export target</string>
+    <string name="EditBookmarkActivity.Title">Edit bookmark</string>
+    <string name="EditBookmarkActivity.TitleAdd">Add bookmark</string>
+    <string name="EditBookmarkActivity.TitleLabel">Name:</string>
+    <string name="EditBookmarkActivity.UrlLabel">Location:</string>
+    <string name="HistoryListActivity.Title">Zirco Browser - History</string>
+    <string name="HistoryListActivity.MenuOpenInTab">Open in new tab</string>
+    <string name="HistoryListActivity.MenuDelete">Delete</string>
+    <string name="DownloadListActivity.Title">Zirco Browser - Downloads</string>
+    <string name="DownloadListActivity.Empty">No downloads</string>
+    <string name="DownloadListActivity.Aborted">%s (Canceled)</string>
+    <string name="DownloadListActivity.Finished">%s (Finished)</string>
+    <string name="AdBlockerWhiteListActivity.Title">Zirco Browser - Ad blocker white list</string>
+    <string name="AdBlockerWhiteListActivity.Empty">White list is empty.</string>
+    <string name="AdBlockerWhiteListActivity.AddMessage">Add to white list</string>
+    <string name="AdBlockerWhiteListActivity.ClearMessage">Clear white list</string>
+    <string name="PreferencesActivity.GeneralSettingsCategoryTitle">General settings</string>
+    <string name="PreferencesActivity.HomePagePreferenceTitle">Home page</string>
+    <string name="PreferencesActivity.HomePagePreferenceSummary">Define your default home page.</string>
+    <string name="PreferencesActivity.FullScreenPreferenceTitle">Full screen</string>
+    <string name="PreferencesActivity.FullScreenPreferenceSummary">Display browser in full screen mode (need
+		application restart).
+	</string>
+    <string name="PreferencesActivity.ShowToastOnTabSwitchPreferenceTitle">Show alert on tab switch</string>
+    <string name="PreferencesActivity.ShowToastOnTabSwitchPreferenceSummary">If checked, a small alert is briefly show when
+		switching tabs.
+	</string>
+    <string name="PreferencesActivity.BrowserSettingsCategoryTitle">Browser settings</string>
+    <string name="PreferencesActivity.HistorySizePreferenceTitle">History size</string>
+    <string name="PreferencesActivity.HistorySizePreferenceSummary">History size in days.</string>
+    <string name="PreferencesActivity.EnableJavascriptPreferenceTitle">Enable JavaScript</string>
+    <string name="PreferencesActivity.EnableJavascriptPreferenceSummary">Enable or disable JavaScript.</string>
+    <string name="PreferencesActivity.LoadImagesPreferenceTitle">Load images</string>
+    <string name="PreferencesActivity.LoadImagesPreferenceSummary">Enable or disable image loading.</string>
+    <string name="PreferencesActivity.PrivacyPreferenceTitle">Privacy settings</string>
+    <string name="PreferencesActivity.PrivacyPreferenceSummary">Manage privacy settings.</string>
+    <string name="PreferencesActivity.EnableFormDataPreferenceTitle">Save forms data</string>
+    <string name="PreferencesActivity.EnableFormDataPreferenceSummary">Enable or disable form data saving.</string>
+    <string name="PreferencesActivity.EnablePasswordsPreferenceTitle">Save passwords</string>
+    <string name="PreferencesActivity.EnablePasswordsPreferenceSummary">Enable or disable password saving.</string>
+    <string name="PreferencesActivity.EnableCookiesPreferenceTitle">Allow cookies</string>
+    <string name="PreferencesActivity.EnableCookiesPreferenceSummary">Enable or disable cookies.</string>
+    <string name="PreferencesActivity.PrivacyClearHistoryTitle">Clear history</string>
+    <string name="PreferencesActivity.PrivacyClearFormDataTitle">Clear form data</string>
+    <string name="PreferencesActivity.PrivacyClearCacheTitle">Clear cache</string>
+    <string name="PreferencesActivity.PrivacyClearCookiesTitle">Clear cookies</string>
+    <string name="PreferencesActivity.BarDurationPreferenceTitle">Bars display duration</string>
+    <string name="PreferencesActivity.BarDurationPreferenceSummary">Display duration of tools bars.</string>
+    <string name="PreferencesActivity.BarDuration1sec">1 second</string>
+    <string name="PreferencesActivity.BarDuration2sec">2 seconds</string>
+    <string name="PreferencesActivity.BarDuration3sec">3 seconds</string>
+    <string name="PreferencesActivity.BarDuration4sec">4 seconds</string>
+    <string name="PreferencesActivity.BarDuration5sec">5 seconds</string>
+
+    <string-array name="BarDurationEntries">
+        <item>@string/PreferencesActivity.BarDuration1sec</item>
+        <item>@string/PreferencesActivity.BarDuration2sec</item>
+        <item>@string/PreferencesActivity.BarDuration3sec</item>
+        <item>@string/PreferencesActivity.BarDuration4sec</item>
+        <item>@string/PreferencesActivity.BarDuration5sec</item>
+    </string-array>
+    <string-array name="BarDurationValues">
+        <item>1000</item>
+        <item>2000</item>
+        <item>3000</item>
+        <item>4000</item>
+        <item>5000</item>
+    </string-array>
+
+    <string name="PreferencesActivity.BubblePositionPreferenceTitle">Bubble position</string>
+    <string name="PreferencesActivity.BubblePositionPreferenceSummary">Position of the "bubble".</string>
+    <string name="PreferencesActivity.BubbleRight">Right</string>
+    <string name="PreferencesActivity.BubbleLeft">Left</string>
+    <string name="PreferencesActivity.BubbleBoth">Both</string>
+
+    <string-array name="BubblePositionEntries">
+        <item>@string/PreferencesActivity.BubbleRight</item>
+        <item>@string/PreferencesActivity.BubbleLeft</item>
+        <item>@string/PreferencesActivity.BubbleBoth</item>
+    </string-array>
+    <string-array name="BubblePositionValues">
+        <item>right</item>
+        <item>left</item>
+        <item>both</item>
+    </string-array>
+
+    <string name="PreferencesActivity.AdBlockerSettingsCategoryTitle">Ad-blocker settings</string>
+    <string name="PreferencesActivity.EnableAdBlockerPreferenceTitle">Enable Ad-blocker</string>
+    <string name="PreferencesActivity.EnableAdBlockerPreferenceSummary">Ad-blocker will not work if JavaScript is not
+		enabled.
+	</string>
+    <string name="PreferencesActivity.AdBlockerWhiteListPreferenceTitle">White list</string>
+    <string name="PreferencesActivity.AdBlockerWhiteListPreferenceSummary">Manage Ad-blocker white list.</string>
+    <string name="Commons.Ok">Ok</string>
+    <string name="Commons.Cancel">Cancel</string>
+    <string name="Commons.PleaseWait">Please wait</string>
+    <string name="Commons.Yes">Yes</string>
+    <string name="Commons.No">No</string>
+    <string name="Commons.NoUndoMessage">This operation cannot be undone. Do you wish to
+		proceed?
+	</string>
+    <string name="Commons.Today">Today (%s)</string>
+    <string name="Commons.Yesterday">Yesterday (%s)</string>
+    <string name="Commons.DaysAgo">%1$s days ago (%2$s)</string>
+    <string name="Commons.JavaScriptDialog">JavaScript dialog</string>
+    <string name="Commons.ClearHistory">Clear history</string>
+    <string name="Commons.ClearingHistory">Clearing history...</string>
+    <string name="Commons.ClearFormData">Clear form data</string>
+    <string name="Commons.ClearingFormData">Clearing form data...</string>
+    <string name="Commons.ClearCache">Clear cache</string>
+    <string name="Commons.ClearingCache">Clearing cache...</string>
+    <string name="Commons.ClearCookies">Clear cookies</string>
+    <string name="Commons.ClearingCookies">Clearing cookies...</string>
+    <string name="Commons.SDCardErrorTitle">SD Card unavailable</string>
+    <string name="Commons.SDCardErrorNoSDMsg">No SD Card found.</string>
+    <string name="Commons.SDCardErrorSDUnavailable">SD Card is not available.</string>
+    <string name="Commons.Close">Close</string>
+    <string name="DATE_FORMAT_ISO8601">yyyy-MM-dd\'T\'HH:mm:ss.SSS</string>
+
+    <!-- 0.3.1 -->
+    <string name="PreferencesActivity.AboutCategoryTitle">About</string>
+    <string name="PreferencesActivity.AboutPreferenceTitle">About</string>
+    <string name="PreferencesActivity.AboutPreferenceSummary">Information about this application.</string>
+
+    <!-- 0.3.2 -->
+    <string name="BookmarksListActivity.MostUsedSortMode">Most used</string>
+    <string name="PreferencesActivity.DefaultZoomPreferenceTitle">Default zoom level</string>
+    <string name="PreferencesActivity.DefaultZoomPreferenceSummary">Set the default zoom level.</string>
+    <string name="PreferencesActivity.DefaultZoomClose">Close</string>
+    <string name="PreferencesActivity.DefaultZoomMedium">Medium</string>
+    <string name="PreferencesActivity.DefaultZoomFar">Far</string>
+
+    <string-array name="DefaultZoomEntries">
+        <item>@string/PreferencesActivity.DefaultZoomClose</item>
+        <item>@string/PreferencesActivity.DefaultZoomMedium</item>
+        <item>@string/PreferencesActivity.DefaultZoomFar</item>
+    </string-array>
+    <string-array name="DefaultZoomValues">
+        <item>CLOSE</item>
+        <item>MEDIUM</item>
+        <item>FAR</item>
+    </string-array>
+
+    <string name="StartPage.Welcome">Welcome!</string>
+    <string name="StartPage.Bookmarks">Most used bookmarks</string>
+    <string name="StartPage.History">Recent history</string>
+    <string name="ChangelogActivity.Title">Changelog</string>
+    <string name="PreferencesActivity.ChangelogPreferenceTitle">Changelog</string>
+    <string name="PreferencesActivity.ChangelogPreferenceSummary">Changelog of this application.</string>
+    <string name="HomepagePreferenceActivity.Title">Home page</string>
+    <string name="HomepagePreferenceActivity.Prompt">Home page</string>
+    <string name="PreferencesActivity.HomepageStart">Start page</string>
+    <string name="PreferencesActivity.HomepageBlank">Blank page</string>
+    <string name="PreferencesActivity.HomepageCustom">Custom page test</string>
+
+    <string-array name="HomepageValues">
+        <item>@string/PreferencesActivity.HomepageStart</item>
+        <item>@string/PreferencesActivity.HomepageBlank</item>
+        <item>@string/PreferencesActivity.HomepageCustom</item>
+    </string-array>
+
+    <!-- 0.3.3 -->
+    <string name="Constants.SearchUrlGoogle">http://www.google.com/m?hl=en&amp;gl=us&amp;client=ms-null&amp;source=android-browser-key&amp;q=%s
+	</string>
+    <string name="Constants.SearchUrlWikipedia">http://en.wikipedia.org/w/index.php?search=%s&amp;go=Go
+	</string>
+    <string name="PreferencesActivity.SearchUrlPreferenceTitle">Search url</string>
+    <string name="PreferencesActivity.SearchUrlPreferenceSummary">Define the search url.</string>
+    <string name="SearchUrlPreferenceActivity.Title">Search url</string>
+    <string name="SearchUrlPreferenceActivity.Prompt">Search url</string>
+    <string name="PreferencesActivity.SearchUrlGoogle">Google</string>
+    <string name="PreferencesActivity.SearchUrlWikipedia">Wikipedia</string>
+    <string name="PreferencesActivity.SearchUrlCustom">Custom</string>
+
+    <string-array name="SearchUrlValues">
+        <item>@string/PreferencesActivity.SearchUrlGoogle</item>
+        <item>@string/PreferencesActivity.SearchUrlWikipedia</item>
+        <item>@string/PreferencesActivity.SearchUrlCustom</item>
+    </string-array>
+
+    <string name="StartPage.Search">Search</string>
+    <string name="StartPage.SearchButton">Go</string>
+    <string name="PreferencesActivity.StartPageCustomizationPreferenceTitle">Start page customization</string>
+    <string name="PreferencesActivity.StartPageCustomizationPreferenceSummary">Customize the start page.</string>
+    <string name="PreferencesActivity.StartPageEnableSearchPreferenceTitle">Show search box</string>
+    <string name="PreferencesActivity.StartPageEnableSearchPreferenceSummary">If checked, a search box will be shown.</string>
+    <string name="PreferencesActivity.StartPageEnableBookmarksPreferenceTitle">Show most used bookmarks</string>
+    <string name="PreferencesActivity.StartPageEnableBookmarksPreferenceSummary">If checked, the most used bookmarks will be shown.
+	</string>
+    <string name="PreferencesActivity.StartPageEnableHistoryPreferenceTitle">Show recent history</string>
+    <string name="PreferencesActivity.StartPageEnableHistoryPreferenceSummary">If checked, the recent history will be shown.
+	</string>
+    <string name="PreferencesActivity.StartPageBookmarksLimitPreferenceTitle">Number of most used bookmarks</string>
+    <string name="PreferencesActivity.StartPageBookmarksLimitPreferenceSummary">The number of most used bookmarks to show.</string>
+    <string name="PreferencesActivity.StartPageHistoryLimitPreferenceTitle">Number of recent history items</string>
+    <string name="PreferencesActivity.StartPageHistoryLimitPreferenceSummary">The number of recent history item to show.</string>
+    <string name="PreferencesActivity.UserAgentPreferenceTitle">User agent</string>
+    <string name="PreferencesActivity.UserAgentPreferenceSummary">Define the user agent to use.</string>
+    <string name="UserAgentPreferenceActivity.Title">User agent</string>
+    <string name="UserAgentPreferenceActivity.Prompt">User agent</string>
+    <string name="PreferencesActivity.UserAgentDefault">Default</string>
+    <string name="PreferencesActivity.UserAgentDesktop">Desktop</string>
+    <string name="PreferencesActivity.UserAgentCustom">Custom</string>
+
+    <string-array name="UserAgentValues">
+        <item>@string/PreferencesActivity.UserAgentDefault</item>
+        <item>@string/PreferencesActivity.UserAgentDesktop</item>
+        <item>@string/PreferencesActivity.UserAgentCustom</item>
+    </string-array>
+
+    <string name="BookmarksListActivity.AndroidExportTarget">Android browser bookmarks</string>
+    <string name="BookmarksListActivity.SDCardExportTarget">SD card</string>
+    <string name="BookmarksListActivity.BookmarksExportSDCardDoneTitle">Export done</string>
+    <string name="BookmarksListActivity.BookmarksExportSDCardDoneMessage">Your bookmarks have been saved to %s.</string>
+    <string name="BookmarksListActivity.BookmarksExportSDCardFailedTitle">Export failed</string>
+    <string name="BookmarksListActivity.BookmarksExportSDCardFailedMessage">Error message: %s.</string>
+
+    <!-- 0.3.4 -->
+    <string name="Main.MenuCopyLinkUrl">Copy link url</string>
+    <string name="Main.MenuViewImage">View image</string>
+    <string name="Main.MenuCopyImageUrl">"Copy image url</string>
+    <string name="Main.MenuDownloadImage">Download image</string>
+    <string name="Main.MenuSendEmail">Send email</string>
+    <string name="Main.MenuCopyEmailUrl">Copy email url</string>
+    <string name="Main.MenuSelectText">Select text</string>
+    <string name="Commons.UrlCopyToastMessage">Url copied to clipboard.</string>
+    <string name="DownloadNotification.DownloadStart">Download start.</string>
+    <string name="DownloadNotification.DownloadInProgress">Download in progress.</string>
+    <string name="DownloadNotification.DownloadComplete">Download complete.</string>
+    <string name="DownloadNotification.DownloadCanceled">Download canceled.</string>
+    <string name="BookmarksHistoryActivity.MenuCopyLinkUrl">Copy url</string>
+    <string name="PreferencesActivity.ClearCacheOnExitPreferenceTitle">Clear cache on exit</string>
+    <string name="PreferencesActivity.ClearCacheOnExitPreferenceSummary">If checked, the browser cache will be cleared when
+		the application exit.
+	</string>
+    <string name="PreferencesActivity.UIPreferenceTitle">User interface settings</string>
+    <string name="PreferencesActivity.UIPreferenceSummary">Customize the user interface.</string>
+    <string name="Main.MenuExit">Exit</string>
+    <string name="PreferencesActivity.RestartDialogTitle">Restart required</string>
+    <string name="PreferencesActivity.RestartDialogMessage">This change will not take effect until the
+		application restart. Do you want to do it now?
+	</string>
+
+    <!-- 0.3.5 -->
+    <string name="PreferencesActivity.EnablePluginsTitle">Enable plug-ins</string>
+    <string name="PreferencesActivity.PluginsAlwaysOff">Always off</string>
+    <string name="PreferencesActivity.PluginsOnDemand">On demand</string>
+    <string name="PreferencesActivity.PluginsAlwaysOn">Always on</string>
+
+    <string-array name="PluginsEntries">
+        <item>@string/PreferencesActivity.PluginsAlwaysOff</item>
+        <item>@string/PreferencesActivity.PluginsOnDemand</item>
+        <item>@string/PreferencesActivity.PluginsAlwaysOn</item>
+    </string-array>
+    <string-array name="PluginsValues">
+        <item>OFF</item>
+        <item>ON_DEMAND</item>
+        <item>ON</item>
+    </string-array>
+
+    <string name="Commons.Continue">Continue</string>
+    <string name="Commons.SslWarning">Security warning</string>
+    <string name="Commons.SslWarningsHeader">There are problems with the security certificate
+		for this site.
+	</string>
+    <string name="Commons.SslUntrusted">This certificate is not from a trusted authority.
+	</string>
+    <string name="Commons.SslIDMismatch">The name of the site does not match the name on the
+		certificate.
+	</string>
+    <string name="Commons.SslExpired">This certificate has expired.</string>
+    <string name="Commons.SslNotYetValid">This certificate is not valid yet.</string>
+    <string name="Main.MenuMobileView">Mobile view</string>
+    <string name="MobileViewListActivity.Title">Zirco Browser - Websites list for mobile view
+	</string>
+    <string name="MobileViewListActivity.ListEmpty">List is empty.</string>
+    <string name="MobileViewListActivity.AddMessage">Add a website</string>
+    <string name="MobileViewListActivity.ClearMessage">Clear all sites</string>
+    <string name="PreferencesActivity.MobileViewCategoryTitle">Mobile view settings</string>
+    <string name="PreferencesActivity.MobileViewListPreferenceTitle">Manage websites</string>
+    <string name="PreferencesActivity.MobileViewListPreferenceSummary">Websites in this list will be loaded using Google
+		mobile view (GWT).
+	</string>
+    <string name="Commons.Add">Add</string>
+    <string name="Commons.Clear">Clear</string>
+    <string name="Commons.Delete">Delete</string>
+
+    <!-- 0.3.6 -->
+    <string name="PreferencesActivity.VolumeKeysBehaviourPreferenceTitle">Volume keys behaviour</string>
+    <string name="PreferencesActivity.VolumeKeysBehaviourPreferenceSummary">Choose the volume keys actions.</string>
+    <string name="PreferencesActivity.VolumeKeysActionDefault">Default behaviour</string>
+    <string name="PreferencesActivity.VolumeKeysActionZoom">Zoom</string>
+    <string name="PreferencesActivity.VolumeKeysActionSwitchTabs">Switch tabs</string>
+    <string name="PreferencesActivity.VolumeKeysActionHistory">Back/Forward</string>
+
+    <string-array name="VolumeKeysActionEntries">
+        <item>@string/PreferencesActivity.VolumeKeysActionDefault</item>
+        <item>@string/PreferencesActivity.VolumeKeysActionZoom</item>
+        <item>@string/PreferencesActivity.VolumeKeysActionSwitchTabs</item>
+        <item>@string/PreferencesActivity.VolumeKeysActionHistory</item>
+    </string-array>
+    <string-array name="VolumeKeysActionValues">
+        <item>DEFAULT</item>
+        <item>ZOOM</item>
+        <item>SWITCH_TABS</item>
+        <item>HISTORY</item>
+    </string-array>
+
+    <!-- 0.3.7 -->
+    <string name="Main.MenuSharePage">Share page</string>
+    <string name="Main.ShareChooserTitle">Share via</string>
+    <string name="Main.MenuShareLinkUrl">Share link</string>
+    <string name="Main.MenuShareImageUrl">Share image</string>
+    <string name="Main.MenuShareEmailUrl">Share email</string>
+
+    <!-- 0.3.8 -->
+    <string name="PreferencesActivity.HideTitleBarPreferenceTitle">Hide title bars</string>
+    <string name="PreferencesActivity.HideTitleBarPreferenceSummary">If checked, windows title bars will not be
+		displayed (need application restart).
+	</string>
+    <string name="PreferencesActivity.UseWideViewPortPreferenceTitle">Use wide viewport</string>
+    <string name="PreferencesActivity.UseWideViewPortPreferenceSummary">If checked, browser will use a viewport similar to
+		desktop browsers.
+	</string>
+    <string name="PreferencesActivity.LoadWithOverviewPreferenceTitle">Load pages with overview</string>
+    <string name="PreferencesActivity.LoadWithOverviewPreferenceSummary">If checked, pages will load zoomed out to show an
+		overview of the page.
+	</string>
+    <string name="PreferencesActivity.SwitchTabsMethodPreferenceTitle">Switch tabs method</string>
+    <string name="PreferencesActivity.SwitchTabsMethodPreferenceSummary">Define how you can switch between open tabs.
+	</string>
+    <string name="PreferencesActivity.SwitchTabButtons">Buttons</string>
+    <string name="PreferencesActivity.SwitchTabFling">Fling</string>
+    <string name="PreferencesActivity.SwitchTabBoth">Both</string>
+
+    <string-array name="SwitchTabsMethodEntries">
+        <item>@string/PreferencesActivity.SwitchTabButtons</item>
+        <item>@string/PreferencesActivity.SwitchTabFling</item>
+        <item>@string/PreferencesActivity.SwitchTabBoth</item>
+    </string-array>
+    <string-array name="SwitchTabsMethodValues">
+        <item>buttons</item>
+        <item>fling</item>
+        <item>both</item>
+    </string-array>
+
+    <!-- 0.3.9 -->
+    <string name="HistoryListActivity.Today">Today</string>
+    <string name="HistoryListActivity.Yesterday">Yesterday</string>
+    <string name="HistoryListActivity.LastSevenDays">Last 7 days</string>
+    <string name="HistoryListActivity.LastMonth">Last month</string>
+    <string name="HistoryListActivity.Older">Older</string>
+    <string name="QuickAction.Home">Home page</string>
+    <string name="QuickAction.Share">Share</string>
+    <string name="QuickAction.SelectText">Select text</string>
+    <string name="QuickAction.MobileView">Mobile view</string>
+    <string name="AboutActivity.OtherLicenseText">This application include code from the GreenDroid
+		project (https://github.com/cyrilmottier/GreenDroid/), licensed under
+		the Apache license, version 2.
+	</string>
+
+    <!-- 0.4.0 -->
+    <string name="PreferencesActivity.WeavePreferenceTitle">Firefox bookmarks synchronization</string>
+    <string name="PreferencesActivity.WeavePreferenceSummary">Manage the settings of the bookmarks synchronization with Firefox Sync.</string>
+    <string name="PreferencesActivity.UseWeavePreferenceTitle">Use Firefox Sync</string>
+    <string name="PreferencesActivity.UseWeavePreferenceSummary">If checked, you can retrieve your bookmarks from Firefox Sync.</string>
+    <string name="PreferencesActivity.WeaveServerPreferenceTitle">Server</string>
+    <string name="PreferencesActivity.WeaveServerPreferenceSummary">Set the Firefox Sync server.</string>
+    <string name="PreferencesActivity.WeaveUsernameTitle">User name</string>
+    <string name="PreferencesActivity.WeaveUsernameSummary">Enter your Firefox Sync user name.</string>
+    <string name="PreferencesActivity.WeavePasswordTitle">Password</string>
+    <string name="PreferencesActivity.WeavePasswordSummary">Enter your Firefox Sync password.</string>
+    <string name="PreferencesActivity.WeaveKeyTitle">Key</string>
+    <string name="PreferencesActivity.WeaveKeySummary">Enter your Firefox Sync key.</string>
+    <string name="WeaveBookmarksListActivity.Title">Firefox bookmarks</string>
+    <string name="WeaveBookmarksListActivity.MenuSync">Synchronize</string>
+    <string name="WeaveBookmarksListActivity.MenuClear">Clear</string>
+    <string name="WeaveBookmarksListActivity.WeaveRootFolder">Places</string>
+    <string name="WeaveBookmarksListActivity.EmptyText">Firefox bookmarks are not synchronized. Setup your account informations and do a synchronization.</string>
+    <string name="WeaveBookmarksListActivity.EmptyFolderText">No bookmarks in this folder.</string>
+    <string name="WeaveBookmarksListActivity.SetupButton">Setup</string>
+    <string name="WeaveBookmarksListActivity.SyncButton">Synchronize</string>
+    <string name="WeaveSync.SyncTitle">Synchronization</string>
+    <string name="WeaveSync.Connecting">Connecting to server...</string>
+    <string name="WeaveSync.GettingData">Getting data...</string>
+    <string name="WeaveSync.ReadingData">Reading data: %1$s / %2$s</string>
+    <string name="WeaveSync.WrittingData">Writting data...</string>
+    <string name="Errors.WeaveSyncFailedTitle">Synchronization failed.</string>
+    <string name="Errors.WeaveSyncFailedMessage">Synchronization failed: %s</string>
+    <string name="Errors.WeaveAuthFailedMessage">Invalid authentication token. Check your settings.</string>
+    <string name="WeaveServerPreferenceActivity.Prompt">Server</string>
+    <string name="WeaveServerPreferenceActivity.Title">Server</string>
+    <string name="WeaveServerPreferenceActivity.DefaultServer">Firefox Sync server</string>
+    <string name="WeaveServerPreferenceActivity.CustomServer">Custom server</string>
+
+    <string-array name="WeaveServerValues">
+        <item>@string/WeaveServerPreferenceActivity.DefaultServer</item>
+        <item>@string/WeaveServerPreferenceActivity.CustomServer</item>
+    </string-array>
+
+    <string name="Main.FileChooserPrompt">Choose file for upload</string>
+    <string name="Commons.HistoryBookmarksExportSDCardConfirmation">Export history and bookmarks</string>
+    <string name="Commons.HistoryBookmarksExportSDCardDoneTitle">Export done</string>
+    <string name="Commons.HistoryBookmarksExportSDCardDoneMessage">Your history and bookmarks have been saved to %s.</string>
+    <string name="Commons.HistoryBookmarksExportSDCardFailedTitle">Export failed</string>
+    <string name="Commons.HistoryBookmarksFailedMessage">Error message: %s.</string>
+    <string name="Commons.HistoryBookmarksImportSDCardFailedTitle">Import failed</string>
+    <string name="Commons.OperationCanBeLongMessage">This operation can take some times. Do you wish to proceed?</string>
+    <string name="PreferencesActivity.ToolsCategoryTitle">Tools</string>
+    <string name="PreferencesActivity.ToolsHistoryBookmarksPreferenceTitle">Manage bookmarks and history</string>
+    <string name="PreferencesActivity.ToolsHistoryBookmarksPreferenceSummary">Import, export, clear history and bookmarks.</string>
+    <string name="PreferencesActivity.ExportHistoryBookmarksPreferenceTitle">Export bookmarks and history</string>
+    <string name="PreferencesActivity.ExportHistoryBookmarksPreferenceSummary">Export bookmarks and history to the SD card.</string>
+    <string name="PreferencesActivity.ImportHistoryBookmarksPreferenceTitle">Import bookmarks and history</string>
+    <string name="PreferencesActivity.ImportHistoryBookmarksPreferenceSummary">Import bookmarks and history from the SD card.</string>
+    <string name="PreferencesActivity.PrivacyClearHistoryBookmarksTitle">Clear history and/or bookmarks</string>
+    <string name="PreferencesActivity.SummaryCannotBeUndone">Use with caution, this operation cannot be undone.</string>
+    <string name="Commons.ClearingHistoryBookmarks">Clearing history and/or bookmarks...</string>
+    <string name="Commons.ClearHistoryBookmarks">Clear history and/or bookmarks</string>
+    <string name="Commons.Bookmarks">Bookmarks</string>
+    <string name="Commons.History">History</string>
+    <string name="Commons.All">All</string>
+    <string name="Commons.ExportingHistoryBookmarks">Exporting history and bookmarks...</string>
+    <string name="Commons.ImportingHistoryBookmarks">Importing history and bookmarks...</string>
+    <string name="Commons.ImportHistoryBookmarksSource">Choose the import source</string>
+    <string name="Commons.ClearingBookmarks">Clearing bookmarks...</string>
+    <string name="DownloadListActivity.RemoveCompletedDownloads">Remove completed downloads</string>
+    <string name="QuickAction.Find">Find on page</string>
+    <string name="SearchDialog.Hint">Find on page</string>
+
 </resources>
