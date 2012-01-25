@@ -97,7 +97,8 @@
             android:ringtoneType="notification"
             android:showDefault="true"
             android:showSilent="true"
-            android:title="@string/notif_ringtone_title" />
+            android:title="@string/notif_ringtone_title"
+            android:summary="@string/notif_ringtone_summary" />
 
         <CheckBoxPreference
             android:defaultValue="true"

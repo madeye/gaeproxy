@@ -448,6 +448,42 @@ com.flurry.android.z -> com.flurry.android.ap:
     android.text.SpannedString b -> b
     android.text.SpannedString a(com.flurry.android.z) -> a
     android.text.SpannedString b(com.flurry.android.z) -> b
+com.github.droidfu.http.BetterHttp -> com.a.a.a.a:
+    int maxConnections -> a
+    int socketTimeout -> b
+    java.lang.String httpUserAgent -> c
+    java.util.HashMap defaultHeaders -> d
+    org.apache.http.impl.client.AbstractHttpClient httpClient -> e
+    void setupHttpClient() -> a
+    com.github.droidfu.http.BetterHttpRequest get(java.lang.String,java.lang.String) -> a
+    void setSocketTimeout(int) -> a
+    int getSocketTimeout() -> b
+com.github.droidfu.http.BetterHttpRequest -> com.a.a.a.b:
+    com.github.droidfu.http.BetterHttpResponse send() -> a
+com.github.droidfu.http.BetterHttpRequestBase -> com.a.a.a.c:
+    java.util.List expectedStatusCodes -> a
+    org.apache.http.impl.client.AbstractHttpClient httpClient -> b
+    org.apache.http.client.methods.HttpUriRequest request -> c
+    int maxRetries -> d
+    int oldTimeout -> e
+    int executionCount -> f
+    com.github.droidfu.http.BetterHttpResponse send() -> a
+    boolean retryRequest(com.github.droidfu.http.BetterHttpRequestRetryHandler,java.io.IOException,org.apache.http.protocol.HttpContext) -> a
+    java.lang.Object handleResponse(org.apache.http.HttpResponse) -> handleResponse
+com.github.droidfu.http.BetterHttpRequestRetryHandler -> com.a.a.a.d:
+    java.util.HashSet exceptionWhitelist -> a
+    java.util.HashSet exceptionBlacklist -> b
+    int maxRetries -> c
+    int timesRetried -> d
+    boolean retryRequest(java.io.IOException,int,org.apache.http.protocol.HttpContext) -> retryRequest
+    int getTimesRetried() -> a
+com.github.droidfu.http.BetterHttpResponse -> com.a.a.a.e:
+    java.io.InputStream getResponseBody() -> a
+com.github.droidfu.http.BetterHttpResponseImpl -> com.a.a.a.f:
+    org.apache.http.HttpResponse response -> a
+    org.apache.http.HttpEntity entity -> b
+    java.io.InputStream getResponseBody() -> a
+com.github.droidfu.http.HttpGet -> com.a.a.a.g:
 com.google.ads.Ad -> com.google.ads.a:
 com.google.ads.AdActivity -> com.google.ads.AdActivity:
     java.lang.Object a -> a
@@ -1563,19 +1599,19 @@ org.gaeproxy.DNSServer -> org.gaeproxy.i:
     java.util.Hashtable orgCache -> u
     java.lang.String target -> v
     java.lang.String appHost -> w
-    java.lang.String dnsRelay -> x
     void addToCache(java.lang.String,byte[]) -> a
     void close() -> a
     byte[] createDNSResponse(byte[],byte[]) -> a
     byte[] fetchAnswer(byte[]) -> a
     byte[] fetchAnswerHTTP(byte[]) -> b
     java.lang.String getRequestDomain(byte[]) -> c
+    int getServPort() -> b
     void loadOrgCache(java.io.InputStream) -> a
     java.lang.String parseDomain(byte[]) -> d
     byte[] parseIPString(java.lang.String) -> b
     java.lang.String resolveDomainName(java.lang.String) -> c
     void run() -> run
-    void saveCache() -> b
+    void saveCache() -> c
     void sendDns(byte[],java.net.DatagramPacket,java.net.DatagramSocket) -> b
     void setBasePath(java.lang.String) -> a
     boolean access$0(org.gaeproxy.DNSServer) -> a
@@ -1696,9 +1732,6 @@ org.gaeproxy.GAEProxy$DownloadFileRunnable -> org.gaeproxy.t:
     void publishProgress(java.lang.String) -> a
     void run() -> run
     void unzip(java.lang.String,java.lang.String) -> a
-org.gaeproxy.GAEProxyContext -> org.gaeproxy.GAEProxyContext:
-    android.content.Context context -> a
-    void onCreate() -> onCreate
 org.gaeproxy.GAEProxyReceiver -> org.gaeproxy.GAEProxyReceiver:
     java.lang.String proxy -> a
     java.lang.String proxyType -> b
@@ -1726,24 +1759,25 @@ org.gaeproxy.GAEProxyService -> org.gaeproxy.GAEProxyService:
     java.lang.String sitekey -> o
     java.lang.String proxyType -> p
     org.gaeproxy.DNSServer dnsServer -> q
-    android.content.SharedPreferences settings -> r
-    boolean hasRedirectSupport -> s
-    boolean isGlobalProxy -> t
-    boolean isHTTPSProxy -> u
-    boolean isDNSBlocked -> v
-    boolean isGFWList -> w
+    int dnsPort -> r
+    android.content.SharedPreferences settings -> s
+    boolean hasRedirectSupport -> t
+    boolean isGlobalProxy -> u
+    boolean isHTTPSProxy -> v
+    boolean isDNSBlocked -> w
+    boolean isGFWList -> x
     com.google.android.apps.analytics.GoogleAnalyticsTracker tracker -> b
-    org.gaeproxy.ProxyedApp[] apps -> x
-    java.lang.Class[] mStartForegroundSignature -> y
-    java.lang.Class[] mStopForegroundSignature -> z
-    java.lang.Class[] mSetForegroundSignature -> A
-    java.lang.reflect.Method mSetForeground -> B
-    java.lang.reflect.Method mStartForeground -> C
-    java.lang.reflect.Method mStopForeground -> D
-    java.lang.Object[] mSetForegroundArgs -> E
-    java.lang.Object[] mStartForegroundArgs -> F
-    java.lang.Object[] mStopForegroundArgs -> G
-    java.lang.ref.WeakReference sRunningInstance -> H
+    org.gaeproxy.ProxyedApp[] apps -> y
+    java.lang.Class[] mStartForegroundSignature -> z
+    java.lang.Class[] mStopForegroundSignature -> A
+    java.lang.Class[] mSetForegroundSignature -> B
+    java.lang.reflect.Method mSetForeground -> C
+    java.lang.reflect.Method mStartForeground -> D
+    java.lang.reflect.Method mStopForeground -> E
+    java.lang.Object[] mSetForegroundArgs -> F
+    java.lang.Object[] mStartForegroundArgs -> G
+    java.lang.Object[] mStopForegroundArgs -> H
+    java.lang.ref.WeakReference sRunningInstance -> I
     android.os.Handler handler -> c
     boolean isServiceStarted() -> a
     boolean connect() -> c
@@ -1862,8 +1896,9 @@ org.gaeproxy.Utils -> org.gaeproxy.ag:
     boolean isInitialized() -> c
     boolean isRoot() -> d
     boolean runCommand(java.lang.String) -> a
+    boolean runRootCommand(java.lang.String,int) -> a
     boolean runRootCommand(java.lang.String) -> b
-    int runScript$3050d48f(java.lang.String,java.lang.StringBuilder,boolean) -> a
+    int runScript(java.lang.String,java.lang.StringBuilder,long,boolean) -> a
     java.lang.String access$0() -> e
     java.lang.String access$1() -> f
 org.gaeproxy.Utils$ScriptRunner -> org.gaeproxy.ah:

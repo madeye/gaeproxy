@@ -15,10 +15,10 @@
 	</string>
     <string name="reconnect_fail">Cannot reconnect</string>
     <string name="ok_iknow">OK, I know</string>
-    <string name="proxy">Proxy</string>
+    <string name="proxy">Address</string>
     <string name="port">Local Port</string>
     <string name="sitekey">Site Key</string>
-    <string name="auto_connect">Connect at boot</string>
+    <string name="auto_connect">Auto Connect</string>
     <string name="auto_reconnect">Auto reconnect</string>
     <string name="auto_set_proxy">Global Proxy</string>
     <string name="disconnect">Disconnect</string>
@@ -68,7 +68,7 @@
 		googlecode. \n\n(gaeproxy.googlecode.com)
 	</string>
     <string name="about">About</string>
-    <string name="proxy_type">Choose your proxy type</string>
+    <string name="proxy_type">Proxy Type</string>
 
     <array name="proxy_type_entry">
         <item>GAppProxy</item>
@@ -92,25 +92,10 @@
     </string-array>
     
     <string-array name="chn_list">
-        <item>1.0.0.0/8</item>
-        <item>14.0.0.0/8</item>
-        <item>27.0.0.0/8</item>
-        <item>36.0.0.0/8</item>
-        <item>39.0.0.0/8</item>
-        <item>42.0.0.0/8</item>
-        <item>49.0.0.0/8</item>
-        <item>58.0.0.0/7</item>
-        <item>60.0.0.0/7</item>
-        <item>101.0.0.0/8</item>
-        <item>103.0.0.0/8</item>
-        <item>106.0.0.0/8</item>
-        <item>110.0.0.0/8</item>
-        <item>111.0.0.0/8</item>
-        <item>112.0.0.0/4</item>
-        <item>139.0.0.0/8</item>
-        <item>140.0.0.0/8</item>
-        <item>144.0.0.0/8</item>
-        <item>150.0.0.0/8</item>
+        <item>1.0.0.0/2</item>
+        <item>66.114.0.0/16</item> <!-- tricks for sina weibo -->
+        <item>96.0.0.0/3</item>
+        <item>128.0.0.0/4</item>
         <item>171.0.0.0/8</item>
         <item>175.0.0.0/8</item>
         <item>180.0.0.0/8</item>
@@ -137,8 +122,9 @@
 	</string>
 
     <!-- settings notification category -->
-    <string name="notif_cat">Notification settings</string>
-    <string name="notif_ringtone_title">Select ringtone</string>
+    <string name="notif_cat">Notification Settings</string>
+    <string name="notif_ringtone_title">Ringtone</string>
+    <string name="notif_ringtone_summary">Select the notification\'s ringtone</string>
     <string name="notif_vibrate_title">Vibrate</string>
     <string name="notif_vibrate_summary">Also vibrate when connection status changes
 	</string>
@@ -154,7 +140,7 @@
 	</string>
     <string name="toast_start">Connecting to GAE Proxy</string>
     <string name="toast_restart">Reconnecting to GAE Proxy</string>
-    <string name="browser">Start GAE Browser</string>
+    <string name="browser">GAE Browser</string>
     <string name="browser_summary">Start a browser through GAE proxy, for users
 		without root permission or iptables support
 	</string>

@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.HttpURLConnection;
@@ -26,6 +27,17 @@ import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Random;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import com.github.droidfu.http.BetterHttp;
+import com.github.droidfu.http.BetterHttpRequest;
+import com.github.droidfu.http.BetterHttpResponse;
 
 import android.util.Log;
 
@@ -144,7 +156,7 @@ public class DNSServer implements WrapServer {
 	protected String dnsHost;
 	protected int dnsPort;
 	final protected int DNS_PKG_HEADER_LEN = 12;
-	final private int[] DNS_HEADERS = { 0, 0, 0x81, 0x80, 0, 0, 0, 0, 0, 0, 0,
+	final private int[] DNS_HEADERS = { 0, 0, 0x81, 0x80, 0, 0, 0, 0, 0x80, 0, 0,
 			0 };
 	final private int[] DNS_PAYLOAD = { 0xc0, 0x0c, 0x00, 0x01, 0x00, 0x01,
 			0x00, 0x00, 0x00, 0x3c, 0x00, 0x04 };
@@ -167,32 +179,40 @@ public class DNSServer implements WrapServer {
 	private String target = "8.8.8.8:53";
 
 	private String appHost = "203.208.46.1";
-	private String dnsRelay = "174.129.17.131";
 
 	private static final String CANT_RESOLVE = "Error";
 
-	public DNSServer(String name, String dnsHost, int dnsPort,
-			String appHost, boolean httpMode) {
+	public DNSServer(String name, String dnsHost, int dnsPort, String appHost,
+			boolean httpMode) {
+
 		this.name = name;
 		this.dnsHost = dnsHost;
 		this.dnsPort = dnsPort;
-		this.appHost = appHost;
 		this.httpMode = httpMode;
 
+		BetterHttp.setupHttpClient();
+		BetterHttp.setSocketTimeout(10 * 1000);
+		
 		domains = new HashSet<String>();
 
 		initOrgCache();
+		
+//		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+//			@Override
+//			public boolean verify(String hostname, SSLSession session) {
+//				return true;
+//			}
+//		});
 
 		// upper dns server not reachable, so use http mode
-		if (httpMode) {
-			try {
-				InetAddress addr = InetAddress
-						.getByName("www.hosts.dotcloud.com");
-				dnsRelay = addr.getHostAddress();
-			} catch (Exception ignore) {
-				dnsRelay = "174.129.17.131";
-			}
-		}
+//		if (httpMode) {
+//			try {
+//				InetAddress addr = InetAddress.getByName("www.google.com");
+//				this.appHost = addr.getHostAddress();
+//			} catch (Exception ignore) {
+//				this.appHost = appHost;
+//			}
+//		}
 
 		if (dnsHost != null && !dnsHost.equals(""))
 			target = dnsHost + ":" + dnsPort;
@@ -259,9 +279,10 @@ public class DNSServer implements WrapServer {
 			start++;
 		}
 
-		System.arraycopy(quest, 0, response, 0, 2); /* 0:2 */
-		System.arraycopy(quest, 4, response, 4, 2); /* 4:6 -> 4:6 */
-		System.arraycopy(quest, 4, response, 6, 2); /* 4:6 -> 7:9 */
+		System.arraycopy(quest, 0, response, 0, 2); /* 0:2 | NAME */ 
+		System.arraycopy(quest, 4, response, 4, 2); /* 4:6 -> 4:6 | TYPE */
+		System.arraycopy(quest, 4, response, 6, 2); /* 4:6 -> 7:9 | CLASS */
+		/* 10:14 | TTL */
 		System.arraycopy(quest, DNS_PKG_HEADER_LEN, response, start,
 				quest.length - DNS_PKG_HEADER_LEN); /* 12:~ -> 15:~ */
 		start += quest.length - DNS_PKG_HEADER_LEN;
@@ -339,7 +360,7 @@ public class DNSServer implements WrapServer {
 
 		DomainValidator dv = DomainValidator.getInstance();
 		/* Not support reverse domain name query */
-		if (domain.endsWith("in-addr.arpa") || !dv.isValid(domain)) {
+		if (domain.endsWith("ip6.arpa") || domain.endsWith("in-addr.arpa") || !dv.isValid(domain)) {
 			return createDNSResponse(quest, parseIPString("127.0.0.1"));
 		}
 
@@ -575,33 +596,49 @@ public class DNSServer implements WrapServer {
 				.encodeBytesToBytes(domain.getBytes())));
 
 		String url = "http://gaednsproxy.appspot.com/?d=" + encode_host;
+		String host = "gaednsproxy.appspot.com";
+		url = url.replace(host, appHost);
 
-		if (dnsError > DNS_ERROR_LIMIT / 2) {
-			url = "http://www.hosts.dotcloud.com/lookup.php?host="
-					+ encode_host;
-		} else {
-			Random random = new Random(System.currentTimeMillis());
-			int n = random.nextInt(2);
-			if (n == 1)
-				url = "http://gaednsproxy2.appspot.com/?d=" + encode_host;
+		Random random = new Random(System.currentTimeMillis());
+		int n = random.nextInt(2);
+		if (n == 1) {
+			url = "http://gaednsproxy2.appspot.com/?d=" + encode_host;
+			host = "gaednsproxy2.appspot.com";
+			url = url.replace(host, appHost);
 		}
 
 		Log.d(TAG, "DNS Relay URL: " + url);
 
+//		try {
+//			// RFC 2616: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+//			URL aURL = new URL(url);
+//			HttpURLConnection conn = (HttpURLConnection) aURL
+//					.openConnection();
+//			conn.setRequestProperty("Host", host);
+//			conn.setConnectTimeout(5 * 1000);
+//			conn.setReadTimeout(10 * 1000);
+//			conn.connect();
+//			is = conn.getInputStream();
+//			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+//			ip = br.readLine();
+//		} catch (SocketException e) {
+//			Log.e(TAG, "Failed to request URI: " + url, e);
+//		} catch (IOException e) {
+//			Log.e(TAG, "Failed to request URI: " + url, e);
+//		} catch (NullPointerException e) {
+//			Log.e(TAG, "Failed to request URI: " + url, e);
+//		}
+		
+		BetterHttpRequest conn = BetterHttp.get(url, host);
+		
 		try {
-			URL aURL = new URL(url);
-			HttpURLConnection conn = (HttpURLConnection) aURL.openConnection();
-			conn.setConnectTimeout(30000);
-			conn.setReadTimeout(30000);
-			conn.connect();
-			is = conn.getInputStream();
+			BetterHttpResponse resp = conn.send();
+			is = resp.getResponseBody();
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			ip = br.readLine();
-		} catch (SocketException e) {
+		} catch (ConnectException e) {
 			Log.e(TAG, "Failed to request URI: " + url, e);
 		} catch (IOException e) {
-			Log.e(TAG, "Failed to request URI: " + url, e);
-		} catch (NullPointerException e) {
 			Log.e(TAG, "Failed to request URI: " + url, e);
 		}
 
@@ -653,12 +690,6 @@ public class DNSServer implements WrapServer {
 					addToCache(questDomain, answer);
 					sendDns(answer, dnsq, srvSocket);
 					Log.d(TAG, "Custom DNS resolver: " + questDomain);
-				} else if (questDomain.toLowerCase().contains("dotcloud.com")) { // 如果为dotcloud域名解析
-					byte[] ips = parseIPString(dnsRelay);
-					byte[] answer = createDNSResponse(udpreq, ips);
-					addToCache(questDomain, answer);
-					sendDns(answer, dnsq, srvSocket);
-					Log.d(TAG, "Custom DNS resolver" + orgCache);
 				} else {
 
 					synchronized (this) {
@@ -668,8 +699,12 @@ public class DNSServer implements WrapServer {
 							domains.add(questDomain);
 					}
 
-					while (threadNum >= MAX_THREAD_NUM) {
-						Thread.sleep(5000);
+//					while (threadNum >= MAX_THREAD_NUM) {
+//						Thread.sleep(5000);
+//					}
+					
+					if (threadNum >= MAX_THREAD_NUM) {
+						continue;
 					}
 
 					if (dnsError > DNS_ERROR_LIMIT)
@@ -739,9 +774,9 @@ public class DNSServer implements WrapServer {
 				break;
 			} catch (IOException e) {
 				Log.e(TAG, e.getLocalizedMessage());
-			} catch (InterruptedException e) {
-				Log.e(TAG, "Interrupted", e);
-				break;
+//			} catch (InterruptedException e) {
+//				Log.e(TAG, "Interrupted", e);
+//				break;
 			}
 		}
 

@@ -17,7 +17,7 @@
     <string name="proxy">代理地址</string>
     <string name="port">本地端口</string>
     <string name="sitekey">密钥</string>
-    <string name="auto_connect">启动时连接</string>
+    <string name="auto_connect">自动连接</string>
     <string name="auto_reconnect">自动恢复连接</string>
     <string name="auto_set_proxy">全局代理</string>
     <string name="disconnect">关闭服务</string>
@@ -53,27 +53,28 @@
 		\n\n(gaeproxy.googlecode.com)
 	</string>
     <string name="about">关于</string>
-    <string name="proxy_type">代理类型选择</string>
+    <string name="proxy_type">代理类型</string>
     <string name="connecting">正在连接...</string>
     <string name="initializing">正在初始化...</string>
     <string name="recovering">正在重置...</string>
     <string name="https_alert">请修改你的代理地址，以 "https://" 开头</string>
-    <string name="https_proxy">启用HTTPS代理</string>
+    <string name="https_proxy">HTTPS代理</string>
     <string name="https_proxy_summary">重定向HTTPS流量，若遇到反复尝试无法连接的情况，请关闭此选项</string>
 
     <!-- settings notification category -->
     <string name="notif_cat">通知设置</string>
-    <string name="notif_ringtone_title">选择铃声</string>
+    <string name="notif_ringtone_title">铃声</string>
+    <string name="notif_ringtone_summary">选择通知的铃声</string>
     <string name="notif_vibrate_title">震动</string>
     <string name="notif_vibrate_summary">在连接状态改变时震动</string>
     <string name="loading">正在加载应用列表...</string>
-    <string name="enable_market">启用电子市场</string>
+    <string name="enable_market">电子市场代理</string>
     <string name="enable_market_summary">帮助大陆用户从电子市场中获得程序更新（需要重启）</string>
-    <string name="auto_set_gfwlist">启用国内路由</string>
+    <string name="auto_set_gfwlist">国内路由</string>
     <string name="auto_set_gfwlist_summary">访问国内站点时忽略本地代理（实验性）</string>
     <string name="toast_start">GAE代理正在启动</string>
     <string name="toast_restart">GAE代理正在重新启动</string>
-    <string name="browser">启动GAE浏览器</string>
+    <string name="browser">内置浏览器</string>
     <string name="browser_summary">启动内置代理浏览器, 只针对没有ROOT权限或IPTABLES支持的用户</string>
     <string name="default_proxy_alert">您正在使用默认的代理地址，此地址每天只有10G的带宽配额，也就说您将随时无法正常使用本应用\n\n因此，请尽快部署自己的服务器端，具体步骤和说明见：http://code.google.com/p/goagent/
 	</string>

@@ -26,12 +26,10 @@ org.emergent.android.weave.client.WeaveHeader: org.emergent.android.weave.client
 org.gaeproxy.AppManager
 org.gaeproxy.Exec
 org.gaeproxy.Exec: java.io.FileDescriptor createSubprocess(java.lang.String,java.lang.String[],java.lang.String[],int[])
-org.gaeproxy.Exec: void setPtyWindowSize(java.io.FileDescriptor,int,int,int,int)
 org.gaeproxy.Exec: int waitFor(int)
 org.gaeproxy.Exec: void close(java.io.FileDescriptor)
 org.gaeproxy.Exec: void hangupProcessGroup(int)
 org.gaeproxy.GAEProxy
-org.gaeproxy.GAEProxyContext
 org.gaeproxy.GAEProxyReceiver
 org.gaeproxy.GAEProxyService
 org.gaeproxy.GAEProxyWidgetProvider

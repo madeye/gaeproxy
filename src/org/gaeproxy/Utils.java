@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
+import java.lang.NoClassDefFoundError;
+
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -115,8 +117,12 @@ public class Utils {
 		 */
 		@Override
 		public synchronized void destroy() {
-			Exec.hangupProcessGroup(mProcId);
-			Exec.close(mTermFd);
+            try {
+                Exec.hangupProcessGroup(mProcId);
+                Exec.close(mTermFd);
+            } catch (NoClassDefFoundError ignore) {
+                // Nothing
+            }
 		}
 
 		@Override
@@ -380,7 +386,6 @@ public class Utils {
 		int exitcode = runScript(command, sb, 10 * 1000, true);
 
 		if (exitcode == TIME_OUT) {
-			isRoot = 0;
 			return false;
 		}
 
@@ -397,7 +402,7 @@ public class Utils {
 
 		Log.d(TAG, command);
 
-		runScript(command, null, 10 * 1000, false);
+		runScript(command, null, timeout, false);
 
 		return true;
 	}
@@ -441,6 +446,7 @@ public class Utils {
 				// Timed-out
 				runner.destroy();
 				runner.join(1000);
+				return TIME_OUT;
 			}
 		} catch (InterruptedException ex) {
 			return TIME_OUT;

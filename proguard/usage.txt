@@ -107,6 +107,64 @@ com.flurry.android.q:
     570:571:final synchronized void a(java.lang.String,java.lang.String)
     575:576:final synchronized void j()
     717:717:final boolean l()
+com.github.droidfu.http.BetterHttp:
+    static final java.lang.String LOG_TAG
+    public static final int DEFAULT_MAX_CONNECTIONS
+    public static final int DEFAULT_SOCKET_TIMEOUT
+    public static final java.lang.String DEFAULT_HTTP_USER_AGENT
+    private static final java.lang.String HEADER_ACCEPT_ENCODING
+    private static final java.lang.String ENCODING_GZIP
+    88:90:public static void enableGZIPEncoding()
+    93:94:public static void setHttpClient(org.apache.http.impl.client.AbstractHttpClient)
+    97:97:public static org.apache.http.impl.client.AbstractHttpClient getHttpClient()
+    105:105:public static com.github.droidfu.http.BetterHttpRequest post(java.lang.String)
+    109:109:public static com.github.droidfu.http.BetterHttpRequest post(java.lang.String,org.apache.http.HttpEntity)
+    113:113:public static com.github.droidfu.http.BetterHttpRequest put(java.lang.String)
+    117:117:public static com.github.droidfu.http.BetterHttpRequest put(java.lang.String,org.apache.http.HttpEntity)
+    121:121:public static com.github.droidfu.http.BetterHttpRequest delete(java.lang.String)
+    125:126:public static void setMaximumConnections(int)
+    145:146:public static void setDefaultHeader(java.lang.String,java.lang.String)
+    149:149:public static java.util.HashMap getDefaultHeaders()
+    153:155:public static void setPortForScheme(java.lang.String,int)
+    158:160:public static void setUserAgent(java.lang.String)
+com.github.droidfu.http.BetterHttp$GZIPHttpRequestInterceptor
+com.github.droidfu.http.BetterHttp$GZIPHttpResponseInterceptor
+com.github.droidfu.http.BetterHttp$GZIPInflatingEntity
+com.github.droidfu.http.BetterHttpRequest:
+    public abstract org.apache.http.client.methods.HttpUriRequest unwrap()
+    public abstract java.lang.String getRequestUrl()
+    public varargs abstract com.github.droidfu.http.BetterHttpRequest expecting(java.lang.Integer[])
+    public abstract com.github.droidfu.http.BetterHttpRequest retries(int)
+    public abstract com.github.droidfu.http.BetterHttpRequest withTimeout(int)
+com.github.droidfu.http.BetterHttpRequestBase:
+    private static final int MAX_RETRIES
+    protected static final java.lang.String HTTP_CONTENT_TYPE_HEADER
+    59:59:public org.apache.http.client.methods.HttpUriRequest unwrap()
+    63:63:public java.lang.String getRequestUrl()
+    67:68:public varargs com.github.droidfu.http.BetterHttpRequestBase expecting(java.lang.Integer[])
+    72:79:public com.github.droidfu.http.BetterHttpRequestBase retries(int)
+    83:86:public com.github.droidfu.http.BetterHttpRequest withTimeout(int)
+    1:1:public bridge synthetic com.github.droidfu.http.BetterHttpRequest retries(int)
+    1:1:public bridge varargs synthetic com.github.droidfu.http.BetterHttpRequest expecting(java.lang.Integer[])
+com.github.droidfu.http.BetterHttpRequestRetryHandler:
+    private static final int RETRY_SLEEP_TIME_MILLIS
+com.github.droidfu.http.BetterHttpResponse:
+    public abstract org.apache.http.HttpResponse unwrap()
+    public abstract byte[] getResponseBodyAsBytes()
+    public abstract java.lang.String getResponseBodyAsString()
+    public abstract int getStatusCode()
+    public abstract java.lang.String getHeader(java.lang.String)
+com.github.droidfu.http.BetterHttpResponseImpl:
+    40:40:public org.apache.http.HttpResponse unwrap()
+    48:48:public byte[] getResponseBodyAsBytes()
+    52:52:public java.lang.String getResponseBodyAsString()
+    56:56:public int getStatusCode()
+    60:63:public java.lang.String getHeader(java.lang.String)
+com.github.droidfu.http.HttpDelete
+com.github.droidfu.http.HttpPost
+com.github.droidfu.http.HttpPut
+com.github.droidfu.http.ssl.EasySSLSocketFactory
+com.github.droidfu.http.ssl.TrivialTrustManager
 com.google.ads.Ad:
     public abstract boolean isReady()
     public abstract void loadAd(com.google.ads.AdRequest)
@@ -452,23 +510,20 @@ org.gaeproxy.Base64$OutputStream:
 org.gaeproxy.DNSServer:
     private static final int MAX_THREAD_NUM
     private static final java.lang.String CANT_RESOLVE
-    389:389:public int getServPort()
-    417:417:public boolean isClosed()
-    421:421:public boolean isInService()
-    822:822:public void setProxyHost(java.lang.String)
-    825:826:public void setTarget(java.lang.String)
-    835:861:private java.lang.String shake(java.lang.String)
-    865:869:public boolean test(java.lang.String,java.lang.String)
+    437:437:public boolean isClosed()
+    441:441:public boolean isInService()
+    856:856:public void setProxyHost(java.lang.String)
+    859:860:public void setTarget(java.lang.String)
+    869:895:private java.lang.String shake(java.lang.String)
+    899:903:public boolean test(java.lang.String,java.lang.String)
 org.gaeproxy.DnsResponse:
     private static final long serialVersionUID
-    63:82:public java.lang.String getIPString()
-    89:89:public int getReqTimes()
+    75:94:public java.lang.String getIPString()
+    101:101:public int getReqTimes()
 org.gaeproxy.DomainValidator:
     private static final java.lang.String DOMAIN_LABEL_REGEX
     private static final java.lang.String TOP_LABEL_REGEX
     private static final java.lang.String DOMAIN_NAME_REGEX
-org.gaeproxy.Exec:
-    public static native void setPtyWindowSize(java.io.FileDescriptor,int,int,int,int)
 org.gaeproxy.GAEProxy:
     private static final java.lang.String TAG
     public static final java.lang.String PREFS_NAME
@@ -477,9 +532,7 @@ org.gaeproxy.GAEProxy:
     private static final int MSG_INSTALL_FAIL
     private static final int MSG_CRASH_RECOVER
     private static final int MSG_INITIAL_FINISH
-    351:361:private boolean checkApkExist(java.lang.String)
-org.gaeproxy.GAEProxyContext:
-    15:15:public static android.content.Context getContext()
+    350:360:private boolean checkApkExist(java.lang.String)
 org.gaeproxy.GAEProxyReceiver:
     private static final java.lang.String TAG
 org.gaeproxy.GAEProxyService:

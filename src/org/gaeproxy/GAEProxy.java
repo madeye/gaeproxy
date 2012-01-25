@@ -301,10 +301,6 @@ public class GAEProxy extends PreferenceActivity implements
 				ed.putBoolean("isInstalling", false);
 				ed.putBoolean("isInstalled", true);
 				isInstalledCheck.setEnabled(true);
-
-				// prepare for python
-				Utils.runCommand("chmod 755 /data/data/org.gaeproxy/python/bin/python");
-				
 				break;
 			case MSG_INSTALL_FAIL:
 				ed.putBoolean("isInstalling", false);
@@ -322,7 +318,6 @@ public class GAEProxy extends PreferenceActivity implements
 					pd.dismiss();
 					pd = null;
 				}
-				Utils.isRoot();
 				break;
 			}
 			ed.commit();
@@ -467,14 +462,14 @@ public class GAEProxy extends PreferenceActivity implements
 		if (countryCode.toLowerCase().equals("cn") || num.equals("31026")) {
 
 			progress = new DownloadFileRunnable(
-					"http://myhosts.sinaapp.com/python_r2.zip", data_path
+					"http://myhosts.sinaapp.com/python_r3.zip", data_path
 							+ "/python.zip", "/data/data/org.gaeproxy/",
 					"http://myhosts.sinaapp.com/python-extras_r2.zip",
 					data_path + "/python-extras.zip", data_path + "/");
 		} else {
 			progress = new DownloadFileRunnable(
 
-					"http://gaeproxy.googlecode.com/files/python_r2.zip",
+					"http://gaeproxy.googlecode.com/files/python_r3.zip",
 					data_path + "/python.zip",
 					"/data/data/org.gaeproxy/",
 					"http://gaeproxy.googlecode.com/files/python-extras_r2.zip",
@@ -549,6 +544,8 @@ public class GAEProxy extends PreferenceActivity implements
 				PendingIntent contentIntent = PendingIntent.getActivity(
 						GAEProxy.this, 0, notificationIntent, 0);
 				notification.contentIntent = contentIntent;
+				
+				Utils.isRoot();
 
 				if (!Utils.isInitialized()
 						&& !GAEProxyService.isServiceStarted()) {
@@ -560,7 +557,7 @@ public class GAEProxy extends PreferenceActivity implements
 							+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n"
-							+ "chmod 755 /data/data/org.gaeproxy/python/bin/python\n");
+							+ "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 
 					try {
 						URL aURL = new URL("http://myhosts.sinaapp.com/hosts");
@@ -971,7 +968,8 @@ public class GAEProxy extends PreferenceActivity implements
 						+ "chmod 755 /data/data/org.gaeproxy/redsocks\n"
 						+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 						+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
-						+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n");
+						+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n"
+						+ "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 
 				handler.sendEmptyMessage(MSG_INSTALL_SUCCESS);
 				h.sendEmptyMessage(0);

@@ -1,9 +1,13 @@
 #!/system/bin/sh
 
-export PYTHONPATH=/data/data/org.gaeproxy/python:/data/data/org.gaeproxy/python/lib/python2.6/lib-dynload:/data/data/org.gaeproxy/python/lib:$1/python-extras
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHONPATH:/system/lib
-export PYTHONHOME=$PYTHONPATH:/data/data/org.gaeproxy/python
-export TEMP=$1/python-extras
+DIR=/data/data/org.gaeproxy
+
+PYTHONPATH=${1}/python-extras
+PYTHONPATH=${PYTHONPATH}:${DIR}/python/lib/python2.6/lib-dynload
+export PYTHONPATH
+export TEMP=${1}/python-extras
+export PYTHONHOME=${DIR}/python
+export LD_LIBRARY_PATH=${DIR}/python/lib
 
 case $2 in
 
@@ -71,13 +75,13 @@ www.253874.com = 76.73.90.170
 "> /data/data/org.gaeproxy/proxy.ini
  
  
-/data/data/org.gaeproxy/python/bin/python /data/data/org.gaeproxy/goagent.py
+$DIR/python-cl $DIR/goagent.py
 
 ;;
 
  gappproxy)
  
-/data/data/org.gaeproxy/python/bin/python /data/data/org.gaeproxy/gappproxy.py
+$DIR/python-cl $DIR/gappproxy.py
 
 ;;
 
@@ -120,7 +124,8 @@ def find_sock_handler(reqtype, ip, port, cmd):
 def check_client(ip, reqtype, args):
     return True
  " > /data/data/org.gaeproxy/proxy.conf
- /data/data/org.gaeproxy/python/bin/python /data/data/org.gaeproxy/wallproxy.py
+ 
+ $DIR/python-cl $DIR/wallproxy.py
  
  ;;
  
