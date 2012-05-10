@@ -69,11 +69,9 @@ public class HistoryListActivity extends ExpandableListActivity {
 
 		@Override
 		public void run() {
-			BookmarksProviderWrapper.clearHistoryAndOrBookmarks(
-					getContentResolver(), true, false);
+			BookmarksProviderWrapper.clearHistoryAndOrBookmarks(getContentResolver(), true, false);
 
-			for (CustomWebView webView : Controller.getInstance()
-					.getWebViewList()) {
+			for (CustomWebView webView : Controller.getInstance().getWebViewList()) {
 				webView.clearHistory();
 			}
 
@@ -96,8 +94,7 @@ public class HistoryListActivity extends ExpandableListActivity {
 	 * Display confirmation and clear history.
 	 */
 	private void clearHistory() {
-		ApplicationUtils.showYesNoDialog(this,
-				android.R.drawable.ic_dialog_alert,
+		ApplicationUtils.showYesNoDialog(this, android.R.drawable.ic_dialog_alert,
 				R.string.Commons_ClearHistory, R.string.Commons_NoUndoMessage,
 				new DialogInterface.OnClickListener() {
 					@Override
@@ -112,9 +109,9 @@ public class HistoryListActivity extends ExpandableListActivity {
 	 * Clear history.
 	 */
 	private void doClearHistory() {
-		mProgressDialog = ProgressDialog.show(this, this.getResources()
-				.getString(R.string.Commons_PleaseWait), this.getResources()
-				.getString(R.string.Commons_ClearingHistory));
+		mProgressDialog = ProgressDialog.show(this,
+				this.getResources().getString(R.string.Commons_PleaseWait), this.getResources()
+						.getString(R.string.Commons_ClearingHistory));
 
 		new HistoryClearer();
 	}
@@ -145,11 +142,12 @@ public class HistoryListActivity extends ExpandableListActivity {
 	 * Fill the history list.
 	 */
 	private void fillData() {
-		Cursor c = BookmarksProviderWrapper
-				.getStockHistory(getContentResolver());
+		Cursor c = BookmarksProviderWrapper.getStockHistory(getContentResolver());
 
-		mAdapter = new HistoryExpandableListAdapter(this, c,
-				Browser.HISTORY_PROJECTION_DATE_INDEX,
+		if (c == null)
+			return;
+
+		mAdapter = new HistoryExpandableListAdapter(this, c, Browser.HISTORY_PROJECTION_DATE_INDEX,
 				ApplicationUtils.getFaviconSizeForBookmarks(this));
 
 		setListAdapter(mAdapter);
@@ -160,10 +158,10 @@ public class HistoryListActivity extends ExpandableListActivity {
 	}
 
 	@Override
-	public boolean onChildClick(ExpandableListView parent, View v,
-			int groupPosition, int childPosition, long id) {
-		HistoryItem item = (HistoryItem) getExpandableListAdapter().getChild(
-				groupPosition, childPosition);
+	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
+			int childPosition, long id) {
+		HistoryItem item = (HistoryItem) getExpandableListAdapter().getChild(groupPosition,
+				childPosition);
 		doNavigateToUrl(item.getUrl(), false);
 
 		return super.onChildClick(parent, v, groupPosition, childPosition, id);
@@ -171,20 +169,15 @@ public class HistoryListActivity extends ExpandableListActivity {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem menuItem) {
-		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuItem
-				.getMenuInfo();
+		ExpandableListContextMenuInfo info = (ExpandableListContextMenuInfo) menuItem.getMenuInfo();
 
-		int type = ExpandableListView
-				.getPackedPositionType(info.packedPosition);
+		int type = ExpandableListView.getPackedPositionType(info.packedPosition);
 
 		if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
-			int group = ExpandableListView
-					.getPackedPositionGroup(info.packedPosition);
-			int child = ExpandableListView
-					.getPackedPositionChild(info.packedPosition);
+			int group = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+			int child = ExpandableListView.getPackedPositionChild(info.packedPosition);
 
-			HistoryItem item = (HistoryItem) getExpandableListAdapter()
-					.getChild(group, child);
+			HistoryItem item = (HistoryItem) getExpandableListAdapter().getChild(group, child);
 
 			switch (menuItem.getItemId()) {
 			case MENU_OPEN_IN_TAB:
@@ -195,12 +188,10 @@ public class HistoryListActivity extends ExpandableListActivity {
 						getString(R.string.Commons_UrlCopyToastMessage));
 				break;
 			case MENU_SHARE:
-				ApplicationUtils
-						.sharePage(this, item.getTitle(), item.getUrl());
+				ApplicationUtils.sharePage(this, item.getTitle(), item.getUrl());
 				break;
 			case MENU_DELETE_FROM_HISTORY:
-				BookmarksProviderWrapper.deleteHistoryRecord(
-						getContentResolver(), item.getId());
+				BookmarksProviderWrapper.deleteHistoryRecord(getContentResolver(), item.getId());
 				fillData();
 				break;
 			default:
@@ -223,32 +214,24 @@ public class HistoryListActivity extends ExpandableListActivity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
 
-		int type = ExpandableListView
-				.getPackedPositionType(info.packedPosition);
-		int group = ExpandableListView
-				.getPackedPositionGroup(info.packedPosition);
-		int child = ExpandableListView
-				.getPackedPositionChild(info.packedPosition);
+		int type = ExpandableListView.getPackedPositionType(info.packedPosition);
+		int group = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+		int child = ExpandableListView.getPackedPositionChild(info.packedPosition);
 
 		if (type == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
 
-			HistoryItem item = (HistoryItem) getExpandableListAdapter()
-					.getChild(group, child);
+			HistoryItem item = (HistoryItem) getExpandableListAdapter().getChild(group, child);
 			menu.setHeaderTitle(item.getTitle());
 
-			menu.add(0, MENU_OPEN_IN_TAB, 0,
-					R.string.HistoryListActivity_MenuOpenInTab);
-			menu.add(0, MENU_COPY_URL, 0,
-					R.string.BookmarksHistoryActivity_MenuCopyLinkUrl);
+			menu.add(0, MENU_OPEN_IN_TAB, 0, R.string.HistoryListActivity_MenuOpenInTab);
+			menu.add(0, MENU_COPY_URL, 0, R.string.BookmarksHistoryActivity_MenuCopyLinkUrl);
 			menu.add(0, MENU_SHARE, 0, R.string.Main_MenuShareLinkUrl);
-			menu.add(0, MENU_DELETE_FROM_HISTORY, 0,
-					R.string.HistoryListActivity_MenuDelete);
+			menu.add(0, MENU_DELETE_FROM_HISTORY, 0, R.string.HistoryListActivity_MenuDelete);
 		}
 	}
 
@@ -257,8 +240,7 @@ public class HistoryListActivity extends ExpandableListActivity {
 		super.onCreateOptionsMenu(menu);
 
 		MenuItem item;
-		item = menu
-				.add(0, MENU_CLEAR_HISTORY, 0, R.string.Commons_ClearHistory);
+		item = menu.add(0, MENU_CLEAR_HISTORY, 0, R.string.Commons_ClearHistory);
 		item.setIcon(R.drawable.ic_menu_delete);
 
 		return true;

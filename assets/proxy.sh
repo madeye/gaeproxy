@@ -15,9 +15,7 @@ base {
  daemon = on;
  redirector = iptables;
 }
-" >$DIR/redsocks.conf
 
-   echo "
 redsocks {
  local_ip = 127.0.0.1;
  local_port = 8123;
@@ -34,7 +32,7 @@ redsocks {
  login = "gaeproxy";
  password = "gaeproxy";
 } 
-" >>$DIR/redsocks.conf
+" > $DIR/redsocks.conf
 
   $DIR/redsocks -p $DIR/redsocks.pid -c $DIR/redsocks.conf
   
@@ -42,11 +40,11 @@ redsocks {
 stop)
   kill -9 `cat $DIR/redsocks.pid`
   kill -9 `cat $DIR/python.pid`
-  rm $DIR/redsocks.conf
-  rm $DIR/redsocks.pid
-  rm $DIR/python.pid
+  rm -f $DIR/redsocks.conf
+  rm -f $DIR/redsocks.pid
+  rm -f $DIR/python.pid
   
-  killall -9 python
+  killall -9 python-cl
   killall -9 redsocks
   
   ;;

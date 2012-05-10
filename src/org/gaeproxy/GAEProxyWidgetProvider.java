@@ -45,6 +45,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -72,8 +73,7 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 
 		if (intent.getAction().equals(PROXY_SWITCH_ACTION)) {
 
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(context);
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 
 			if (GAEProxyService.statusLock) {
 				// only one request a time
@@ -81,8 +81,7 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 			}
 
 			// Get instance of Vibrator from current Context
-			Vibrator v = (Vibrator) context
-					.getSystemService(Context.VIBRATOR_SERVICE);
+			Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
 			// Vibrate for 10 milliseconds
 			v.vibrate(10);
@@ -93,8 +92,8 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 				views.setImageViewResource(R.id.serviceToggle, R.drawable.ing);
 
 				AppWidgetManager awm = AppWidgetManager.getInstance(context);
-				awm.updateAppWidget(awm.getAppWidgetIds(new ComponentName(
-						context, GAEProxyWidgetProvider.class)), views);
+				awm.updateAppWidget(awm.getAppWidgetIds(new ComponentName(context,
+						GAEProxyWidgetProvider.class)), views);
 			} catch (Exception ignore) {
 				// Nothing
 			}
@@ -105,8 +104,7 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 			if (GAEProxyService.isServiceStarted()) {
 				// Service is working, so stop it
 				try {
-					context.stopService(new Intent(context,
-							GAEProxyService.class));
+					context.stopService(new Intent(context, GAEProxyService.class));
 				} catch (Exception e) {
 					// Nothing
 				}
@@ -114,11 +112,17 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 			} else {
 
 				// Service is not working, then start it
-				boolean isInstalled = settings.getBoolean("isInstalled", false);
+				String versionName;
+				try {
+					versionName = context.getPackageManager().getPackageInfo(
+							context.getPackageName(), 0).versionName;
+				} catch (NameNotFoundException e) {
+					versionName = "NONE";
+				}
+				boolean isInstalled = settings.getBoolean(versionName, false);
 
 				if (isInstalled) {
-					Toast.makeText(context,
-							context.getString(R.string.toast_start),
+					Toast.makeText(context, context.getString(R.string.toast_start),
 							Toast.LENGTH_LONG).show();
 
 					proxy = settings.getString("proxy", "");
@@ -155,14 +159,11 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 						// Nothing
 					}
 					try {
-						views.setImageViewResource(R.id.serviceToggle,
-								R.drawable.off);
+						views.setImageViewResource(R.id.serviceToggle, R.drawable.off);
 
-						AppWidgetManager awm = AppWidgetManager
-								.getInstance(context);
-						awm.updateAppWidget(awm
-								.getAppWidgetIds(new ComponentName(context,
-										GAEProxyWidgetProvider.class)), views);
+						AppWidgetManager awm = AppWidgetManager.getInstance(context);
+						awm.updateAppWidget(awm.getAppWidgetIds(new ComponentName(context,
+								GAEProxyWidgetProvider.class)), views);
 					} catch (Exception ignore) {
 						// Nothing
 					}
@@ -174,8 +175,7 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 	}
 
 	@Override
-	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
-			int[] appWidgetIds) {
+	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		final int N = appWidgetIds.length;
 
 		// Perform this loop procedure for each App Widget that belongs to this
@@ -186,8 +186,7 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 			// Create an Intent to launch ExampleActivity
 			Intent intent = new Intent(context, GAEProxyWidgetProvider.class);
 			intent.setAction(PROXY_SWITCH_ACTION);
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-					0, intent, 0);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
 			// Get the layout for the App Widget and attach an on-click listener
 			// to the button

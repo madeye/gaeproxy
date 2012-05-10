@@ -97,17 +97,18 @@ class Dbg {
 			needToInferCaller = false;
 		}
 	}
-																	private static final Level LEVEL_ANDROID_VERBOSE = Level.FINE; // should
-																	// never
-																	// ship
-																	// using
-																	// this
+
+	private static final Level LEVEL_ANDROID_VERBOSE = Level.FINE; // should
+	// never
+	// ship
+	// using
+	// this
 	private static final Level LEVEL_ANDROID_DEBUG = Level.CONFIG; // stripped
 	// at
-																	// runtime
-																	// (except
-																	// on
-																	// emulator?)
+	// runtime
+	// (except
+	// on
+	// emulator?)
 	@SuppressWarnings("unused")
 	private static final Level LEVEL_ANDROID_INFO = Level.INFO;
 	private static final Level LEVEL_ANDROID_WARN = Level.WARNING;

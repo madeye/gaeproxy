@@ -42,6 +42,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
@@ -64,11 +65,16 @@ public class GAEProxyReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(context);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		String versionName;
+		try {
+			versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) {
+			versionName = "NONE";
+		}
 
 		isAutoConnect = settings.getBoolean("isAutoConnect", false);
-		isInstalled = settings.getBoolean("isInstalled", false);
+		isInstalled = settings.getBoolean(versionName, false);
 
 		boolean isMarketEnable = settings.getBoolean("isMarketEnable", false);
 

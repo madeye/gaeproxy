@@ -1,9 +1,13 @@
 #!/system/bin/sh
 
-export PYTHONPATH=/data/data/org.gaeproxy/python:/data/data/org.gaeproxy/python/lib/python2.6/lib-dynload:/data/data/org.gaeproxy/python/lib:$1/python-extras
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PYTHONPATH:/system/lib
-export PYTHONHOME=$PYTHONPATH:/data/data/org.gaeproxy/python
-export TEMP=$1/python-extras
+DIR=/data/data/org.gaeproxy
+
+PYTHONPATH=${1}/python-extras
+PYTHONPATH=${PYTHONPATH}:${DIR}/python/lib/python2.6/lib-dynload
+export PYTHONPATH
+export TEMP=${1}/python-extras
+export PYTHONHOME=${DIR}/python
+export LD_LIBRARY_PATH=${DIR}/python/lib
 
 case $2 in
 
@@ -42,7 +46,7 @@ appspot = cn
 hosts = cn
 sites = .googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.appspot.com|.android.com|.googlegroups.com|.android.clients.google.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
-withgae = plus.google.com|reader.googleusercontent.com|music.google.com|plusone.google.com
+withgae = plus.google.com|reader.googleusercontent.com|music.google.com|plusone.google.com|play.google.com
 cn = $5|203.208.46.1|203.208.46.2|203.208.46.3|203.208.46.4|203.208.46.5|203.208.46.6|203.208.46.7|203.208.46.8
 hk = 209.85.175.32|209.85.175.33|209.85.175.37|209.85.175.34|209.85.175.35|209.85.175.40|209.85.175.41|209.85.175.63|209.85.175.51|209.85.175.69|209.85.175.76|209.85.175.77|209.85.175.46|209.85.175.45|209.85.175.93|209.85.175.91|209.85.175.102|209.85.175.98|209.85.175.114|209.85.175.118|209.85.175.129|209.85.175.75|209.85.175.101|209.85.175.139|209.85.175.113|209.85.175.138|209.85.175.136|209.85.175.190|209.85.175.251|209.85.143.99|209.85.169.147|209.85.173.105|209.85.175.104|209.85.195.104|209.85.227.103|209.85.227.99|209.85.229.104|209.85.229.105|209.85.229.147|209.85.229.99|66.102.13.105|72.14.204.103|72.14.204.105|72.14.204.99|74.125.157.104|74.125.157.99|74.125.224.80|74.125.225.48|74.125.225.83|74.125.232.242|74.125.235.144|74.125.235.20|74.125.235.4|74.125.235.50|74.125.235.51|74.125.237.18|74.125.237.52|74.125.39.103|74.125.39.104|74.125.39.105|74.125.39.106|74.125.39.147|74.125.39.99|74.125.43.105|74.125.65.147|74.125.71.105|74.125.71.99|74.125.73.99|74.125.79.104|74.125.79.99
 ipv6 = 2404:6800:8005::6a|2404:6800:8005::62|2404:6800:8005::2c
@@ -71,13 +75,13 @@ www.253874.com = 76.73.90.170
 "> /data/data/org.gaeproxy/proxy.ini
  
  
-/data/data/org.gaeproxy/python/bin/python /data/data/org.gaeproxy/goagent.py
+$DIR/python-cl $DIR/goagent.py
 
 ;;
 
  gappproxy)
  
-/data/data/org.gaeproxy/python/bin/python /data/data/org.gaeproxy/gappproxy.py
+$DIR/python-cl $DIR/gappproxy.py
 
 ;;
 
@@ -120,7 +124,7 @@ def find_sock_handler(reqtype, ip, port, cmd):
 def check_client(ip, reqtype, args):
     return True
  " > /data/data/org.gaeproxy/proxy.conf
- /data/data/org.gaeproxy/python/bin/python /data/data/org.gaeproxy/wallproxy.py
+ $DIR/python-cl $DIR/wallproxy.py
  
  ;;
  

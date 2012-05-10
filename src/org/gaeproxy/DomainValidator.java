@@ -445,6 +445,7 @@ public class DomainValidator implements Serializable {
 	public boolean isValidGenericTld(String gTld) {
 		return GENERIC_TLD_LIST.contains(chompLeadingDot(gTld.toLowerCase()));
 	}
+
 	/**
 	 * Returns true if the specified <code>String</code> matches any
 	 * IANA-defined infrastructure top-level domain. Leading dots are ignored if
@@ -458,6 +459,7 @@ public class DomainValidator implements Serializable {
 		return INFRASTRUCTURE_TLD_LIST.contains(chompLeadingDot(iTld
 				.toLowerCase()));
 	}
+
 	/**
 	 * Returns true if the specified <code>String</code> matches any
 	 * IANA-defined top-level domain. Leading dots are ignored if present. The

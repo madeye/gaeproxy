@@ -647,7 +647,7 @@ public class Base64 {
 
 	/** The new line character (\n) as a byte. */
 	private final static byte NEW_LINE = (byte) '\n';
-													/** Preferred encoding. */
+	/** Preferred encoding. */
 	private final static String PREFERRED_ENCODING = "US-ASCII";
 
 	/* ******** S T A N D A R D B A S E 6 4 A L P H A B E T ******** */
@@ -1051,7 +1051,7 @@ public class Base64 {
 		catch (java.io.UnsupportedEncodingException uee) {
 			bytes = s.getBytes();
 		} // end catch
-		// </change>
+			// </change>
 
 		// Decode
 		bytes = decode(bytes, 0, bytes.length, options);

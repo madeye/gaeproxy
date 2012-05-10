@@ -18,12 +18,15 @@ package org.gaeproxy.zirco.ui.components;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.gaeproxy.ProxySettings;
 import org.gaeproxy.zirco.controllers.Controller;
 import org.gaeproxy.zirco.utils.ApplicationUtils;
 import org.gaeproxy.zirco.utils.Constants;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -177,12 +180,30 @@ public class CustomWebView extends WebView {
 	public int getProgress() {
 		return mProgress;
 	}
+	
+	private void initializeProxy() {
+
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+		int port = 1984;
+		try {
+			port = Integer.valueOf(settings.getString("port", "1984"));
+		} catch (NumberFormatException ignore) {
+
+		}
+
+		ProxySettings.setProxy(mContext, "127.0.0.1", port);
+
+	}
 
 	/**
 	 * Initialize the WebView with the options set by the user through
 	 * preferences.
 	 */
 	public void initializeOptions() {
+
+		initializeProxy();
+		
 		WebSettings settings = getSettings();
 
 		// User settings

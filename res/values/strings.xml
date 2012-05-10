@@ -11,14 +11,13 @@
     <string name="already_stopped">Service has been stopped already.</string>
     <string name="already_running">Service has been started already.</string>
     <string name="forward_stop">Proxy Service Stopped</string>
-    <string name="service_failed">Please check your network and login information
-	</string>
+    <string name="service_failed">Please check your network and login information</string>
     <string name="reconnect_fail">Cannot reconnect</string>
     <string name="ok_iknow">OK, I know</string>
-    <string name="proxy">Proxy</string>
+    <string name="proxy">Address</string>
     <string name="port">Local Port</string>
     <string name="sitekey">Site Key</string>
-    <string name="auto_connect">Connect at boot</string>
+    <string name="auto_connect">Auto Connect</string>
     <string name="auto_reconnect">Auto reconnect</string>
     <string name="auto_set_proxy">Global Proxy</string>
     <string name="disconnect">Disconnect</string>
@@ -32,43 +31,36 @@
     <string name="proxy_summary">GAE Proxy URL</string>
     <string name="port_summary">Listening port</string>
     <string name="sitekey_summary">Site key for WallProxy / GoAgent</string>
-    <string name="port_alert">The port number should be greater than 1024
-	</string>
+    <string name="port_alert">The port number should be greater than 1024</string>
     <string name="auto_connect_summary">Start GAE Proxy at the startup</string>
     <string name="auto_set_proxy_summary">Set up the global proxy (needs ROOT permission and
-		IPTABLES support)
-	</string>
+		IPTABLES support)</string>
     <string name="port_empty">Port should not be empty</string>
     <string name="proxy_empty">Proxy should not be empty</string>
     <string name="install_cat">Package configure</string>
     <string name="isInstalled">Install / Uninstall</string>
     <string name="download">Downloading</string>
     <string name="downloading">Downloading, Patient Please...</string>
-    <string name="isInstalled_summary">Install / Uninstall extra packages (need SD card)
-	</string>
+    <string name="isInstalled_summary">Install / Uninstall extra packages (need SD card)</string>
     <string name="install_alert">Please install dependent module first! (Scroll to
-		the bottom, and select to install)
-	</string>
+		the bottom, and select to install)</string>
     <string name="sdcard_alert">Please make sure you have a SD CARD!</string>
-    <string name="recovery">Recover the status</string>
+    <string name="recovery">Reset</string>
     <string name="unzip">Unzipping...</string>
     <string name="proxyed_apps">Individual Proxy</string>
     <string name="proxyed_apps_summary">Set individual proxy for apps (needs ROOT
 		permission and
-		IPTABLES support)
-	</string>
+		IPTABLES support)</string>
     <string name="proxyed_help">Select apps to use with GAEProxy:</string>
     <string name="crash_alert">An unexpected exit detected, context has been
-		recovered
-	</string>
+		recovered</string>
     <string name="copy_rights">GAEProxy is an open source project
 		published under
 		the GPLv3. \n\nIf you have any questions, please visit
 		our project page on
-		googlecode. \n\n(gaeproxy.googlecode.com)
-	</string>
+		googlecode. \n\n(gaeproxy.googlecode.com)</string>
     <string name="about">About</string>
-    <string name="proxy_type">Choose your proxy type</string>
+    <string name="proxy_type">Proxy Type</string>
 
     <array name="proxy_type_entry">
         <item>GAppProxy</item>
@@ -90,7 +82,6 @@
         <item>173.0.0.0/8</item>
         <item>202.248.0.0/16</item>
     </string-array>
-    
     <string-array name="chn_list">
         <item>1.0.0.0/8</item>
         <item>14.0.0.0/8</item>
@@ -101,16 +92,9 @@
         <item>49.0.0.0/8</item>
         <item>58.0.0.0/7</item>
         <item>60.0.0.0/7</item>
-        <item>101.0.0.0/8</item>
-        <item>103.0.0.0/8</item>
-        <item>106.0.0.0/8</item>
-        <item>110.0.0.0/8</item>
-        <item>111.0.0.0/8</item>
-        <item>112.0.0.0/4</item>
-        <item>139.0.0.0/8</item>
-        <item>140.0.0.0/8</item>
-        <item>144.0.0.0/8</item>
-        <item>150.0.0.0/8</item>
+        <item>66.114.0.0/16</item> <!-- tricks for sina weibo -->
+        <item>96.0.0.0/3</item>
+        <item>128.0.0.0/4</item>
         <item>171.0.0.0/8</item>
         <item>175.0.0.0/8</item>
         <item>180.0.0.0/8</item>
@@ -121,49 +105,45 @@
         <item>210.0.0.0/8</item>
         <item>211.0.0.0/8</item>
         <item>216.0.0.0/5</item>
+        <item>192.168.0.0/16</item>
+        <item>10.0.0.0/8</item>
+        <item>172.16.0.0/12</item>
     </string-array>
 
-    <string name="mirror_list">ZmNhcGpwfHBzd3N3ZXxzdG9ybWZhdHdvd3xrZWRpZ3VvfGdmd2Rhb3xiZWFyYmVhcmhqMXxjYW9nb2FnZW50fHByb3h5NjY3fGFlbHhzYW18bWF4bWFydGFpbmdvYWdlbnR8bWV0YWxqb2tlcjEwMDJ8c2hlbmRhbnB1ZmYxfHJveHNreWZxfGZsb3VzZXByb3h5fHRhb2Vyc2h1fGhxeTUxMjI4fGxpaGFuZzkxMnxmcmVlNG0yZ298cGV0ZXJtYXBsZXxnb2FnZW50LWR1cDAwMXxvaWNxZGFuaWVsfGxpYW5neXk4ODg4fGNhdGFtZWk2fHN1bm55aGFuODIwfHBpYW9oYW44NHxibGluZGNoaW5hfHB1YmxpY2dvYWdlbnQxfHl1c2h1bnlhb3pob25nZ3VvfHN0ZWZ3b28tZnVjay1nZnd8Y29tcHV0ZXJ4YW18bGFvbGlhbm5hbmFwcDF8Y2ZhbnMxOTgyfHh1ZXJvbnx6cWhzZnp8c3dhZ21vbnxmb3JqYXBhbmZvbnxpMzMwNjIwMDk4OHx5dW1pbmc1MjAxMzR8YXpyYWVsZ3p8YmVlcmdvYWdlbnR8Y29taXRjbnxnb291dGJhYWF8d2hzaG1kc2ZzdGNzaDE2M3xocS1nb2FnZW50fGJic2NjYnN8Y2x5aHkxOTczfHZpcC0xMTE1fG15bmVjcXF8bXluZWN0dHx6MTY0OTgwMzE2fGNvZGluZ3RpbWVsZXNzfGNhaWh1aTA4MDE=
-	</string>
+    <string name="mirror_list">ZmNhcGpwfHBzd3N3ZXxzdG9ybWZhdHdvd3xrZWRpZ3VvfGdmd2Rhb3xiZWFyYmVhcmhqMXxjYW9nb2FnZW50fHByb3h5NjY3fGFlbHhzYW18bWF4bWFydGFpbmdvYWdlbnR8bWV0YWxqb2tlcjEwMDJ8c2hlbmRhbnB1ZmYxfHJveHNreWZxfGZsb3VzZXByb3h5fHRhb2Vyc2h1fGhxeTUxMjI4fGxpaGFuZzkxMnxmcmVlNG0yZ298cGV0ZXJtYXBsZXxnb2FnZW50LWR1cDAwMXxvaWNxZGFuaWVsfGxpYW5neXk4ODg4fGNhdGFtZWk2fHN1bm55aGFuODIwfHBpYW9oYW44NHxibGluZGNoaW5hfHB1YmxpY2dvYWdlbnQxfHl1c2h1bnlhb3pob25nZ3VvfHN0ZWZ3b28tZnVjay1nZnd8Y29tcHV0ZXJ4YW18bGFvbGlhbm5hbmFwcDF8Y2ZhbnMxOTgyfHh1ZXJvbnx6cWhzZnp8c3dhZ21vbnxmb3JqYXBhbmZvbnxpMzMwNjIwMDk4OHx5dW1pbmc1MjAxMzR8YXpyYWVsZ3p8YmVlcmdvYWdlbnR8Y29taXRjbnxnb291dGJhYWF8d2hzaG1kc2ZzdGNzaDE2M3xocS1nb2FnZW50fGJic2NjYnN8Y2x5aHkxOTczfHZpcC0xMTE1fG15bmVjcXF8bXluZWN0dHx6MTY0OTgwMzE2fGNvZGluZ3RpbWVsZXNzfGNhaWh1aTA4MDE=</string>
     <string name="connecting">Connecting...</string>
     <string name="initializing">Initializing...</string>
-    <string name="recovering">Recovering...</string>
+    <string name="recovering">Reseting...</string>
     <string name="https_alert">Please modify your proxy host to start with
-		"https://"
-	</string>
+		"https://"</string>
     <string name="https_proxy">Enable HTTPS proxy</string>
     <string name="https_proxy_summary">Proxy HTTPS through GAE, not compatible with most
-		apps
-	</string>
+		apps</string>
 
     <!-- settings notification category -->
-    <string name="notif_cat">Notification settings</string>
-    <string name="notif_ringtone_title">Select ringtone</string>
+    <string name="notif_cat">Notification Settings</string>
+    <string name="notif_ringtone_title">Ringtone</string>
+    <string name="notif_ringtone_summary">Select the notification\'s ringtone</string>
     <string name="notif_vibrate_title">Vibrate</string>
-    <string name="notif_vibrate_summary">Also vibrate when connection status changes
-	</string>
+    <string name="notif_vibrate_summary">Also vibrate when connection status changes</string>
     <string name="loading">Loading app list...</string>
     <string name="enable_market">Enable Market</string>
     <string name="enable_market_summary">Only for users in China, help to update app from
-		Android Market (need reboot)
-	</string>
+		Android Market (need reboot)</string>
     <string name="auto_set_gfwlist">Enable CHN Route</string>
     <string name="auto_set_gfwlist_summary">Bypass all sites located in China (needs ROOT
 		permission and
-		IPTABLES support)
-	</string>
+		IPTABLES support)</string>
     <string name="toast_start">Connecting to GAE Proxy</string>
     <string name="toast_restart">Reconnecting to GAE Proxy</string>
-    <string name="browser">Start GAE Browser</string>
+    <string name="browser">GAE Browser</string>
     <string name="browser_summary">Start a browser through GAE proxy, for users
-		without root permission or iptables support
-	</string>
+		without root permission or iptables support</string>
     <string name="default_proxy_alert">You are using the default proxy, which has a quota
 		of only 10G bandwidth every day. Please deploy your own
 		servers to get
 		more free bandwidth quota with Google App Engine.\n\nYou can find more
-		information here: https://github.com/phus/goagent
-	</string>
+		information here: https://github.com/phus/goagent</string>
     <string name="warning">Warning</string>
 
     <!--
@@ -178,8 +158,7 @@
 
     <string name="ApplicationName">Zirco Browser</string>
     <string name="ApplicationNameUrl">Zirco - %s</string>
-    <string name="ApplicationDescription">Zirco is an open-source browser for Android.
-	</string>
+    <string name="ApplicationDescription">Zirco is an open-source browser for Android.</string>
     <string name="AboutActivity.Title">About</string>
     <string name="AboutActivity.VersionText">Version:</string>
     <string name="AboutActivity.UrlTextValue">http://code.google.com/p/zirco-browser/</string>
@@ -239,12 +218,10 @@
     <string name="PreferencesActivity.HomePagePreferenceSummary">Define your default home page.</string>
     <string name="PreferencesActivity.FullScreenPreferenceTitle">Full screen</string>
     <string name="PreferencesActivity.FullScreenPreferenceSummary">Display browser in full screen mode (need
-		application restart).
-	</string>
+		application restart).</string>
     <string name="PreferencesActivity.ShowToastOnTabSwitchPreferenceTitle">Show alert on tab switch</string>
     <string name="PreferencesActivity.ShowToastOnTabSwitchPreferenceSummary">If checked, a small alert is briefly show when
-		switching tabs.
-	</string>
+		switching tabs.</string>
     <string name="PreferencesActivity.BrowserSettingsCategoryTitle">Browser settings</string>
     <string name="PreferencesActivity.HistorySizePreferenceTitle">History size</string>
     <string name="PreferencesActivity.HistorySizePreferenceSummary">History size in days.</string>
@@ -307,8 +284,7 @@
     <string name="PreferencesActivity.AdBlockerSettingsCategoryTitle">Ad-blocker settings</string>
     <string name="PreferencesActivity.EnableAdBlockerPreferenceTitle">Enable Ad-blocker</string>
     <string name="PreferencesActivity.EnableAdBlockerPreferenceSummary">Ad-blocker will not work if JavaScript is not
-		enabled.
-	</string>
+		enabled.</string>
     <string name="PreferencesActivity.AdBlockerWhiteListPreferenceTitle">White list</string>
     <string name="PreferencesActivity.AdBlockerWhiteListPreferenceSummary">Manage Ad-blocker white list.</string>
     <string name="Commons.Ok">Ok</string>
@@ -317,8 +293,7 @@
     <string name="Commons.Yes">Yes</string>
     <string name="Commons.No">No</string>
     <string name="Commons.NoUndoMessage">This operation cannot be undone. Do you wish to
-		proceed?
-	</string>
+		proceed?</string>
     <string name="Commons.Today">Today (%s)</string>
     <string name="Commons.Yesterday">Yesterday (%s)</string>
     <string name="Commons.DaysAgo">%1$s days ago (%2$s)</string>
@@ -380,10 +355,8 @@
     </string-array>
 
     <!-- 0.3.3 -->
-    <string name="Constants.SearchUrlGoogle">http://www.google.com/m?hl=en&amp;gl=us&amp;client=ms-null&amp;source=android-browser-key&amp;q=%s
-	</string>
-    <string name="Constants.SearchUrlWikipedia">http://en.wikipedia.org/w/index.php?search=%s&amp;go=Go
-	</string>
+    <string name="Constants.SearchUrlGoogle">http://www.google.com/m?hl=en&amp;gl=us&amp;client=ms-null&amp;source=android-browser-key&amp;q=%s</string>
+    <string name="Constants.SearchUrlWikipedia">http://en.wikipedia.org/w/index.php?search=%s&amp;go=Go</string>
     <string name="PreferencesActivity.SearchUrlPreferenceTitle">Search url</string>
     <string name="PreferencesActivity.SearchUrlPreferenceSummary">Define the search url.</string>
     <string name="SearchUrlPreferenceActivity.Title">Search url</string>
@@ -405,11 +378,9 @@
     <string name="PreferencesActivity.StartPageEnableSearchPreferenceTitle">Show search box</string>
     <string name="PreferencesActivity.StartPageEnableSearchPreferenceSummary">If checked, a search box will be shown.</string>
     <string name="PreferencesActivity.StartPageEnableBookmarksPreferenceTitle">Show most used bookmarks</string>
-    <string name="PreferencesActivity.StartPageEnableBookmarksPreferenceSummary">If checked, the most used bookmarks will be shown.
-	</string>
+    <string name="PreferencesActivity.StartPageEnableBookmarksPreferenceSummary">If checked, the most used bookmarks will be shown.</string>
     <string name="PreferencesActivity.StartPageEnableHistoryPreferenceTitle">Show recent history</string>
-    <string name="PreferencesActivity.StartPageEnableHistoryPreferenceSummary">If checked, the recent history will be shown.
-	</string>
+    <string name="PreferencesActivity.StartPageEnableHistoryPreferenceSummary">If checked, the recent history will be shown.</string>
     <string name="PreferencesActivity.StartPageBookmarksLimitPreferenceTitle">Number of most used bookmarks</string>
     <string name="PreferencesActivity.StartPageBookmarksLimitPreferenceSummary">The number of most used bookmarks to show.</string>
     <string name="PreferencesActivity.StartPageHistoryLimitPreferenceTitle">Number of recent history items</string>
@@ -451,15 +422,13 @@
     <string name="BookmarksHistoryActivity.MenuCopyLinkUrl">Copy url</string>
     <string name="PreferencesActivity.ClearCacheOnExitPreferenceTitle">Clear cache on exit</string>
     <string name="PreferencesActivity.ClearCacheOnExitPreferenceSummary">If checked, the browser cache will be cleared when
-		the application exit.
-	</string>
+		the application exit.</string>
     <string name="PreferencesActivity.UIPreferenceTitle">User interface settings</string>
     <string name="PreferencesActivity.UIPreferenceSummary">Customize the user interface.</string>
     <string name="Main.MenuExit">Exit</string>
     <string name="PreferencesActivity.RestartDialogTitle">Restart required</string>
     <string name="PreferencesActivity.RestartDialogMessage">This change will not take effect until the
-		application restart. Do you want to do it now?
-	</string>
+		application restart. Do you want to do it now?</string>
 
     <!-- 0.3.5 -->
     <string name="PreferencesActivity.EnablePluginsTitle">Enable plug-ins</string>
@@ -481,26 +450,21 @@
     <string name="Commons.Continue">Continue</string>
     <string name="Commons.SslWarning">Security warning</string>
     <string name="Commons.SslWarningsHeader">There are problems with the security certificate
-		for this site.
-	</string>
-    <string name="Commons.SslUntrusted">This certificate is not from a trusted authority.
-	</string>
+		for this site.</string>
+    <string name="Commons.SslUntrusted">This certificate is not from a trusted authority.</string>
     <string name="Commons.SslIDMismatch">The name of the site does not match the name on the
-		certificate.
-	</string>
+		certificate.</string>
     <string name="Commons.SslExpired">This certificate has expired.</string>
     <string name="Commons.SslNotYetValid">This certificate is not valid yet.</string>
     <string name="Main.MenuMobileView">Mobile view</string>
-    <string name="MobileViewListActivity.Title">Zirco Browser - Websites list for mobile view
-	</string>
+    <string name="MobileViewListActivity.Title">Zirco Browser - Websites list for mobile view</string>
     <string name="MobileViewListActivity.ListEmpty">List is empty.</string>
     <string name="MobileViewListActivity.AddMessage">Add a website</string>
     <string name="MobileViewListActivity.ClearMessage">Clear all sites</string>
     <string name="PreferencesActivity.MobileViewCategoryTitle">Mobile view settings</string>
     <string name="PreferencesActivity.MobileViewListPreferenceTitle">Manage websites</string>
     <string name="PreferencesActivity.MobileViewListPreferenceSummary">Websites in this list will be loaded using Google
-		mobile view (GWT).
-	</string>
+		mobile view (GWT).</string>
     <string name="Commons.Add">Add</string>
     <string name="Commons.Clear">Clear</string>
     <string name="Commons.Delete">Delete</string>
@@ -536,19 +500,15 @@
     <!-- 0.3.8 -->
     <string name="PreferencesActivity.HideTitleBarPreferenceTitle">Hide title bars</string>
     <string name="PreferencesActivity.HideTitleBarPreferenceSummary">If checked, windows title bars will not be
-		displayed (need application restart).
-	</string>
+		displayed (need application restart).</string>
     <string name="PreferencesActivity.UseWideViewPortPreferenceTitle">Use wide viewport</string>
     <string name="PreferencesActivity.UseWideViewPortPreferenceSummary">If checked, browser will use a viewport similar to
-		desktop browsers.
-	</string>
+		desktop browsers.</string>
     <string name="PreferencesActivity.LoadWithOverviewPreferenceTitle">Load pages with overview</string>
     <string name="PreferencesActivity.LoadWithOverviewPreferenceSummary">If checked, pages will load zoomed out to show an
-		overview of the page.
-	</string>
+		overview of the page.</string>
     <string name="PreferencesActivity.SwitchTabsMethodPreferenceTitle">Switch tabs method</string>
-    <string name="PreferencesActivity.SwitchTabsMethodPreferenceSummary">Define how you can switch between open tabs.
-	</string>
+    <string name="PreferencesActivity.SwitchTabsMethodPreferenceSummary">Define how you can switch between open tabs.</string>
     <string name="PreferencesActivity.SwitchTabButtons">Buttons</string>
     <string name="PreferencesActivity.SwitchTabFling">Fling</string>
     <string name="PreferencesActivity.SwitchTabBoth">Both</string>
@@ -574,10 +534,10 @@
     <string name="QuickAction.Share">Share</string>
     <string name="QuickAction.SelectText">Select text</string>
     <string name="QuickAction.MobileView">Mobile view</string>
+    <string name="QuickAction.Menu">Menu</string>
     <string name="AboutActivity.OtherLicenseText">This application include code from the GreenDroid
 		project (https://github.com/cyrilmottier/GreenDroid/), licensed under
-		the Apache license, version 2.
-	</string>
+		the Apache license, version 2.</string>
 
     <!-- 0.4.0 -->
     <string name="PreferencesActivity.WeavePreferenceTitle">Firefox bookmarks synchronization</string>

@@ -82,6 +82,7 @@ class WeaveTransport {
 			}
 		}
 	}
+
 	/**
 	 * Based on BasicResponseHandler
 	 */
@@ -144,6 +145,7 @@ class WeaveTransport {
 			verify(host, cns, subjectAlts, false);
 		}
 	}
+
 	@SuppressWarnings("serial")
 	public static class WeaveResponseException extends HttpResponseException {
 

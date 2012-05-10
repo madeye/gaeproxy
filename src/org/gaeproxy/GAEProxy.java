@@ -40,21 +40,20 @@ package org.gaeproxy;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.gaeproxy.db.DNSResponse;
+import org.gaeproxy.db.DatabaseHelper;
+
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -62,7 +61,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -81,11 +79,12 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,182 +92,16 @@ import com.flurry.android.FlurryAgent;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 
-public class GAEProxy extends PreferenceActivity implements
-		OnSharedPreferenceChangeListener {
-
-	class DownloadFileRunnable implements Runnable {
-
-		private String[] path;
-
-		private int progress_count = 0;
-
-		public DownloadFileRunnable(String... path) {
-			this.path = path;
-			notification.contentView.setProgressBar(R.id.pb, 100, 0, false);
-			nm.notify(notification_id, notification);
-		}
-
-		protected void publishProgress(String progress) {
-			int now = Integer.parseInt(progress);
-			if (now - progress_count > 5) {
-				Log.d("ANDRO_ASYNC", progress);
-				notification.contentView.setProgressBar(R.id.pb, 100,
-						Integer.parseInt(progress), false);
-				nm.notify(notification_id, notification);
-				progress_count = now;
-			}
-		}
-
-		@Override
-		public void run() {
-			int count;
-
-			handler.sendEmptyMessage(MSG_INSTALL_START);
-			PowerManager.WakeLock mWakeLock;
-			PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-			mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK
-					| PowerManager.ON_AFTER_RELEASE, "GAEProxy");
-
-			mWakeLock.acquire();
-
-			// Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(
-			// "www.google.com.hk", 80));
-
-			try {
-
-				File zip = new File(path[1]);
-
-				URL url = new URL(path[0]);
-				URLConnection conexion = url.openConnection();
-				conexion.connect();
-				conexion.setConnectTimeout(4 * 1000);
-				conexion.setReadTimeout(8 * 1000);
-				int lenghtOfFile = conexion.getContentLength();
-
-				if (lenghtOfFile < 0)
-					throw new Exception("Length of File: " + lenghtOfFile);
-
-				if (!zip.exists() || lenghtOfFile != zip.length()) {
-
-					Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
-
-					InputStream input = new BufferedInputStream(
-							url.openStream());
-					OutputStream output = new FileOutputStream(path[1]);
-
-					byte data[] = new byte[1024];
-
-					long total = 0;
-
-					while ((count = input.read(data)) != -1) {
-						total += count;
-						publishProgress(""
-								+ (int) ((total * 50) / lenghtOfFile));
-						output.write(data, 0, count);
-					}
-
-					output.flush();
-					output.close();
-					input.close();
-				}
-
-				publishProgress("" + 50);
-				// Unzip now
-				unzip(path[1], path[2]);
-
-				// Unzip another file
-				zip = new File(path[4]);
-
-				url = new URL(path[3]);
-				conexion = url.openConnection();
-				conexion.setConnectTimeout(4 * 1000);
-				conexion.setReadTimeout(8 * 1000);
-				conexion.connect();
-
-				lenghtOfFile = conexion.getContentLength();
-
-				if (lenghtOfFile < 0)
-					throw new Exception("Length of File: " + lenghtOfFile);
-
-				if (!zip.exists() || zip.length() != lenghtOfFile) {
-
-					Log.d("ANDRO_ASYNC", "Lenght of file: " + lenghtOfFile);
-
-					InputStream input = new BufferedInputStream(
-							url.openStream());
-					OutputStream output = new FileOutputStream(path[4]);
-
-					byte data[] = new byte[1024];
-
-					long total = 0;
-
-					while ((count = input.read(data)) != -1) {
-						total += count;
-						publishProgress(""
-								+ (int) (50 + (total * 50) / lenghtOfFile));
-						output.write(data, 0, count);
-					}
-
-					output.flush();
-					output.close();
-					input.close();
-				}
-
-				publishProgress("" + 100);
-				// Unzip File
-				unzip(path[4], path[5]);
-				handler.sendEmptyMessage(MSG_INSTALL_SUCCESS);
-
-			} catch (Exception e) {
-				handler.sendEmptyMessage(MSG_INSTALL_FAIL);
-				Log.e("error", e.getMessage().toString());
-			}
-
-			if (mWakeLock.isHeld())
-				mWakeLock.release();
-
-			nm.cancel(notification_id);
-		}
-
-		public void unzip(String file, String path) {
-			dirChecker(path);
-			try {
-				FileInputStream fin = new FileInputStream(file);
-				ZipInputStream zin = new ZipInputStream(fin);
-				ZipEntry ze = null;
-				while ((ze = zin.getNextEntry()) != null) {
-					if (ze.getName().contains("__MACOSX"))
-						continue;
-					// Log.v("Decompress", "Unzipping " + ze.getName());
-					if (ze.isDirectory()) {
-						dirChecker(path + ze.getName());
-					} else {
-						FileOutputStream fout = new FileOutputStream(path
-								+ ze.getName());
-						byte data[] = new byte[2048];
-						int count;
-						while ((count = zin.read(data)) != -1) {
-							fout.write(data, 0, count);
-						}
-						zin.closeEntry();
-						fout.close();
-					}
-
-				}
-				zin.close();
-			} catch (Exception e) {
-				Log.e("Decompress", "unzip", e);
-			}
-
-		}
-
-	}
+public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 
 	private static final String TAG = "GAEProxy";
-	public static final String PREFS_NAME = "GAEProxy";
 
+	public static final String PREFS_NAME = "GAEProxy";
 	private String proxy;
+
 	private int port;
 	private String sitekey = "";
 	private String proxyType = "GoAgent";
@@ -276,16 +109,8 @@ public class GAEProxy extends PreferenceActivity implements
 	private boolean isHTTPSProxy = false;
 	private boolean isGFWList = false;
 
-	// Notification Progress Bar
-	int notification_id = 19172439;
-	NotificationManager nm;
-	Notification notification;
-
-	private static final int MSG_INSTALL_START = 0;
-	private static final int MSG_INSTALL_SUCCESS = 1;
-	private static final int MSG_INSTALL_FAIL = 2;
-	private static final int MSG_CRASH_RECOVER = 3;
-	private static final int MSG_INITIAL_FINISH = 4;
+	private static final int MSG_CRASH_RECOVER = 1;
+	private static final int MSG_INITIAL_FINISH = 2;
 
 	final Handler handler = new Handler() {
 		@Override
@@ -294,27 +119,8 @@ public class GAEProxy extends PreferenceActivity implements
 					.getDefaultSharedPreferences(GAEProxy.this);
 			Editor ed = settings.edit();
 			switch (msg.what) {
-			case MSG_INSTALL_START:
-				ed.putBoolean("isInstalled", false);
-				break;
-			case MSG_INSTALL_SUCCESS:
-				ed.putBoolean("isInstalling", false);
-				ed.putBoolean("isInstalled", true);
-				isInstalledCheck.setEnabled(true);
-
-				// prepare for python
-				Utils.runCommand("chmod 755 /data/data/org.gaeproxy/python/bin/python");
-				
-				break;
-			case MSG_INSTALL_FAIL:
-				ed.putBoolean("isInstalling", false);
-				ed.putBoolean("isInstalled", false);
-				isInstalledCheck.setEnabled(true);
-				break;
 			case MSG_CRASH_RECOVER:
-				Toast.makeText(GAEProxy.this, R.string.crash_alert,
-						Toast.LENGTH_LONG).show();
-				ed.putBoolean("isInstalling", false);
+				Toast.makeText(GAEProxy.this, R.string.crash_alert, Toast.LENGTH_LONG).show();
 				ed.putBoolean("isRunning", false);
 				break;
 			case MSG_INITIAL_FINISH:
@@ -322,7 +128,6 @@ public class GAEProxy extends PreferenceActivity implements
 					pd.dismiss();
 					pd = null;
 				}
-				Utils.isRoot();
 				break;
 			}
 			ed.commit();
@@ -333,8 +138,8 @@ public class GAEProxy extends PreferenceActivity implements
 	private static ProgressDialog pd = null;
 
 	private CheckBoxPreference isAutoConnectCheck;
+
 	private CheckBoxPreference isGlobalProxyCheck;
-	private CheckBoxPreference isInstalledCheck;
 	private EditTextPreference proxyText;
 	private EditTextPreference portText;
 	private EditTextPreference sitekeyText;
@@ -343,26 +148,11 @@ public class GAEProxy extends PreferenceActivity implements
 	private CheckBoxPreference isGFWListCheck;
 	private CheckBoxPreference isRunningCheck;
 	private AdView adView;
-
 	private Preference proxyedApps;
+
 	private Preference browser;
 
-	private boolean checkApkExist(String packageName) {
-		if (packageName == null || "".equals(packageName))
-			return false;
-		try {
-			ApplicationInfo info = getPackageManager().getApplicationInfo(
-					packageName, 0);
-			if (info != null)
-				return true;
-			else
-				return false;
-		} catch (NameNotFoundException e) {
-			return false;
-		}
-	}
-
-	private void CopyAssets(String path) {
+	private void copyAssets(String path) {
 
 		AssetManager assetManager = getAssets();
 		String[] files = null;
@@ -375,22 +165,14 @@ public class GAEProxy extends PreferenceActivity implements
 			InputStream in = null;
 			OutputStream out = null;
 			try {
-				// if (!(new File("/data/data/org.gaeproxy/" +
-				// files[i])).exists()) {
-				if (files[i].equals("hosts")
-						&& (new File("/data/data/org.gaeproxy/" + files[i]))
-								.exists())
-					continue;
 				in = assetManager.open(files[i]);
-				out = new FileOutputStream("/data/data/org.gaeproxy/"
-						+ files[i]);
+				out = new FileOutputStream("/data/data/org.gaeproxy/" + files[i]);
 				copyFile(in, out);
 				in.close();
 				in = null;
 				out.flush();
 				out.close();
 				out = null;
-				// }
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage());
 			}
@@ -403,6 +185,14 @@ public class GAEProxy extends PreferenceActivity implements
 		while ((read = in.read(buffer)) != -1) {
 			out.write(buffer, 0, read);
 		}
+	}
+
+	private void crash_recovery() {
+
+		Utils.runRootCommand(Utils.getIptables() + " -t nat -F OUTPUT");
+
+		Utils.runCommand(GAEProxyService.BASE + "proxy.sh stop");
+
 	}
 
 	private void dirChecker(String dir) {
@@ -423,7 +213,6 @@ public class GAEProxy extends PreferenceActivity implements
 		isAutoConnectCheck.setEnabled(false);
 		isGlobalProxyCheck.setEnabled(false);
 		isHTTPSProxyCheck.setEnabled(false);
-		isInstalledCheck.setEnabled(false);
 		proxyTypeList.setEnabled(false);
 	}
 
@@ -440,47 +229,30 @@ public class GAEProxy extends PreferenceActivity implements
 		isAutoConnectCheck.setEnabled(true);
 		isGFWListCheck.setEnabled(true);
 		isHTTPSProxyCheck.setEnabled(true);
-		isInstalledCheck.setEnabled(true);
 		proxyTypeList.setEnabled(true);
 	}
 
 	private boolean install() {
 
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		if (settings.getBoolean("isInstalling", false))
-			return false;
+		PowerManager.WakeLock mWakeLock;
+		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK
+				| PowerManager.ON_AFTER_RELEASE, "GAEProxy");
 
 		String data_path = Utils.getDataPath(this);
 
-		isInstalledCheck.setEnabled(false);
-		showAToast(getString(R.string.downloading));
+		try {
+			final InputStream pythonZip = getAssets().open("modules/python.mp3");
+			final InputStream extraZip = getAssets().open("modules/python-extras.mp3");
 
-		Editor ed = settings.edit();
-		ed.putBoolean("isInstalling", true);
-		ed.commit();
-
-		DownloadFileRunnable progress;
-		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-		String countryCode = tm.getSimCountryIso();
-		String num = tm.getSimOperator();
-		if (countryCode.toLowerCase().equals("cn") || num.equals("31026")) {
-
-			progress = new DownloadFileRunnable(
-					"http://myhosts.sinaapp.com/python_r2.zip", data_path
-							+ "/python.zip", "/data/data/org.gaeproxy/",
-					"http://myhosts.sinaapp.com/python-extras_r2.zip",
-					data_path + "/python-extras.zip", data_path + "/");
-		} else {
-			progress = new DownloadFileRunnable(
-
-					"http://gaeproxy.googlecode.com/files/python_r2.zip",
-					data_path + "/python.zip",
-					"/data/data/org.gaeproxy/",
-					"http://gaeproxy.googlecode.com/files/python-extras_r2.zip",
-					data_path + "/python-extras.zip", data_path + "/");
+			unzip(pythonZip, "/data/data/org.gaeproxy/");
+			unzip(extraZip, data_path + "/");
+		} catch (IOException e) {
+			Log.e(TAG, "unable to install python");
 		}
-		new Thread(progress).start();
+		if (mWakeLock.isHeld())
+			mWakeLock.release();
+
 		return true;
 	}
 
@@ -504,7 +276,7 @@ public class GAEProxy extends PreferenceActivity implements
 		adView = new AdView(GAEProxy.this, AdSize.BANNER, "a14d8be8a284afc");
 		// Lookup your LinearLayout assuming it’s been given
 		// the attribute android:id="@+id/mainLayout"
-		LinearLayout layout = (LinearLayout) findViewById(R.id.ad);
+		FrameLayout layout = (FrameLayout) findViewById(R.id.ad);
 		// Add the adView to it
 		layout.addView(adView);
 		// Initiate a generic request to load it with an ad
@@ -522,57 +294,71 @@ public class GAEProxy extends PreferenceActivity implements
 		isAutoConnectCheck = (CheckBoxPreference) findPreference("isAutoConnect");
 		isHTTPSProxyCheck = (CheckBoxPreference) findPreference("isHTTPSProxy");
 		isGlobalProxyCheck = (CheckBoxPreference) findPreference("isGlobalProxy");
-		isInstalledCheck = (CheckBoxPreference) findPreference("isInstalled");
 		proxyTypeList = (ListPreference) findPreference("proxyType");
 		isGFWListCheck = (CheckBoxPreference) findPreference("isGFWList");
 
 		if (pd == null)
-			pd = ProgressDialog.show(this, "",
-					getString(R.string.initializing), true, true);
+			pd = ProgressDialog.show(this, "", getString(R.string.initializing), true, true);
+
+		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
 		new Thread() {
 			@Override
 			public void run() {
 
-				nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-				notification = new Notification(R.drawable.icon,
-						getString(R.string.download),
-						System.currentTimeMillis());
-				notification.contentView = new RemoteViews(getPackageName(),
-						R.layout.layout_progress_bar);
-				// 使用notification.xml文件作VIEW
-				notification.contentView.setProgressBar(R.id.pb, 100, 0, false);
-				// 设置进度条，最大值 为100,当前值为0，最后一个参数为true时显示条纹
-				// （就是在Android Market下载软件，点击下载但还没获取到目标大小时的状态）
-				Intent notificationIntent = new Intent(GAEProxy.this,
-						GAEProxy.class);
-				PendingIntent contentIntent = PendingIntent.getActivity(
-						GAEProxy.this, 0, notificationIntent, 0);
-				notification.contentIntent = contentIntent;
+				Utils.isRoot();
 
-				if (!Utils.isInitialized()
-						&& !GAEProxyService.isServiceStarted()) {
+				String versionName;
+				try {
+					versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+				} catch (NameNotFoundException e) {
+					versionName = "NONE";
+				}
 
-					CopyAssets("");
+				if (!settings.getBoolean(versionName, false)) {
+
+					Editor edit = settings.edit();
+					edit.putBoolean(versionName, true);
+					edit.commit();
+
+					File f = new File("/data/data/org.gaeproxy/certs");
+					if (f.exists() && f.isFile())
+						f.delete();
+					if (!f.exists())
+						f.mkdir();
+
+					File hosts = new File("/data/data/org.gaeproxy/hosts");
+
+					if (hosts.exists())
+						hosts.delete();
+
+					copyAssets("");
 
 					Utils.runCommand("chmod 755 /data/data/org.gaeproxy/iptables\n"
 							+ "chmod 755 /data/data/org.gaeproxy/redsocks\n"
 							+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n"
-							+ "chmod 755 /data/data/org.gaeproxy/python/bin/python\n");
+							+ "chmod 755 /data/data/org.gaeproxy/python-cl\n");
+
+					install();
+
+				}
+
+				if (!(new File(Utils.getDataPath(GAEProxy.this) + "/python-extras")).exists()) {
+					install();
+				}
+
+				if (!Utils.isInitialized() && !GAEProxyService.isServiceStarted()) {
 
 					try {
 						URL aURL = new URL("http://myhosts.sinaapp.com/hosts");
-						HttpURLConnection conn = (HttpURLConnection) aURL
-								.openConnection();
+						HttpURLConnection conn = (HttpURLConnection) aURL.openConnection();
 						conn.setConnectTimeout(3 * 1000);
 						conn.setReadTimeout(6 * 1000);
 						conn.connect();
-						InputStream input = new BufferedInputStream(
-								conn.getInputStream());
-						OutputStream output = new FileOutputStream(
-								"/data/data/org.gaeproxy/hosts");
+						InputStream input = new BufferedInputStream(conn.getInputStream());
+						OutputStream output = new FileOutputStream("/data/data/org.gaeproxy/hosts");
 
 						byte data[] = new byte[1024];
 
@@ -603,10 +389,10 @@ public class GAEProxy extends PreferenceActivity implements
 		 * 2、Id，这个很重要，Android根据这个Id来确定不同的菜单 3、顺序，那个菜单现在在前面由这个参数的大小决定
 		 * 4、文本，菜单的显示文本
 		 */
-		menu.add(Menu.NONE, Menu.FIRST + 1, 1, getString(R.string.recovery))
-				.setIcon(android.R.drawable.ic_menu_delete);
-		menu.add(Menu.NONE, Menu.FIRST + 2, 2, getString(R.string.about))
-				.setIcon(android.R.drawable.ic_menu_info_details);
+		menu.add(Menu.NONE, Menu.FIRST + 1, 1, getString(R.string.recovery)).setIcon(
+				android.R.drawable.ic_menu_delete);
+		menu.add(Menu.NONE, Menu.FIRST + 2, 2, getString(R.string.about)).setIcon(
+				android.R.drawable.ic_menu_info_details);
 		// return true才会起作用
 		return true;
 
@@ -654,8 +440,7 @@ public class GAEProxy extends PreferenceActivity implements
 		case Menu.FIRST + 2:
 			String versionName = "";
 			try {
-				versionName = getPackageManager().getPackageInfo(
-						getPackageName(), 0).versionName;
+				versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 			} catch (NameNotFoundException e) {
 				versionName = "";
 			}
@@ -672,45 +457,21 @@ public class GAEProxy extends PreferenceActivity implements
 		super.onPause();
 
 		// Unregister the listener whenever a key changes
-		getPreferenceScreen().getSharedPreferences()
-				.unregisterOnSharedPreferenceChangeListener(this);
+		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
+				this);
 	}
 
 	@Override
-	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-			Preference preference) {
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
+	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (preference.getKey() != null
-				&& preference.getKey().equals("proxyedApps")) {
+		if (preference.getKey() != null && preference.getKey().equals("proxyedApps")) {
 			Intent intent = new Intent(this, AppManager.class);
 			startActivity(intent);
-		} else if (preference.getKey() != null
-				&& preference.getKey().equals("browser")) {
-			Intent intent = new Intent(this,
-					org.gaeproxy.zirco.ui.activities.MainActivity.class);
+		} else if (preference.getKey() != null && preference.getKey().equals("browser")) {
+			Intent intent = new Intent(this, org.gaeproxy.zirco.ui.activities.MainActivity.class);
 			startActivity(intent);
-		} else if (preference.getKey() != null
-				&& preference.getKey().equals("isInstalled")) {
-			if (settings.getBoolean("isInstalled", false)) {
-				if (install()) {
-				} else {
-					Editor ed = settings.edit();
-					ed.putBoolean("isInstalled", false);
-					ed.commit();
-				}
-			} else {
-			}
-		} else if (preference.getKey() != null
-				&& preference.getKey().equals("isRunning")) {
-			if (!settings.getBoolean("isInstalled", false)) {
-				showAToast(getString(R.string.install_alert));
-				Editor edit = settings.edit();
-				edit.putBoolean("isRunning", false);
-				edit.commit();
-				return false;
-			}
+		} else if (preference.getKey() != null && preference.getKey().equals("isRunning")) {
 			if (!serviceStart()) {
 				Editor edit = settings.edit();
 				edit.putBoolean("isRunning", false);
@@ -723,8 +484,7 @@ public class GAEProxy extends PreferenceActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (settings.getBoolean("isGlobalProxy", false))
 			proxyedApps.setEnabled(false);
@@ -761,13 +521,9 @@ public class GAEProxy extends PreferenceActivity implements
 			disableAll();
 			browser.setEnabled(true);
 		} else {
-			if (settings.getBoolean("isInstalling", false)) {
-				disableAll();
-			} else {
-				enableAll();
-			}
 			browser.setEnabled(false);
 			isRunningCheck.setChecked(false);
+			enableAll();
 		}
 
 		// Setup the initial values
@@ -779,31 +535,25 @@ public class GAEProxy extends PreferenceActivity implements
 			proxyTypeList.setSummary(settings.getString("proxyType", ""));
 
 		if (!settings.getString("port", "").equals(""))
-			portText.setSummary(settings.getString("port",
-					getString(R.string.port_summary)));
+			portText.setSummary(settings.getString("port", getString(R.string.port_summary)));
 
 		if (!settings.getString("proxy", "").equals(""))
-			proxyText.setSummary(settings.getString("proxy",
-					getString(R.string.proxy_summary)));
+			proxyText.setSummary(settings.getString("proxy", getString(R.string.proxy_summary)));
 
 		// Set up a listener whenever a key changes
-		getPreferenceScreen().getSharedPreferences()
-				.registerOnSharedPreferenceChangeListener(this);
+		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		// Let's do something a preference value changes
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (key.equals("isConnecting")) {
 			if (settings.getBoolean("isConnecting", false)) {
 				Log.d(TAG, "Connecting start");
 				if (pd == null)
-					pd = ProgressDialog.show(this, "",
-							getString(R.string.connecting), true, true);
+					pd = ProgressDialog.show(this, "", getString(R.string.connecting), true, true);
 			} else {
 				Log.d(TAG, "Connecting finish");
 				if (pd != null) {
@@ -841,13 +591,6 @@ public class GAEProxy extends PreferenceActivity implements
 			}
 		}
 
-		if (key.equals("isInstalled")) {
-			if (settings.getBoolean("isInstalled", false))
-				isInstalledCheck.setChecked(true);
-			else
-				isInstalledCheck.setChecked(false);
-		}
-
 		if (key.equals("isGlobalProxy")) {
 			if (settings.getBoolean("isGlobalProxy", false))
 				proxyedApps.setEnabled(false);
@@ -861,20 +604,8 @@ public class GAEProxy extends PreferenceActivity implements
 				browser.setEnabled(true);
 				isRunningCheck.setChecked(true);
 			} else {
-				if (settings.getBoolean("isInstalling", false)) {
-					disableAll();
-				} else {
-					enableAll();
-				}
 				browser.setEnabled(false);
 				isRunningCheck.setChecked(false);
-			}
-		}
-
-		if (key.equals("isInstalling")) {
-			if (settings.getBoolean("isInstalling", false)) {
-				disableAll();
-			} else {
 				enableAll();
 			}
 		}
@@ -922,21 +653,10 @@ public class GAEProxy extends PreferenceActivity implements
 		FlurryAgent.onEndSession(this);
 	}
 
-	private void crash_recovery() {
-
-		Utils.runRootCommand(Utils.getIptables() + " -t nat -F OUTPUT");
-
-		Utils.runCommand(GAEProxyService.BASE + "proxy.sh stop");
-
-		handler.sendEmptyMessage(MSG_INSTALL_SUCCESS);
-
-	}
-
 	private void recovery() {
 
 		if (pd == null)
-			pd = ProgressDialog.show(this, "", getString(R.string.recovering),
-					true, true);
+			pd = ProgressDialog.show(this, "", getString(R.string.recovering), true, true);
 
 		final Handler h = new Handler() {
 			@Override
@@ -957,23 +677,54 @@ public class GAEProxy extends PreferenceActivity implements
 		new Thread() {
 			@Override
 			public void run() {
+
 				Utils.runRootCommand(Utils.getIptables() + " -t nat -F OUTPUT");
 
 				Utils.runCommand(GAEProxyService.BASE + "proxy.sh stop");
 
-				File cache = new File(GAEProxyService.BASE + "cache/dnscache");
-				if (cache.exists())
-					cache.delete();
+				try {
+					DatabaseHelper helper = OpenHelperManager.getHelper(GAEProxy.this,
+							DatabaseHelper.class);
+					Dao<DNSResponse, String> dnsCacheDao = helper.getDNSCacheDao();
+					List<DNSResponse> list = dnsCacheDao.queryForAll();
+					for (DNSResponse resp : list) {
+						dnsCacheDao.delete(resp);
+					}
+				} catch (Exception ignore) {
+					// Nothing
+				}
 
-				CopyAssets("");
+				File f = new File("/data/data/org.gaeproxy/certs");
+				if (f.exists() && f.isFile())
+					f.delete();
+
+				if (f.exists() && f.isDirectory()) {
+					File[] files = f.listFiles();
+					for (int i = 0; i < files.length; i++)
+						if (!files[i].isDirectory())
+							files[i].delete();
+					f.delete();
+				}
+
+				if (!f.exists())
+					f.mkdir();
+
+				File hosts = new File("/data/data/org.gaeproxy/hosts");
+
+				if (hosts.exists())
+					hosts.delete();
+
+				copyAssets("");
 
 				Utils.runCommand("chmod 755 /data/data/org.gaeproxy/iptables\n"
 						+ "chmod 755 /data/data/org.gaeproxy/redsocks\n"
 						+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 						+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
-						+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n");
+						+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n"
+						+ "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 
-				handler.sendEmptyMessage(MSG_INSTALL_SUCCESS);
+				install();
+
 				h.sendEmptyMessage(0);
 			}
 		}.start();
@@ -996,8 +747,7 @@ public class GAEProxy extends PreferenceActivity implements
 			return false;
 		}
 
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
 		proxyType = settings.getString("proxyType", "GoAgent");
 
@@ -1005,18 +755,10 @@ public class GAEProxy extends PreferenceActivity implements
 		if (isTextEmpty(proxy, getString(R.string.proxy_empty)))
 			return false;
 
-		// if (!proxy.startsWith("https://")) {
-		// showAToast(getString(R.string.https_alert));
-		// return false;
-		// }
-
 		if (proxy.contains("proxyofmax.appspot.com")) {
 			final TextView message = new TextView(this);
 			message.setPadding(10, 5, 10, 5);
-			// i.e.: R.string.dialog_message =>
-			// "Test this dialog following the link to dtmilano.blogspot.com"
-			final SpannableString s = new SpannableString(
-					getText(R.string.default_proxy_alert));
+			final SpannableString s = new SpannableString(getText(R.string.default_proxy_alert));
 			Linkify.addLinks(s, Linkify.WEB_URLS);
 			message.setText(s);
 			message.setMovementMethod(LinkMovementMethod.getInstance());
@@ -1028,8 +770,7 @@ public class GAEProxy extends PreferenceActivity implements
 					.setNegativeButton(getString(R.string.ok_iknow),
 							new DialogInterface.OnClickListener() {
 								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
+								public void onClick(DialogInterface dialog, int id) {
 									dialog.cancel();
 								}
 							}).setView(message).create().show();
@@ -1090,6 +831,35 @@ public class GAEProxy extends PreferenceActivity implements
 						});
 		AlertDialog alert = builder.create();
 		alert.show();
+	}
+
+	public void unzip(InputStream zip, String path) {
+		dirChecker(path);
+		try {
+			ZipInputStream zin = new ZipInputStream(zip);
+			ZipEntry ze = null;
+			while ((ze = zin.getNextEntry()) != null) {
+				if (ze.getName().contains("__MACOSX"))
+					continue;
+				// Log.v("Decompress", "Unzipping " + ze.getName());
+				if (ze.isDirectory()) {
+					dirChecker(path + ze.getName());
+				} else {
+					FileOutputStream fout = new FileOutputStream(path + ze.getName());
+					byte data[] = new byte[10 * 1024];
+					int count;
+					while ((count = zin.read(data)) != -1) {
+						fout.write(data, 0, count);
+					}
+					zin.closeEntry();
+					fout.close();
+				}
+
+			}
+			zin.close();
+		} catch (Exception e) {
+			Log.e("Decompress", "unzip", e);
+		}
 	}
 
 }

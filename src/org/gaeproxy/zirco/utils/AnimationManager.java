@@ -30,9 +30,11 @@ public final class AnimationManager {
 	private static class AnimationManagerHolder {
 		private static final AnimationManager INSTANCE = new AnimationManager();
 	}
+
 	private static final int BARS_ANIMATION_DURATION = 150;
 
 	private static final int ANIMATION_DURATION = 350;
+
 	/**
 	 * Get the unique instance of the Controller.
 	 * 
@@ -41,6 +43,7 @@ public final class AnimationManager {
 	public static AnimationManager getInstance() {
 		return AnimationManagerHolder.INSTANCE;
 	}
+
 	private Animation mTopBarShowAnimation = null;
 	private Animation mTopBarHideAnimation = null;
 

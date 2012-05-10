@@ -63,6 +63,7 @@ public class WeaveBasicObject {
 			return m_nodeObj.getString("IV");
 		}
 	}
+
 	private URI m_uri = null;
 	private final URI m_queryUri;
 

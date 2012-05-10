@@ -127,13 +127,13 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
 	public Object getChild(int groupPosition, int childPosition) {
 		moveCursorToChildPosition(groupPosition, childPosition);
 
-		String title = mCursor.getString(Browser.HISTORY_PROJECTION_TITLE_INDEX);
+		String title = mCursor
+				.getString(Browser.HISTORY_PROJECTION_TITLE_INDEX);
 		if (title.length() > 11)
 			title = title.substring(0, 10) + "...";
-		
+
 		return new HistoryItem(
-				mCursor.getLong(Browser.HISTORY_PROJECTION_ID_INDEX),
-				title,
+				mCursor.getLong(Browser.HISTORY_PROJECTION_ID_INDEX), title,
 				mCursor.getString(Browser.HISTORY_PROJECTION_URL_INDEX),
 				mCursor.getBlob(Browser.HISTORY_PROJECTION_FAVICON_INDEX));
 	}

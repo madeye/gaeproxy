@@ -309,8 +309,7 @@ public class BookmarksProviderWrapper {
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
 
-				int columnId = cursor
-						.getColumnIndex(BaseColumns._ID);
+				int columnId = cursor.getColumnIndex(BaseColumns._ID);
 				int columnTitle = cursor
 						.getColumnIndex(Browser.BookmarkColumns.TITLE);
 				int columnUrl = cursor
@@ -603,8 +602,7 @@ public class BookmarksProviderWrapper {
 					whereClause, null, null);
 			bookmarkExist = (cursor != null) && (cursor.moveToFirst());
 			if (bookmarkExist) {
-				id = cursor.getLong(cursor
-						.getColumnIndex(BaseColumns._ID));
+				id = cursor.getLong(cursor.getColumnIndex(BaseColumns._ID));
 			}
 		}
 
@@ -744,8 +742,8 @@ public class BookmarksProviderWrapper {
 		if (cursor != null) {
 			if (cursor.moveToFirst()) {
 
-				long id = cursor.getLong(cursor
-						.getColumnIndex(BaseColumns._ID));
+				long id = cursor
+						.getLong(cursor.getColumnIndex(BaseColumns._ID));
 				int visits = cursor.getInt(cursor
 						.getColumnIndex(Browser.BookmarkColumns.VISITS)) + 1;
 

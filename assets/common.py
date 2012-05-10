@@ -52,8 +52,8 @@ DEF_LISTEN_PORT = 8000
 DEF_LOCAL_PROXY = ''
 DEF_FETCH_SERVER = ''
 DEF_CONF_FILE = os.path.join(dir, 'proxy.conf')
-DEF_CERT_FILE = os.path.join(dir, 'LocalProxyServer.cert')
-DEF_KEY_FILE  = os.path.join(dir, 'LocalProxyServer.key')
+DEF_CERT_FILE = os.path.join(dir, 'CA.cert')
+DEF_KEY_FILE  = os.path.join(dir, 'CA.key')
 
 class GAppProxyError(Exception):
     def __init__(self, reason):

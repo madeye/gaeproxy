@@ -53,8 +53,7 @@ public class ImageLoader {
 						Bitmap bmp = getBitmap(photoToLoad.uid);
 						cache.put(photoToLoad.uid, bmp);
 						Object tag = photoToLoad.imageView.getTag();
-						if (tag != null
-								&& ((Integer) tag) == photoToLoad.uid) {
+						if (tag != null && ((Integer) tag) == photoToLoad.uid) {
 							BitmapDisplayer bd = new BitmapDisplayer(bmp,
 									photoToLoad.imageView);
 							Activity a = (Activity) photoToLoad.imageView
@@ -120,7 +119,7 @@ public class ImageLoader {
 
 		// Find the dir to save cached images
 		cacheDir = context.getCacheDir();
-		
+
 	}
 
 	public void clearCache() {

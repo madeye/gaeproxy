@@ -58,10 +58,12 @@ public class UserWeave {
 		builder.appendEncodedPath(subpath);
 		return builder.build();
 	}
+
 	protected static URI buildSyncUriFromSubpath(URI clusterUri, String userId,
 			String subpath) {
 		return buildSyncUriFromSubpath(clusterUri, userId, null, subpath);
 	}
+
 	protected static URI buildUserUriFromSubpath(URI authUri, String userId,
 			String subpath) {
 		WeaveUtil.checkNull(authUri);
@@ -74,6 +76,7 @@ public class UserWeave {
 		builder.appendEncodedPath(subpath);
 		return builder.build();
 	}
+
 	private final WeaveTransport m_transport;
 	private final URI m_authUri;
 	@SuppressWarnings("unused")

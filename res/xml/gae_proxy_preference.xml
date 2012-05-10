@@ -97,22 +97,14 @@
             android:ringtoneType="notification"
             android:showDefault="true"
             android:showSilent="true"
-            android:title="@string/notif_ringtone_title" />
+            android:title="@string/notif_ringtone_title"
+            android:summary="@string/notif_ringtone_summary" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="settings_key_notif_vibrate"
             android:summary="@string/notif_vibrate_summary"
             android:title="@string/notif_vibrate_title" />
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/install_cat" >
-
-        <CheckBoxPreference
-            android:key="isInstalled"
-            android:summary="@string/isInstalled_summary"
-            android:title="@string/isInstalled" >
-        </CheckBoxPreference>
     </PreferenceCategory>
 
 </PreferenceScreen>

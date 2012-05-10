@@ -72,6 +72,7 @@ public class APNManager {
 			this.port = port;
 		}
 	}
+
 	private static final String ID = "_id";
 	private static final String APN = "apn";
 	private static final String TYPE = "type";

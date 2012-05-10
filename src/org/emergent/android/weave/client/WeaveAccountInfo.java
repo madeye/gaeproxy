@@ -23,16 +23,19 @@ public class WeaveAccountInfo {
 			throw new IllegalStateException(e);
 		}
 	}
+
 	public static WeaveAccountInfo createWeaveAccountInfo(String serverUri,
 			String username, String password, char[] encsecret)
 			throws URISyntaxException {
 		return createWeaveAccountInfo(new URI(serverUri), username, password,
 				encsecret);
 	}
+
 	public static WeaveAccountInfo createWeaveAccountInfo(URI serverUri,
 			String username, String password, char[] encsecret) {
 		return new WeaveAccountInfo(serverUri, username, password, encsecret);
 	}
+
 	private final URI m_server;
 
 	private final String m_username;

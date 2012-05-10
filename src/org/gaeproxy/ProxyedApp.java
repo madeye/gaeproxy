@@ -60,7 +60,6 @@ public class ProxyedApp {
 		this.enabled = enabled;
 	}
 
-
 	/**
 	 * @param name
 	 *            the name to set

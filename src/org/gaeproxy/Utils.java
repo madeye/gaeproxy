@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -12,8 +11,8 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
@@ -33,6 +32,26 @@ public class Utils {
 		private int mProcId;
 		private FileDescriptor mTermFd;
 
+		/**
+		 * Creates a new script runner.
+		 * 
+		 * @param file
+		 *            temporary script file
+		 * @param script
+		 *            script to run
+		 * @param res
+		 *            response output
+		 * @param asroot
+		 *            if true, executes the script as root
+		 */
+		public ScriptRunner(File file, String script, StringBuilder res,
+				boolean asroot) {
+			this.file = file;
+			this.script = script;
+			this.res = res;
+			this.asroot = asroot;
+		}
+
 		private int createSubprocess(int[] processId, String cmd) {
 			ArrayList<String> argList = parse(cmd);
 			String arg0 = argList.get(0);
@@ -40,6 +59,19 @@ public class Utils {
 
 			mTermFd = Exec.createSubprocess(arg0, args, null, processId);
 			return processId[0];
+		}
+
+		/**
+		 * Destroy this script runner
+		 */
+		@Override
+		public synchronized void destroy() {
+			try {
+				Exec.hangupProcessGroup(mProcId);
+				Exec.close(mTermFd);
+			} catch (NoClassDefFoundError ignore) {
+				// Nothing
+			}
 		}
 
 		private ArrayList<String> parse(String cmd) {
@@ -88,35 +120,6 @@ public class Utils {
 				result.add(builder.toString());
 			}
 			return result;
-		}
-
-		/**
-		 * Creates a new script runner.
-		 * 
-		 * @param file
-		 *            temporary script file
-		 * @param script
-		 *            script to run
-		 * @param res
-		 *            response output
-		 * @param asroot
-		 *            if true, executes the script as root
-		 */
-		public ScriptRunner(File file, String script, StringBuilder res,
-				boolean asroot) {
-			this.file = file;
-			this.script = script;
-			this.res = res;
-			this.asroot = asroot;
-		}
-
-		/**
-		 * Destroy this script runner
-		 */
-		@Override
-		public synchronized void destroy() {
-			Exec.hangupProcessGroup(mProcId);
-			Exec.close(mTermFd);
 		}
 
 		@Override
@@ -218,8 +221,8 @@ public class Utils {
 		boolean version = false;
 
 		StringBuilder sb = new StringBuilder();
-		String command = iptables + " --version\n" + iptables + " -L -t nat -n\n"
-				+ "exit\n";
+		String command = iptables + " --version\n" + iptables
+				+ " -L -t nat -n\n" + "exit\n";
 
 		int exitcode = runScript(command, sb, 10 * 1000, true);
 
@@ -380,7 +383,6 @@ public class Utils {
 		int exitcode = runScript(command, sb, 10 * 1000, true);
 
 		if (exitcode == TIME_OUT) {
-			isRoot = 0;
 			return false;
 		}
 
@@ -393,21 +395,27 @@ public class Utils {
 		return isRoot == 1 ? true : false;
 	}
 
+	public static boolean runCommand(String command) {
+
+		return runCommand(command, 10 * 1000);
+
+	}
+
 	public static boolean runCommand(String command, int timeout) {
 
 		Log.d(TAG, command);
 
-		runScript(command, null, 10 * 1000, false);
+		runScript(command, null, timeout, false);
 
 		return true;
 	}
-	
-	public static boolean runCommand(String command) {
-		
-		return runCommand(command, 10 * 1000);
-		
+
+	public static boolean runRootCommand(String command) {
+
+		return runRootCommand(command, 10 * 1000);
+
 	}
-	
+
 	public static boolean runRootCommand(String command, int timeout) {
 
 		if (!isRoot())
@@ -418,12 +426,6 @@ public class Utils {
 		runScript(command, null, timeout, true);
 
 		return true;
-	}
-
-	public static boolean runRootCommand(String command) {
-
-		return runRootCommand(command, 10 * 1000);
-		
 	}
 
 	private synchronized static int runScript(String script, StringBuilder res,
@@ -441,6 +443,7 @@ public class Utils {
 				// Timed-out
 				runner.destroy();
 				runner.join(1000);
+				return TIME_OUT;
 			}
 		} catch (InterruptedException ex) {
 			return TIME_OUT;

@@ -93,6 +93,7 @@ public class WeaveBookmarksListActivity extends Activity implements
 		}
 
 	}
+
 	private static final int MENU_SYNC = Menu.FIRST;
 
 	private static final int MENU_CLEAR = Menu.FIRST + 1;

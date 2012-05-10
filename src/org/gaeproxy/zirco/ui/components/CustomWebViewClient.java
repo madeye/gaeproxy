@@ -81,8 +81,8 @@ public class CustomWebViewClient extends WebViewClient {
 		// loadDataWithBaseURL here, otherwise it won't load.
 		if (url.equals(Constants.URL_ABOUT_START)) {
 			view.loadDataWithBaseURL("file:///android_asset/startpage/",
-					ApplicationUtils.getStartPage(view.getContext()),
-					"text/html", "UTF-8", "about:start");
+					ApplicationUtils.getStartPage(view.getContext()), "text/html", "UTF-8",
+					"about:start");
 		}
 
 		((CustomWebView) view).notifyPageStarted();
@@ -92,8 +92,7 @@ public class CustomWebViewClient extends WebViewClient {
 	}
 
 	@Override
-	public void onReceivedSslError(WebView view, final SslErrorHandler handler,
-			SslError error) {
+	public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
 		handler.proceed();
 	}
 
@@ -113,10 +112,12 @@ public class CustomWebViewClient extends WebViewClient {
 							Constants.URL_SEARCH_GOOGLE);
 			String newUrl = String.format(searchUrl, searchTerm);
 
-			view.loadUrl(newUrl);
+			if (view != null)
+				view.loadUrl(newUrl);
 			return true;
 
-		} else if (view.getHitTestResult().getType() == HitTestResult.EMAIL_TYPE) {
+		} else if (view != null && view.getHitTestResult() != null
+				&& view.getHitTestResult().getType() == HitTestResult.EMAIL_TYPE) {
 			mMainActivity.onMailTo(url);
 			return true;
 
@@ -125,12 +126,11 @@ public class CustomWebViewClient extends WebViewClient {
 			// If the url is not from GWT mobile view, and is in the mobile view
 			// url list, then load it with GWT.
 			if ((!url.startsWith(Constants.URL_GOOGLE_MOBILE_VIEW_NO_FORMAT))
-					&& (UrlUtils.checkInMobileViewUrlList(view.getContext(),
-							url))) {
+					&& (UrlUtils.checkInMobileViewUrlList(view.getContext(), url))) {
 
-				String newUrl = String.format(Constants.URL_GOOGLE_MOBILE_VIEW,
-						url);
-				view.loadUrl(newUrl);
+				String newUrl = String.format(Constants.URL_GOOGLE_MOBILE_VIEW, url);
+				if (view != null)
+					view.loadUrl(newUrl);
 				return true;
 
 			} else {

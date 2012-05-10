@@ -51,6 +51,7 @@ public final class Controller {
 	public static Controller getInstance() {
 		return ControllerHolder.INSTANCE;
 	}
+
 	private SharedPreferences mPreferences;
 	private List<CustomWebView> mWebViewList;
 	private List<DownloadItem> mDownloadList;

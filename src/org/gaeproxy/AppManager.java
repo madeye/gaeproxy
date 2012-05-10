@@ -82,7 +82,7 @@ public class AppManager extends Activity implements OnCheckedChangeListener,
 			// ignore system apps
 			if (aInfo.uid < 10000)
 				continue;
-			
+
 			ProxyedApp app = new ProxyedApp();
 
 			app.setUid(aInfo.uid);
@@ -93,13 +93,12 @@ public class AppManager extends Activity implements OnCheckedChangeListener,
 			if (aInfo.packageName != null
 					&& aInfo.packageName.equals("org.proxydroid")) {
 				app.setProxyed(true);
-			} else if (Arrays
-					.binarySearch(tordApps, app.getUsername()) >= 0) {
+			} else if (Arrays.binarySearch(tordApps, app.getUsername()) >= 0) {
 				app.setProxyed(true);
 			} else {
 				app.setProxyed(false);
 			}
-			
+
 			vectorApps.add(app);
 
 		}
@@ -210,7 +209,7 @@ public class AppManager extends Activity implements OnCheckedChangeListener,
 
 		while (itAppInfo.hasNext()) {
 			aInfo = itAppInfo.next();
-			
+
 			// ignore system apps
 			if (aInfo.uid < 10000)
 				continue;
