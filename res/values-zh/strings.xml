@@ -30,7 +30,7 @@
     <string name="service_summary">开启 / 关闭后台服务</string>
     <string name="proxy_summary">GAE代理服务地址</string>
     <string name="port_summary">本地代理服务器监听端口，任意大于1024的数字</string>
-    <string name="sitekey_summary">WallProxy / GoAgent 加密密钥</string>
+    <string name="sitekey_summary">加密密钥</string>
     <string name="port_alert">端口必需是大于1024的数字</string>
     <string name="auto_connect_summary">启动时自动打开代理服务</string>
     <string name="auto_set_proxy_summary">配置全局代理，需要 ROOT 权限以及 IPTABLES 的支持</string>

@@ -2,7 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/function_cat" >
-
         <CheckBoxPreference
             android:key="isRunning"
             android:summary="@string/service_summary"
@@ -15,31 +14,19 @@
             android:title="@string/browser" >
         </Preference>
     </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/proxy_cat" >
-
-        <ListPreference
-            android:defaultValue="GoAgent"
-            android:entries="@array/proxy_type_entry"
-            android:entryValues="@array/proxy_type_entry"
-            android:key="proxyType"
-            android:title="@string/proxy_type" >
-        </ListPreference>
-
         <EditTextPreference
             android:defaultValue="https://proxyofmax.appspot.com/fetch.py"
             android:key="proxy"
             android:summary="@string/proxy_summary"
             android:title="@string/proxy" >
         </EditTextPreference>
-
         <EditTextPreference
             android:defaultValue="1984"
             android:key="port"
             android:summary="@string/port_summary"
             android:title="@string/port" >
         </EditTextPreference>
-
         <EditTextPreference
             android:defaultValue=""
             android:key="sitekey"
@@ -47,29 +34,24 @@
             android:title="@string/sitekey" >
         </EditTextPreference>
     </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/fearute_cat" >
-
         <CheckBoxPreference
             android:key="isAutoConnect"
             android:summary="@string/auto_connect_summary"
             android:title="@string/auto_connect" >
         </CheckBoxPreference>
-
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="isHTTPSProxy"
             android:summary="@string/https_proxy_summary"
             android:title="@string/https_proxy" >
         </CheckBoxPreference>
-
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="isGFWList"
             android:summary="@string/auto_set_gfwlist_summary"
             android:title="@string/auto_set_gfwlist" >
         </CheckBoxPreference>
-
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="isGlobalProxy"
@@ -89,16 +71,14 @@
             android:title="@string/enable_market" >
         </CheckBoxPreference>
     </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/notif_cat" >
-
         <RingtonePreference
             android:key="settings_key_notif_ringtone"
             android:ringtoneType="notification"
             android:showDefault="true"
             android:showSilent="true"
-            android:title="@string/notif_ringtone_title"
-            android:summary="@string/notif_ringtone_summary" />
+            android:summary="@string/notif_ringtone_summary"
+            android:title="@string/notif_ringtone_title" />
 
         <CheckBoxPreference
             android:defaultValue="true"

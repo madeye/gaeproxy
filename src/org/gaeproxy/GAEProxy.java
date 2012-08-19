@@ -79,23 +79,22 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
-public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class GAEProxy extends PreferenceActivity implements
+		OnSharedPreferenceChangeListener {
 
 	private static final String TAG = "GAEProxy";
 
@@ -120,7 +119,8 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 			Editor ed = settings.edit();
 			switch (msg.what) {
 			case MSG_CRASH_RECOVER:
-				Toast.makeText(GAEProxy.this, R.string.crash_alert, Toast.LENGTH_LONG).show();
+				Toast.makeText(GAEProxy.this, R.string.crash_alert,
+						Toast.LENGTH_LONG).show();
 				ed.putBoolean("isRunning", false);
 				break;
 			case MSG_INITIAL_FINISH:
@@ -143,7 +143,6 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 	private EditTextPreference proxyText;
 	private EditTextPreference portText;
 	private EditTextPreference sitekeyText;
-	private ListPreference proxyTypeList;
 	private CheckBoxPreference isHTTPSProxyCheck;
 	private CheckBoxPreference isGFWListCheck;
 	private CheckBoxPreference isRunningCheck;
@@ -166,7 +165,8 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 			OutputStream out = null;
 			try {
 				in = assetManager.open(files[i]);
-				out = new FileOutputStream("/data/data/org.gaeproxy/" + files[i]);
+				out = new FileOutputStream("/data/data/org.gaeproxy/"
+						+ files[i]);
 				copyFile(in, out);
 				in.close();
 				in = null;
@@ -213,15 +213,12 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		isAutoConnectCheck.setEnabled(false);
 		isGlobalProxyCheck.setEnabled(false);
 		isHTTPSProxyCheck.setEnabled(false);
-		proxyTypeList.setEnabled(false);
 	}
 
 	private void enableAll() {
 		proxyText.setEnabled(true);
 		portText.setEnabled(true);
-		if (proxyTypeList.getValue().equals("WallProxy")
-				|| proxyTypeList.getValue().equals("GoAgent"))
-			sitekeyText.setEnabled(true);
+		sitekeyText.setEnabled(true);
 		if (!isGlobalProxyCheck.isChecked())
 			proxyedApps.setEnabled(true);
 
@@ -229,7 +226,6 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		isAutoConnectCheck.setEnabled(true);
 		isGFWListCheck.setEnabled(true);
 		isHTTPSProxyCheck.setEnabled(true);
-		proxyTypeList.setEnabled(true);
 	}
 
 	private boolean install() {
@@ -242,8 +238,10 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		String data_path = Utils.getDataPath(this);
 
 		try {
-			final InputStream pythonZip = getAssets().open("modules/python.mp3");
-			final InputStream extraZip = getAssets().open("modules/python-extras.mp3");
+			final InputStream pythonZip = getAssets()
+					.open("modules/python.mp3");
+			final InputStream extraZip = getAssets().open(
+					"modules/python-extras.mp3");
 
 			unzip(pythonZip, "/data/data/org.gaeproxy/");
 			unzip(extraZip, data_path + "/");
@@ -294,13 +292,14 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		isAutoConnectCheck = (CheckBoxPreference) findPreference("isAutoConnect");
 		isHTTPSProxyCheck = (CheckBoxPreference) findPreference("isHTTPSProxy");
 		isGlobalProxyCheck = (CheckBoxPreference) findPreference("isGlobalProxy");
-		proxyTypeList = (ListPreference) findPreference("proxyType");
 		isGFWListCheck = (CheckBoxPreference) findPreference("isGFWList");
 
 		if (pd == null)
-			pd = ProgressDialog.show(this, "", getString(R.string.initializing), true, true);
+			pd = ProgressDialog.show(this, "",
+					getString(R.string.initializing), true, true);
 
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		final SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
 		new Thread() {
 			@Override
@@ -310,7 +309,8 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 
 				String versionName;
 				try {
-					versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+					versionName = getPackageManager().getPackageInfo(
+							getPackageName(), 0).versionName;
 				} catch (NameNotFoundException e) {
 					versionName = "NONE";
 				}
@@ -336,6 +336,7 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 
 					Utils.runCommand("chmod 755 /data/data/org.gaeproxy/iptables\n"
 							+ "chmod 755 /data/data/org.gaeproxy/redsocks\n"
+							+ "chmod 755 /data/data/org.gaeproxy/stunnel\n"
 							+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n"
@@ -345,20 +346,25 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 
 				}
 
-				if (!(new File(Utils.getDataPath(GAEProxy.this) + "/python-extras")).exists()) {
+				if (!(new File(Utils.getDataPath(GAEProxy.this)
+						+ "/python-extras")).exists()) {
 					install();
 				}
 
-				if (!Utils.isInitialized() && !GAEProxyService.isServiceStarted()) {
+				if (!Utils.isInitialized()
+						&& !GAEProxyService.isServiceStarted()) {
 
 					try {
 						URL aURL = new URL("http://myhosts.sinaapp.com/hosts");
-						HttpURLConnection conn = (HttpURLConnection) aURL.openConnection();
+						HttpURLConnection conn = (HttpURLConnection) aURL
+								.openConnection();
 						conn.setConnectTimeout(3 * 1000);
 						conn.setReadTimeout(6 * 1000);
 						conn.connect();
-						InputStream input = new BufferedInputStream(conn.getInputStream());
-						OutputStream output = new FileOutputStream("/data/data/org.gaeproxy/hosts");
+						InputStream input = new BufferedInputStream(
+								conn.getInputStream());
+						OutputStream output = new FileOutputStream(
+								"/data/data/org.gaeproxy/hosts");
 
 						byte data[] = new byte[1024];
 
@@ -389,10 +395,10 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		 * 2、Id，这个很重要，Android根据这个Id来确定不同的菜单 3、顺序，那个菜单现在在前面由这个参数的大小决定
 		 * 4、文本，菜单的显示文本
 		 */
-		menu.add(Menu.NONE, Menu.FIRST + 1, 1, getString(R.string.recovery)).setIcon(
-				android.R.drawable.ic_menu_delete);
-		menu.add(Menu.NONE, Menu.FIRST + 2, 2, getString(R.string.about)).setIcon(
-				android.R.drawable.ic_menu_info_details);
+		menu.add(Menu.NONE, Menu.FIRST + 1, 1, getString(R.string.recovery))
+				.setIcon(android.R.drawable.ic_menu_delete);
+		menu.add(Menu.NONE, Menu.FIRST + 2, 2, getString(R.string.about))
+				.setIcon(android.R.drawable.ic_menu_info_details);
 		// return true才会起作用
 		return true;
 
@@ -440,7 +446,8 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		case Menu.FIRST + 2:
 			String versionName = "";
 			try {
-				versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+				versionName = getPackageManager().getPackageInfo(
+						getPackageName(), 0).versionName;
 			} catch (NameNotFoundException e) {
 				versionName = "";
 			}
@@ -457,21 +464,27 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		super.onPause();
 
 		// Unregister the listener whenever a key changes
-		getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(
-				this);
+		getPreferenceScreen().getSharedPreferences()
+				.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
-	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
+			Preference preference) {
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
-		if (preference.getKey() != null && preference.getKey().equals("proxyedApps")) {
+		if (preference.getKey() != null
+				&& preference.getKey().equals("proxyedApps")) {
 			Intent intent = new Intent(this, AppManager.class);
 			startActivity(intent);
-		} else if (preference.getKey() != null && preference.getKey().equals("browser")) {
-			Intent intent = new Intent(this, org.gaeproxy.zirco.ui.activities.MainActivity.class);
+		} else if (preference.getKey() != null
+				&& preference.getKey().equals("browser")) {
+			Intent intent = new Intent(this,
+					org.gaeproxy.zirco.ui.activities.MainActivity.class);
 			startActivity(intent);
-		} else if (preference.getKey() != null && preference.getKey().equals("isRunning")) {
+		} else if (preference.getKey() != null
+				&& preference.getKey().equals("isRunning")) {
 			if (!serviceStart()) {
 				Editor edit = settings.edit();
 				edit.putBoolean("isRunning", false);
@@ -484,18 +497,15 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 	@Override
 	protected void onResume() {
 		super.onResume();
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
 		if (settings.getBoolean("isGlobalProxy", false))
 			proxyedApps.setEnabled(false);
 		else
 			proxyedApps.setEnabled(true);
 
-		if (proxyTypeList.getValue().equals("WallProxy")
-				|| proxyTypeList.getValue().equals("GoAgent"))
-			sitekeyText.setEnabled(true);
-		else
-			sitekeyText.setEnabled(false);
+		sitekeyText.setEnabled(true);
 
 		Editor edit = settings.edit();
 
@@ -531,29 +541,32 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		if (!settings.getString("sitekey", "").equals(""))
 			sitekeyText.setSummary(settings.getString("sitekey", ""));
 
-		if (!settings.getString("proxyType", "").equals(""))
-			proxyTypeList.setSummary(settings.getString("proxyType", ""));
-
 		if (!settings.getString("port", "").equals(""))
-			portText.setSummary(settings.getString("port", getString(R.string.port_summary)));
+			portText.setSummary(settings.getString("port",
+					getString(R.string.port_summary)));
 
 		if (!settings.getString("proxy", "").equals(""))
-			proxyText.setSummary(settings.getString("proxy", getString(R.string.proxy_summary)));
+			proxyText.setSummary(settings.getString("proxy",
+					getString(R.string.proxy_summary)));
 
 		// Set up a listener whenever a key changes
-		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		getPreferenceScreen().getSharedPreferences()
+				.registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
 		// Let's do something a preference value changes
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
 		if (key.equals("isConnecting")) {
 			if (settings.getBoolean("isConnecting", false)) {
 				Log.d(TAG, "Connecting start");
 				if (pd == null)
-					pd = ProgressDialog.show(this, "", getString(R.string.connecting), true, true);
+					pd = ProgressDialog.show(this, "",
+							getString(R.string.connecting), true, true);
 			} else {
 				Log.d(TAG, "Connecting finish");
 				if (pd != null) {
@@ -610,14 +623,7 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 			}
 		}
 
-		if (key.equals("proxyType")) {
-			proxyTypeList.setSummary(settings.getString("proxyType", ""));
-			if (settings.getString("proxyType", "").equals("WallProxy")
-					|| settings.getString("proxyType", "").equals("GoAgent"))
-				sitekeyText.setEnabled(true);
-			else
-				sitekeyText.setEnabled(false);
-		} else if (key.equals("port"))
+		if (key.equals("port"))
 			if (settings.getString("port", "").equals(""))
 				portText.setSummary(getString(R.string.port_summary));
 			else
@@ -644,19 +650,20 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 	@Override
 	public void onStart() {
 		super.onStart();
-		FlurryAgent.onStartSession(this, "46W95Q7YQQ6IY1NFIQW4");
+		EasyTracker.getInstance().activityStart(this);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(this);
+		EasyTracker.getInstance().activityStop(this);
 	}
 
 	private void recovery() {
 
 		if (pd == null)
-			pd = ProgressDialog.show(this, "", getString(R.string.recovering), true, true);
+			pd = ProgressDialog.show(this, "", getString(R.string.recovering),
+					true, true);
 
 		final Handler h = new Handler() {
 			@Override
@@ -683,13 +690,15 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 				Utils.runCommand(GAEProxyService.BASE + "proxy.sh stop");
 
 				try {
-					DatabaseHelper helper = OpenHelperManager.getHelper(GAEProxy.this,
-							DatabaseHelper.class);
-					Dao<DNSResponse, String> dnsCacheDao = helper.getDNSCacheDao();
+					DatabaseHelper helper = OpenHelperManager.getHelper(
+							GAEProxy.this, DatabaseHelper.class);
+					Dao<DNSResponse, String> dnsCacheDao = helper
+							.getDNSCacheDao();
 					List<DNSResponse> list = dnsCacheDao.queryForAll();
 					for (DNSResponse resp : list) {
 						dnsCacheDao.delete(resp);
 					}
+					OpenHelperManager.releaseHelper();
 				} catch (Exception ignore) {
 					// Nothing
 				}
@@ -718,6 +727,7 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 
 				Utils.runCommand("chmod 755 /data/data/org.gaeproxy/iptables\n"
 						+ "chmod 755 /data/data/org.gaeproxy/redsocks\n"
+						+ "chmod 755 /data/data/org.gaeproxy/stunnel\n"
 						+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 						+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
 						+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n"
@@ -747,7 +757,8 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 			return false;
 		}
 
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
 
 		proxyType = settings.getString("proxyType", "GoAgent");
 
@@ -758,7 +769,8 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 		if (proxy.contains("proxyofmax.appspot.com")) {
 			final TextView message = new TextView(this);
 			message.setPadding(10, 5, 10, 5);
-			final SpannableString s = new SpannableString(getText(R.string.default_proxy_alert));
+			final SpannableString s = new SpannableString(
+					getText(R.string.default_proxy_alert));
 			Linkify.addLinks(s, Linkify.WEB_URLS);
 			message.setText(s);
 			message.setMovementMethod(LinkMovementMethod.getInstance());
@@ -770,7 +782,8 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 					.setNegativeButton(getString(R.string.ok_iknow),
 							new DialogInterface.OnClickListener() {
 								@Override
-								public void onClick(DialogInterface dialog, int id) {
+								public void onClick(DialogInterface dialog,
+										int id) {
 									dialog.cancel();
 								}
 							}).setView(message).create().show();
@@ -845,7 +858,8 @@ public class GAEProxy extends PreferenceActivity implements OnSharedPreferenceCh
 				if (ze.isDirectory()) {
 					dirChecker(path + ze.getName());
 				} else {
-					FileOutputStream fout = new FileOutputStream(path + ze.getName());
+					FileOutputStream fout = new FileOutputStream(path
+							+ ze.getName());
 					byte data[] = new byte[10 * 1024];
 					int count;
 					while ((count = zin.read(data)) != -1) {
