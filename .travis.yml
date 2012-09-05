@@ -12,6 +12,3 @@ before_install:
   - wget http://dl.google.com/gaformobileapps/GoogleAnalyticsAndroid.zip
   - unzip GoogleAnalyticsAndroid.zip
   - mvn install:install-file -Dfile=libGoogleAnalyticsV2.jar -DgroupId=com.google.android.analytics -DartifactId=analytics -Dversion=V2 -Dpackaging=jar
-  - wget --no-check-certificate https://raw.github.com/madeye/gaeproxy/master/settings.xml
-  - wget --no-check-certificate https://raw.github.com/madeye/gaeproxy/master/travis.keystore
-  - sed 's@/tmp@'"$PWD"'@' settings.xml > ~/.m2/settings.xml
