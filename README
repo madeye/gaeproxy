@@ -40,6 +40,6 @@ http://developer.android.com/guide/publishing/app-signing.html#cert
     </profiles>
   </settings>
 
-- Invode the build like this
+- Invoke the building like this
 
   mvn clean install
