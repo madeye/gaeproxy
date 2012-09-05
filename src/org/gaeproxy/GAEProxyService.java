@@ -454,7 +454,7 @@ public class GAEProxyService extends Service {
 			}
 		} else {
 			try {
-				InetAddress addr = InetAddress.getByName("www.google.com");
+				InetAddress addr = InetAddress.getByName("gaednsproxy.appspot.com");
 				appHost = addr.getHostAddress();
 			} catch (Exception ignore) {
 				return false;
