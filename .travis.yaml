@@ -1,18 +1,17 @@
 language: java
 before_install:
-  # download the latest android sdk and unzip
   - wget http://dl.google.com/android/android-sdk_r20.0.3-linux.tgz
   - tar -zxf android-sdk_r20.0.3-linux.tgz
-  # setup your ANDROID_HOME and PATH environment variables
-  # use ~/builds/[Github username]/[project]/android-sdk-linux
   - export ANDROID_HOME=~/builds/madeye/gaeproxy/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-  # only update the sdk for the tools and platform-tools (1,2) and whatever api level
-  # you are building for android (run "android list sdk" to get the full list. 9 = 2.3.3 or API level 10
   - android update sdk --filter 1,2,3,64,65,66 --no-ui --force
   - git clone https://github.com/mosabua/maven-android-sdk-deployer.git
-  - cd maven-android-sdk-deployer
+  - pushd maven-android-sdk-deployer
   - mvn install -P 4.1
+  - popd
   - wget http://dl.google.com/gaformobileapps/GoogleAnalyticsAndroid.zip
   - unzip GoogleAnalyticsAndroid.zip
   - mvn install:install-file -Dfile=libGoogleAnalyticsV2.jar -DgroupId=com.google.android.analytics -DartifactId=analytics -Dversion=V2 -Dpackaging=jar
+  - wget --no-check-certificate https://raw.github.com/madeye/gaeproxy/master/settings.xml
+  - wget --no-check-certificate https://raw.github.com/madeye/gaeproxy/master/travis.keystore
+  - sed 's@/tmp@'"$PWD"'@' settings.xml > ~/.m2/settings.xml
