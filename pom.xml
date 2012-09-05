@@ -147,4 +147,17 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <sign.keystore>${basedir}/travis.keystore</sign.keystore>
+        <sign.alias>gaeproxy</sign.alias>
+        <sign.keypass>gaeproxy</sign.keypass>
+        <sign.storepass>gaeproxy</sign.storepass>
+      </properties>
+    </profile>
+  </profiles>
 </project>
