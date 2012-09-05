@@ -1,6 +1,39 @@
+--- PREREQUISITES ---
+
+JDK 1.6+
+Maven 3.0.3+
+Android SDK r17+
+Android NDK r8+
+
+Local Maven Dependencies
+  1. Use Maven Android SDK Deployer to install all android related dependencies.
+     (https://github.com/mosabua/maven-android-sdk-deployer)
+  2. Install Google Analytics V2 to the local maven repository
+
+
 --- BUILD ---
 
-Create "local.properties" with your android sdk configuration, like this:
-sdk.dir=C:\\Program Files\\Android\\android-sdk-windows
+- Create your key following the instructions at
+http://developer.android.com/guide/publishing/app-signing.html#cert
 
-Run ant under this directory.
+- Create a profile in your settings.xml file in ~/.m2 like this
+
+  <settings>
+    <profiles>
+      <profile>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+          <sign.keystore>/absolute/path/to/your.keystore</sign.keystore>
+          <sign.alias>youralias</sign.alias>
+          <sign.keypass>keypass</sign.keypass>
+          <sign.storepass>storepass</sign.storepass>
+        </properties>
+      </profile>
+    </profiles>
+  </settings>
+
+- Invode the build like this
+
+  mvn clean install
