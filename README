@@ -1,15 +1,21 @@
 --- PREREQUISITES ---
 
-JDK 1.6+
-Maven 3.0.3+
-Android SDK r17+
-Android NDK r8+
+- JDK 1.6+
+- Maven 3.0.3+
+- Android SDK r17+
+- Android NDK r8+
 
-Local Maven Dependencies
+- Local Maven Dependencies
+
   1. Use Maven Android SDK Deployer to install all android related dependencies.
-     (https://github.com/mosabua/maven-android-sdk-deployer)
+
+     git clone https://github.com/mosabua/maven-android-sdk-deployer.git 
+     export ANDROID_HOME=/path/to/android/sdk
+     mvn install -P 4.1
+
   2. Install Google Analytics V2 to the local maven repository
 
+     cd extras; bash import.sh;
 
 --- BUILD ---
 
