@@ -151,7 +151,7 @@
         <executions>
           <execution>
             <id>deploy-to-sae</id>
-            <phase>deploy</phase>
+            <phase>install</phase>
             <goals>
               <goal>exec</goal>
             </goals>
