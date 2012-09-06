@@ -18,4 +18,4 @@ script:
   - mvn clean install -DTRAVIS=true
 notifications:
   email:
-    - gaeproxy.googlegroups.com
+    - gaeproxy@googlegroups.com
