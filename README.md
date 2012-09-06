@@ -23,7 +23,7 @@
   popd
   ```
 
-  2. Install Google Analytics V2 to the local maven repository
+  2. Install Google Analytics V2 to the local maven repository.
 
   ```bash
   cd extras; bash import.sh;
