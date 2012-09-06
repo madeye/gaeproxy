@@ -10,3 +10,10 @@ tests/bin
 tests/gen
 tests/local.properties
 NUL
+
+#Intellij IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
