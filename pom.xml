@@ -153,6 +153,7 @@
       <activation>
         <property>
           <name>TRAVIS</name>
+          <value>true</value>
         </property>
       </activation>
       <build>
