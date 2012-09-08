@@ -45,7 +45,7 @@ forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|p
 withgae = plus.google.com|plusone.google.com|reader.googleusercontent.com|music.google.com|apis.google.com
 
 [google_hk]
-mode = http
+mode = https
 hosts = www.google.com|mail.google.com|www.google.com.hk|www.google.com.tw
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
@@ -56,31 +56,38 @@ mode = http
 hosts = 2404:6800:8005::2f|2a00:1450:8006::30|2404:6800:8005::84
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
-withgae = 
-
-[fetchmax]
-local = 
-server = 
+withgae =
 
 [autorange]
-hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm
+enable = 1
+hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm|.redtubefiles.com
 maxsize = 1048576
 waitsize = 524288
-bufsize = 8192
+
+[crlf]
+enable = 0
+dns = 8.8.8.8
+sites = .youtube.com|.ytimg.com
+
+[socks5]
+enable = 0
+password = 123456
+listen = 127.0.0.1:8089
+fetchserver = https://phus/
 
 [pac]
 enable = 0
 ip = 127.0.0.1
-port = 8089
+port = 8086
 file = goagent.pac
-update = 0
-remote = http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest
-timeout = 16
-direct = .253874.com|.cnn.com
 
 [useragent]
 enable = 0
 string = Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3
+
+[fetchmax]
+local =
+server =
 
 [love]
 enable = 1
