@@ -8,6 +8,20 @@
   <packaging>apk</packaging>
   <name>GAEProxy</name>
 
+  <repositories>
+    <repository>
+      <id>madeye-maven-repository</id>
+      <url>https://github.com/madeye/maven-repository/raw/master</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
