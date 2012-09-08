@@ -13,7 +13,7 @@
 
 * Local Maven Dependencies
 
-  1. Use Maven Android SDK Deployer to install all android related dependencies.
+  Use Maven Android SDK Deployer to install all android related dependencies.
 
   ```bash
   git clone https://github.com/mosabua/maven-android-sdk-deployer.git 
@@ -23,11 +23,6 @@
   popd
   ```
 
-  2. Install Google Analytics V2 to the local maven repository.
-
-  ```bash
-  cd extras; bash import.sh;
-  ```
 
 ## BUILD
 
