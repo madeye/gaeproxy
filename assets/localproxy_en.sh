@@ -49,7 +49,7 @@ mode = https
 hosts = $5
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
-withgae = www.google.com.hk
+withgae = feedproxy.google.com
 
 [google_ipv6]
 mode = http

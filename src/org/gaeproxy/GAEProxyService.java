@@ -370,7 +370,7 @@ public class GAEProxyService extends Service {
   public boolean handleConnection() {
 
     try {
-      Lookup lookup = new Lookup("appspot.l.google.com", Type.A);
+      Lookup lookup = new Lookup("www.google.com", Type.A);
       Resolver resolver = new SimpleResolver("8.8.4.4");
       resolver.setTCP(true);
       resolver.setTimeout(10);
