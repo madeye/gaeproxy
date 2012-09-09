@@ -451,14 +451,14 @@ public class DNSServer implements Runnable {
 		String encode_host = URLEncoder.encode(Base64.encodeBytes(Base64.encodeBytesToBytes(domain
 				.getBytes())));
 
-		String url = "http://gaednsproxy2.appspot.com/?d=" + encode_host;
+		String url = "https://gaednsproxy2.appspot.com/?d=" + encode_host;
 		String host = "gaednsproxy2.appspot.com";
 		url = url.replace(host, appHost);
 
 		Random random = new Random(System.currentTimeMillis());
 		int n = random.nextInt(1);
 		if (n == 1) {
-			url = "http://gaednsproxy3.appspot.com/?d=" + encode_host;
+			url = "https://gaednsproxy3.appspot.com/?d=" + encode_host;
 			host = "gaednsproxy3.appspot.com";
 			url = url.replace(host, appHost);
 		}

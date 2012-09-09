@@ -66,7 +66,7 @@ waitsize = 524288
 
 [crlf]
 enable = 0
-dns = 8.8.8.8
+dns = 8.8.4.4
 sites = .youtube.com|.ytimg.com
 
 [socks5]
