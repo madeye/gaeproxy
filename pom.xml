@@ -29,9 +29,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>android</groupId>
+            <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>4.1_r2</version>
+            <version>4.1.1.4</version>
             <scope>provided</scope>
         </dependency>
 
@@ -97,12 +97,11 @@
                         <id>signing</id>
                         <goals>
                             <goal>sign</goal>
-                            <goal>verify</goal>
                         </goals>
                         <phase>package</phase>
+                        <inherited>true</inherited>
                         <configuration>
-                            <removeExistingSignatures>true</removeExistingSignatures>
-                            <archiveDirectory />
+                            <archiveDirectory/>
                             <includes>
                                 <include>${project.build.directory}/${project.artifactId}.apk</include>
                             </includes>
@@ -111,6 +110,10 @@
                             <storepass>${sign.storepass}</storepass>
                             <keypass>${sign.keypass}</keypass>
                             <verbose>true</verbose>
+                            <arguments>
+                                <argument>-sigalg</argument><argument>MD5withRSA</argument>
+                                <argument>-digestalg</argument><argument>SHA1</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
@@ -143,31 +146,53 @@
                     </sdk>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <configuration>
-                    <artifacts>
-                        <artifact>
-                            <file>${project.build.directory}/${project.artifactId}-${project.version}.apk</file>
-                            <type>apk</type>
-                            <classifier>signed-aligned</classifier>
-                        </artifact>
-                    </artifacts>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-signed-aligned</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>debug-sign</id>
+            <activation>
+                <file>
+                    <missing>${basedir}/local.properties</missing>
+                </file>
+            </activation>
+            <properties>
+                <sign.keystore>${basedir}/travis.keystore</sign.keystore>
+                <sign.alias>travis</sign.alias>
+                <sign.keypass>travis</sign.keypass>
+                <sign.storepass>travis</sign.storepass>
+            </properties>
+        </profile>
+        <profile>
+            <id>release-sign</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/local.properties</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>1.0-alpha-2</version>
+                        <executions>
+                            <execution>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <files>
+                                        <file>${basedir}/local.properties</file>
+                                    </files>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>travis</id>
             <activation>
@@ -200,12 +225,6 @@
                     </plugin>
                 </plugins>
             </build>
-            <properties>
-                <sign.keystore>${basedir}/travis.keystore</sign.keystore>
-                <sign.alias>gaeproxy</sign.alias>
-                <sign.keypass>gaeproxy</sign.keypass>
-                <sign.storepass>gaeproxy</sign.storepass>
-            </properties>
         </profile>
     </profiles>
 </project>
