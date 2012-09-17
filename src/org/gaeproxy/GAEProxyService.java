@@ -374,11 +374,19 @@ public class GAEProxyService extends Service {
         }
         appHost = sb.toString();
       } else {
-        InetAddress addr = InetAddress.getByName("mail.google.com");
-        appHost = addr.getHostAddress();
+        appHost = null;
       }
     } catch (Exception ignore) {
-      // Nothing
+      appHost = null;
+    }
+
+    if (appHost == null) { 
+      try {
+        InetAddress addr = InetAddress.getByName("mail.google.com");
+        appHost = addr.getHostAddress();
+      } catch (Exception ignore) {
+        appHost = null;
+      }
     }
 
     if (appHost == null || appHost.equals("")) {
