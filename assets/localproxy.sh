@@ -14,7 +14,7 @@ echo "
 [listen]
 ip = 127.0.0.1
 port = $4
-visible = 1
+visible = 0
 
 [gae]
 enable = 1
@@ -23,6 +23,7 @@ password = $7
 path = /$6
 profile = google_cn
 mulconn = 1
+rangesize = 4194304
 
 [paas]
 enable = 0
@@ -57,12 +58,6 @@ hosts = 2404:6800:8005::2f|2a00:1450:8006::30|2404:6800:8005::84
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
 withgae =
-
-[autorange]
-enable = 1
-hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm|.redtubefiles.com
-maxsize = 1048576
-waitsize = 524288
 
 [crlf]
 enable = 0
