@@ -23,7 +23,7 @@ password = $7
 path = /$6
 profile = google_cn
 mulconn = 1
-rangesize = 4194304
+rangesize = 1048576
 
 [paas]
 enable = 0
