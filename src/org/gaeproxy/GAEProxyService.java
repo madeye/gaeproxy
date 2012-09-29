@@ -38,28 +38,6 @@
 
 package org.gaeproxy;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URL;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-
-import org.gaeproxy.db.DNSResponse;
-import org.gaeproxy.db.DatabaseHelper;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -74,19 +52,25 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
+import android.os.*;
 import android.os.Message;
-import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
-
 import com.google.analytics.tracking.android.EasyTracker;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
+import org.apache.commons.codec.binary.Base64;
 import org.xbill.DNS.*;
+
+import java.io.*;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Random;
+import java.lang.Process;
 
 public class GAEProxyService extends Service {
 
@@ -117,7 +101,7 @@ public class GAEProxyService extends Service {
       + "--dport 443 -j DNAT --to-destination 127.0.0.1:8124\n";
 
   private static final String TAG = "GAEProxyService";
-  private static final String DEFAULT_HOST = "74.125.128.106";
+  private static final String DEFAULT_HOST = "203.208.46.1";
 
   public static volatile boolean statusLock = false;
 
@@ -226,7 +210,7 @@ public class GAEProxyService extends Service {
 
       StringBuffer sb = new StringBuffer();
 
-      sb.append(BASE + "localproxy_en.sh \""
+      sb.append(BASE + "localproxy.sh \""
           + Utils.getDataPath(this) + "\"");
 
       String[] proxyString = proxy.split("\\/");
@@ -311,18 +295,18 @@ public class GAEProxyService extends Service {
         if (handleConnection()) {
           // Connection and forward successful
           notifyAlert(getString(R.string.forward_success),
-            getString(R.string.service_running));
+              getString(R.string.service_running));
 
           handler.sendEmptyMessageDelayed(MSG_CONNECT_SUCCESS, 500);
 
           // for widget, maybe exception here
           try {
             RemoteViews views = new RemoteViews(getPackageName(),
-              R.layout.gaeproxy_appwidget);
+                R.layout.gaeproxy_appwidget);
             views.setImageViewResource(R.id.serviceToggle,
                 R.drawable.on);
             AppWidgetManager awm = AppWidgetManager
-              .getInstance(GAEProxyService.this);
+                .getInstance(GAEProxyService.this);
             awm.updateAppWidget(awm
                 .getAppWidgetIds(new ComponentName(
                     GAEProxyService.this,
@@ -380,9 +364,9 @@ public class GAEProxyService extends Service {
       appHost = null;
     }
 
-    if (appHost == null) { 
+    if (appHost == null) {
       try {
-        InetAddress addr = InetAddress.getByName("mail.google.com");
+        InetAddress addr = InetAddress.getByName("www.google.com");
         appHost = addr.getHostAddress();
       } catch (Exception ignore) {
         appHost = null;
@@ -410,12 +394,9 @@ public class GAEProxyService extends Service {
       proxyType = "GoAgent";
       String[] mirror_list = null;
       int mirror_num = 0;
-      try {
-        String mirror_string = new String(
-            Base64.decode(getString(R.string.mirror_list)));
-        mirror_list = mirror_string.split("\\|");
-      } catch (IOException e) {
-      }
+      String mirror_string = new String(
+          Base64.decodeBase64(getString(R.string.mirror_list).getBytes()));
+      mirror_list = mirror_string.split("\\|");
 
       if (mirror_list != null) {
         mirror_num = mirror_list.length;
@@ -442,7 +423,7 @@ public class GAEProxyService extends Service {
     final String ringtone = settings.getString(
         "settings_key_notif_ringtone", null);
     AudioManager audioManager = (AudioManager) this
-      .getSystemService(Context.AUDIO_SERVICE);
+        .getSystemService(Context.AUDIO_SERVICE);
     if (audioManager.getStreamVolume(AudioManager.STREAM_RING) == 0) {
       notification.sound = null;
     } else if (ringtone != null)
@@ -500,129 +481,129 @@ public class GAEProxyService extends Service {
   }
 
   @Override
-    public IBinder onBind(Intent intent) {
-      return null;
-    }
+  public IBinder onBind(Intent intent) {
+    return null;
+  }
 
   @Override
-    public void onCreate() {
-      super.onCreate();
+  public void onCreate() {
+    super.onCreate();
 
-      EasyTracker.getTracker().trackEvent("service", "start",
-          getVersionName(), 0L);
+    EasyTracker.getTracker().trackEvent("service", "start",
+        getVersionName(), 0L);
 
-      settings = PreferenceManager.getDefaultSharedPreferences(this);
-      notificationManager = (NotificationManager) this
+    settings = PreferenceManager.getDefaultSharedPreferences(this);
+    notificationManager = (NotificationManager) this
         .getSystemService(NOTIFICATION_SERVICE);
 
-      intent = new Intent(this, GAEProxy.class);
-      intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-      pendIntent = PendingIntent.getActivity(this, 0, intent, 0);
-      notification = new Notification();
+    intent = new Intent(this, GAEProxy.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    pendIntent = PendingIntent.getActivity(this, 0, intent, 0);
+    notification = new Notification();
 
-      try {
-        mStartForeground = getClass().getMethod("startForeground",
-            mStartForegroundSignature);
-        mStopForeground = getClass().getMethod("stopForeground",
-            mStopForegroundSignature);
-      } catch (NoSuchMethodException e) {
-        // Running on an older platform.
-        mStartForeground = mStopForeground = null;
-      }
-
-      try {
-        mSetForeground = getClass().getMethod("setForeground",
-            mSetForegroundSignature);
-      } catch (NoSuchMethodException e) {
-        throw new IllegalStateException(
-            "OS doesn't have Service.startForeground OR Service.setForeground!");
-      }
+    try {
+      mStartForeground = getClass().getMethod("startForeground",
+          mStartForegroundSignature);
+      mStopForeground = getClass().getMethod("stopForeground",
+          mStopForegroundSignature);
+    } catch (NoSuchMethodException e) {
+      // Running on an older platform.
+      mStartForeground = mStopForeground = null;
     }
+
+    try {
+      mSetForeground = getClass().getMethod("setForeground",
+          mSetForegroundSignature);
+    } catch (NoSuchMethodException e) {
+      throw new IllegalStateException(
+          "OS doesn't have Service.startForeground OR Service.setForeground!");
+    }
+  }
 
   /**
    * Called when the activity is closed.
    */
   @Override
-    public void onDestroy() {
+  public void onDestroy() {
 
-      EasyTracker.getTracker().trackEvent("service", "stop",
-          getVersionName(), 0L);
+    EasyTracker.getTracker().trackEvent("service", "stop",
+        getVersionName(), 0L);
 
-      statusLock = true;
+    statusLock = true;
 
-      stopForegroundCompat(1);
+    stopForegroundCompat(1);
 
-      notifyAlert(getString(R.string.forward_stop),
-          getString(R.string.service_stopped),
-          Notification.FLAG_AUTO_CANCEL);
+    notifyAlert(getString(R.string.forward_stop),
+        getString(R.string.service_stopped),
+        Notification.FLAG_AUTO_CANCEL);
 
-      try {
-        if (httpOS != null) {
-          httpOS.close();
-          httpOS = null;
-        }
-        if (httpProcess != null) {
-          httpProcess.destroy();
-          httpProcess = null;
-        }
-      } catch (Exception e) {
-        Log.e(TAG, "HTTP Server close unexpected");
+    try {
+      if (httpOS != null) {
+        httpOS.close();
+        httpOS = null;
       }
-
-      try {
-        if (dnsServer != null)
-          dnsServer.close();
-      } catch (Exception e) {
-        Log.e(TAG, "DNS Server close unexpected");
+      if (httpProcess != null) {
+        httpProcess.destroy();
+        httpProcess = null;
       }
-
-      new Thread() {
-        @Override
-          public void run() {
-
-            // Make sure the connection is closed, important here
-            onDisconnect();
-
-          }
-      }.start();
-
-      // for widget, maybe exception here
-      try {
-        RemoteViews views = new RemoteViews(getPackageName(),
-            R.layout.gaeproxy_appwidget);
-        views.setImageViewResource(R.id.serviceToggle, R.drawable.off);
-        AppWidgetManager awm = AppWidgetManager.getInstance(this);
-        awm.updateAppWidget(awm.getAppWidgetIds(new ComponentName(this,
-                GAEProxyWidgetProvider.class)), views);
-      } catch (Exception ignore) {
-        // Nothing
-      }
-
-      Editor ed = settings.edit();
-      ed.putBoolean("isRunning", false);
-      ed.putBoolean("isConnecting", false);
-      ed.commit();
-
-      try {
-        notificationManager.cancel(0);
-      } catch (Exception ignore) {
-        // Nothing
-      }
-
-      try {
-        ProxySettings.resetProxy(this);
-      } catch (Exception ignore) {
-        // Nothing
-      }
-
-      // APNManager.clearAPNProxy("127.0.0.1", Integer.toString(port), this);
-
-      super.onDestroy();
-
-      statusLock = false;
-
-      markServiceStopped();
+    } catch (Exception e) {
+      Log.e(TAG, "HTTP Server close unexpected");
     }
+
+    try {
+      if (dnsServer != null)
+        dnsServer.close();
+    } catch (Exception e) {
+      Log.e(TAG, "DNS Server close unexpected");
+    }
+
+    new Thread() {
+      @Override
+      public void run() {
+
+        // Make sure the connection is closed, important here
+        onDisconnect();
+
+      }
+    }.start();
+
+    // for widget, maybe exception here
+    try {
+      RemoteViews views = new RemoteViews(getPackageName(),
+          R.layout.gaeproxy_appwidget);
+      views.setImageViewResource(R.id.serviceToggle, R.drawable.off);
+      AppWidgetManager awm = AppWidgetManager.getInstance(this);
+      awm.updateAppWidget(awm.getAppWidgetIds(new ComponentName(this,
+          GAEProxyWidgetProvider.class)), views);
+    } catch (Exception ignore) {
+      // Nothing
+    }
+
+    Editor ed = settings.edit();
+    ed.putBoolean("isRunning", false);
+    ed.putBoolean("isConnecting", false);
+    ed.commit();
+
+    try {
+      notificationManager.cancel(0);
+    } catch (Exception ignore) {
+      // Nothing
+    }
+
+    try {
+      ProxySettings.resetProxy(this);
+    } catch (Exception ignore) {
+      // Nothing
+    }
+
+    // APNManager.clearAPNProxy("127.0.0.1", Integer.toString(port), this);
+
+    super.onDestroy();
+
+    statusLock = false;
+
+    markServiceStopped();
+  }
 
   private void onDisconnect() {
     Utils.runRootCommand(Utils.getIptables() + " -t nat -F OUTPUT");
@@ -636,19 +617,19 @@ public class GAEProxyService extends Service {
   // platform. On 2.0 or later we override onStartCommand() so this
   // method will not be called.
   @Override
-    public void onStart(Intent intent, int startId) {
+  public void onStart(Intent intent, int startId) {
 
-      handleCommand(intent);
+    handleCommand(intent);
 
-    }
+  }
 
   @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-      handleCommand(intent);
-      // We want this service to continue running until it is explicitly
-      // stopped, so return sticky.
-      return START_STICKY;
-    }
+  public int onStartCommand(Intent intent, int flags, int startId) {
+    handleCommand(intent);
+    // We want this service to continue running until it is explicitly
+    // stopped, so return sticky.
+    return START_STICKY;
+  }
 
   /**
    * Internal method to request actual PTY terminal once we've finished
@@ -672,7 +653,7 @@ public class GAEProxyService extends Service {
           URL aURL = new URL(
               "http://myhosts.sinaapp.com/port4.php?sig=" + sig);
           HttpURLConnection conn = (HttpURLConnection) aURL
-            .openConnection();
+              .openConnection();
           conn.setConnectTimeout(4000);
           conn.setReadTimeout(8000);
           conn.connect();
@@ -717,9 +698,9 @@ public class GAEProxyService extends Service {
       try {
         fs = new FileOutputStream(BASE + "stunnel.conf");
         String conf = "debug = 0\n" + "client = yes\n" + "pid = "
-          + BASE + "stunnel.pid\n" + "[https]\n"
-          + "sslVersion = all\n" + "accept = 127.0.0.1:8126\n"
-          + "connect = " + socksIp + ":" + socksPort + "\n";
+            + BASE + "stunnel.pid\n" + "[https]\n"
+            + "sslVersion = all\n" + "accept = 127.0.0.1:8126\n"
+            + "connect = " + socksIp + ":" + socksPort + "\n";
         fs.write(conf.getBytes());
         fs.flush();
         fs.close();
@@ -773,11 +754,11 @@ public class GAEProxyService extends Service {
 
     String cmd_bypass = Utils.getIptables() + CMD_IPTABLES_RETURN;
 
-    for (String mask : appMask) { 
+    for (String mask : appMask) {
       init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
     }
     init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
-          + getApplicationInfo().uid));
+        + getApplicationInfo().uid));
 
     if (isGFWList) {
 
@@ -807,13 +788,13 @@ public class GAEProxyService extends Service {
       }
       for (int uid : uidSet) {
         http_sb.append((hasRedirectSupport ? Utils.getIptables()
-              + CMD_IPTABLES_REDIRECT_ADD_HTTP : Utils.getIptables()
-              + CMD_IPTABLES_DNAT_ADD_HTTP).replace("-t nat",
-                "-t nat -m owner --uid-owner " + uid));
+            + CMD_IPTABLES_REDIRECT_ADD_HTTP : Utils.getIptables()
+            + CMD_IPTABLES_DNAT_ADD_HTTP).replace("-t nat",
+            "-t nat -m owner --uid-owner " + uid));
         https_sb.append((hasRedirectSupport ? Utils.getIptables()
-              + CMD_IPTABLES_REDIRECT_ADD_HTTPS : Utils.getIptables()
-              + CMD_IPTABLES_DNAT_ADD_HTTPS).replace("-t nat",
-                "-t nat -m owner --uid-owner " + uid));
+            + CMD_IPTABLES_REDIRECT_ADD_HTTPS : Utils.getIptables()
+            + CMD_IPTABLES_DNAT_ADD_HTTPS).replace("-t nat",
+            "-t nat -m owner --uid-owner " + uid));
       }
     }
 

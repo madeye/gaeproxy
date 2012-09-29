@@ -339,7 +339,6 @@ public class GAEProxy extends PreferenceActivity implements
 							+ "chmod 755 /data/data/org.gaeproxy/stunnel\n"
 							+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
-							+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 
 					install();
@@ -730,7 +729,6 @@ public class GAEProxy extends PreferenceActivity implements
 						+ "chmod 755 /data/data/org.gaeproxy/stunnel\n"
 						+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 						+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
-						+ "chmod 755 /data/data/org.gaeproxy/localproxy_en.sh\n"
 						+ "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 
 				install();

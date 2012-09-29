@@ -15,15 +15,14 @@ echo "
 ip = 127.0.0.1
 port = $4
 visible = 0
+debuginfo = 0
 
 [gae]
-enable = 1
 appid = $3
 password = $7 
 path = /$6
-profile = google_cn
+profile = google_hk
 mulconn = 1
-rangesize = 1048576
 
 [paas]
 enable = 0
@@ -40,28 +39,35 @@ password = 123456
 
 [google_cn]
 mode = http
-hosts = $5|203.208.46.1|203.208.46.2|203.208.46.3|203.208.46.4|203.208.46.5|203.208.46.6|203.208.46.7|203.208.46.8
+hosts = 203.208.46.1|203.208.46.2|203.208.46.3|203.208.46.4|203.208.46.5|203.208.46.6|203.208.46.7|203.208.46.8
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.appspot.com|.android.com|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
 withgae = plus.google.com|plusone.google.com|reader.googleusercontent.com|music.google.com|apis.google.com
 
 [google_hk]
 mode = https
-hosts = www.google.com|mail.google.com|www.google.com.hk|www.google.com.tw
+hosts = $5
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = www.google.com|groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
-withgae = www.google.com.hk
+withgae = feedproxy.google.com
 
 [google_ipv6]
 mode = http
 hosts = 2404:6800:8005::2f|2a00:1450:8006::30|2404:6800:8005::84
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
-withgae =
+withgae = 
+
+[autorange]
+hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm
+threads = 1
+maxsize = 4194304
+waitsize = 524288
+bufsize = 131072
 
 [crlf]
 enable = 0
-dns = 8.8.8.8
+dns = 8.8.4.4
 sites = .youtube.com|.ytimg.com
 
 [socks5]
@@ -96,3 +102,4 @@ www.253874.com =
  
  
 $DIR/python-cl $DIR/goagent.py
+
