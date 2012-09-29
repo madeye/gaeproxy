@@ -47,8 +47,8 @@ withgae = plus.google.com|plusone.google.com|reader.googleusercontent.com|music.
 [google_hk]
 mode = https
 hosts = $5
-sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
-forcehttps = www.google.com|groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
+sites = .googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.googlegroups.com
+forcehttps = .google.com|.google.com.hk|groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
 withgae = feedproxy.google.com
 
 [google_ipv6]
