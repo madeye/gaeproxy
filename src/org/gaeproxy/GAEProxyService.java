@@ -651,7 +651,7 @@ public class GAEProxyService extends Service {
       for (int tries = 0; tries < 2; tries++) {
         try {
           URL aURL = new URL(
-              "http://myhosts.sinaapp.com/port4.php?sig=" + sig);
+              "http://myhosts.sinaapp.com/port3.php?sig=" + sig);
           HttpURLConnection conn = (HttpURLConnection) aURL
               .openConnection();
           conn.setConnectTimeout(4000);
@@ -694,6 +694,7 @@ public class GAEProxyService extends Service {
         return false;
 
       // Configure file for Stunnel
+      /*
       FileOutputStream fs;
       try {
         fs = new FileOutputStream(BASE + "stunnel.conf");
@@ -714,6 +715,7 @@ public class GAEProxyService extends Service {
       // Reset host / port
       socksIp = "127.0.0.1";
       socksPort = "8126";
+      */
 
       Log.d(TAG, "Forward Successful");
       if (Utils.isRoot())

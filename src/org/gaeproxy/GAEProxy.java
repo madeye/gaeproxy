@@ -336,7 +336,6 @@ public class GAEProxy extends PreferenceActivity implements
 
 					Utils.runCommand("chmod 755 /data/data/org.gaeproxy/iptables\n"
 							+ "chmod 755 /data/data/org.gaeproxy/redsocks\n"
-							+ "chmod 755 /data/data/org.gaeproxy/stunnel\n"
 							+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
 							+ "chmod 755 /data/data/org.gaeproxy/python-cl\n");
@@ -726,7 +725,6 @@ public class GAEProxy extends PreferenceActivity implements
 
 				Utils.runCommand("chmod 755 /data/data/org.gaeproxy/iptables\n"
 						+ "chmod 755 /data/data/org.gaeproxy/redsocks\n"
-						+ "chmod 755 /data/data/org.gaeproxy/stunnel\n"
 						+ "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
 						+ "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
 						+ "chmod 755 /data/data/org.gaeproxy/python-cl\n");
