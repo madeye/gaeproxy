@@ -81,6 +81,7 @@ enable = 0
 ip = 127.0.0.1
 port = 8086
 file = goagent.pac
+gfwlist = http://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt
 
 [useragent]
 enable = 0

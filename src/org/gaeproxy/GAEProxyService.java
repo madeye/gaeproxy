@@ -108,12 +108,12 @@ public class GAEProxyService extends Service {
   private Process httpProcess = null;
   private DataOutputStream httpOS = null;
 
-  private String proxy;
+  private String appId;
+  private String appPath;
   private String appHost = DEFAULT_HOST;
   private String[] appMask;
   private int port;
   private String sitekey;
-  private String proxyType = "GoAgent";
   private DNSServer dnsServer = null;
   private int dnsPort = 8153;
 
@@ -204,6 +204,20 @@ public class GAEProxyService extends Service {
     }
   };
 
+  private boolean parseProxyURL(String url) {
+    if (url == null)
+      return false;
+    String[] proxyString = url.split("\\/");
+    if (proxyString.length < 4)
+      return false;
+    appPath = proxyString[3];
+    String[] ids = proxyString[2].split("\\.");
+    if (ids.length < 3)
+      return false;
+    appId = ids[0];
+    return true;
+  }
+
   public boolean connect() {
 
     try {
@@ -213,14 +227,8 @@ public class GAEProxyService extends Service {
       sb.append(BASE + "localproxy.sh \""
           + Utils.getDataPath(this) + "\"");
 
-      String[] proxyString = proxy.split("\\/");
-      if (proxyString.length < 4)
-        return false;
-      String[] appid = proxyString[2].split("\\.");
-      if (appid.length < 3)
-        return false;
-      sb.append(" goagent " + appid[0] + " " + port + " \"" + appHost
-          + "\" " + proxyString[3] + " " + sitekey);
+      sb.append(" goagent \"" + appId + "\" " + port + " \"" + appHost
+          + "\" " + appPath + " \"" + sitekey + "\"");
 
       final String cmd = sb.toString();
 
@@ -268,15 +276,18 @@ public class GAEProxyService extends Service {
       return;
     }
 
-    proxy = bundle.getString("proxy");
-    proxyType = bundle.getString("proxyType");
+    if (!parseProxyURL(bundle.getString("proxy"))) {
+      stopSelf();
+      return;
+    }
+
     port = bundle.getInt("port");
     sitekey = bundle.getString("sitekey");
     isGlobalProxy = bundle.getBoolean("isGlobalProxy");
     isHTTPSProxy = bundle.getBoolean("isHTTPSProxy");
     isGFWList = bundle.getBoolean("isGFWList");
 
-    Log.e(TAG, "GAE Proxy: " + proxy);
+    Log.e(TAG, "GAE Proxy: " + appId + " " + appPath);
     Log.e(TAG, "Local Port: " + port);
 
     // APNManager.setAPNProxy("127.0.0.1", Integer.toString(port), this);
@@ -390,21 +401,12 @@ public class GAEProxyService extends Service {
 
     // Random mirror for load balance
     // only affect when appid equals proxyofmax
-    if (proxy.equals("https://proxyofmax.appspot.com/fetch.py")) {
-      proxyType = "GoAgent";
-      String[] mirror_list = null;
-      int mirror_num = 0;
+    if (appId.equals("proxyofmax")) {
       String mirror_string = new String(
           Base64.decodeBase64(getString(R.string.mirror_list).getBytes()));
-      mirror_list = mirror_string.split("\\|");
-
-      if (mirror_list != null) {
-        mirror_num = mirror_list.length;
-        Random random = new Random(System.currentTimeMillis());
-        int n = random.nextInt(mirror_num);
-        proxy = "https://" + mirror_list[n] + ".appspot.com/fetch.py";
-        Log.d(TAG, "Balance Proxy: " + proxy);
-      }
+      appId = mirror_string;
+      appPath = getString(R.string.mirror_path);
+      sitekey = getString(R.string.mirror_sitekey);
     }
 
     if (!preConnection())
