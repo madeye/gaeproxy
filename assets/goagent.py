@@ -1395,11 +1395,6 @@ def main():
     f.write(pid)
     f.close()
 
-    if common.PAAS_ENABLE:
-        host, port = common.PAAS_LISTEN.split(':')
-        server = gevent.server.StreamServer((host, int(port)), paasproxy_handler)
-        gevent.spawn(server.serve_forever)
-
     if common.SOCKS5_ENABLE:
         host, port = common.SOCKS5_LISTEN.split(':')
         server = gevent.server.StreamServer((host, int(port)), socks5proxy_handler)
@@ -1409,8 +1404,13 @@ def main():
         server = gevent.server.StreamServer((common.PAC_IP, common.PAC_PORT), pacserver_handler)
         gevent.spawn(server.serve_forever)
 
-    server = gevent.server.StreamServer((common.LISTEN_IP, common.LISTEN_PORT), gaeproxy_handler)
-    server.serve_forever()
+    if common.PAAS_ENABLE:
+        host, port = common.PAAS_LISTEN.split(':')
+        server = gevent.server.StreamServer((host, int(port)), paasproxy_handler)
+        server.serve_forever()
+    else:
+        server = gevent.server.StreamServer((common.LISTEN_IP, common.LISTEN_PORT), gaeproxy_handler)
+        server.serve_forever()
 
 if __name__ == '__main__':
     try:

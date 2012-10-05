@@ -108,12 +108,14 @@ public class GAEProxyService extends Service {
   private Process httpProcess = null;
   private DataOutputStream httpOS = null;
 
+  private String proxyType = "GAE";
   private String appId;
   private String appPath;
   private String appHost = DEFAULT_HOST;
   private String[] appMask;
   private int port;
   private String sitekey;
+  private String dnsHost = null;
   private DNSServer dnsServer = null;
   private int dnsPort = 8153;
 
@@ -205,6 +207,15 @@ public class GAEProxyService extends Service {
   };
 
   private boolean parseProxyURL(String url) {
+    if (proxyType.equals("PaaS")) {
+      Uri uri = Uri.parse(url);
+      if (uri == null) {
+        return false;
+      }
+      appId = uri.getHost();
+      appPath = url + (url.endsWith("/") ? "" : "/");
+      return true;
+    }
     if (url == null)
       return false;
     String[] proxyString = url.split("\\/");
@@ -224,11 +235,14 @@ public class GAEProxyService extends Service {
 
       StringBuffer sb = new StringBuffer();
 
-      sb.append(BASE + "localproxy.sh \""
-          + Utils.getDataPath(this) + "\"");
-
-      sb.append(" goagent \"" + appId + "\" " + port + " \"" + appHost
-          + "\" " + appPath + " \"" + sitekey + "\"");
+      sb.append(BASE + "localproxy.sh");
+      sb.append(" \"" + Utils.getDataPath(this) + "\"");
+      sb.append(" \"" + proxyType + "\"");
+      sb.append(" \"" + appId + "\"");
+      sb.append(" \"" + port + "\"");
+      sb.append(" \"" + appHost + "\"");
+      sb.append(" \"" + appPath + "\"");
+      sb.append(" \"" + sitekey + "\"");
 
       final String cmd = sb.toString();
 
@@ -276,18 +290,20 @@ public class GAEProxyService extends Service {
       return;
     }
 
+    port = bundle.getInt("port");
+    sitekey = bundle.getString("sitekey");
+    proxyType = bundle.getString("proxyType");
+
+    isGlobalProxy = bundle.getBoolean("isGlobalProxy");
+    isHTTPSProxy = bundle.getBoolean("isHTTPSProxy");
+    isGFWList = bundle.getBoolean("isGFWList");
+
     if (!parseProxyURL(bundle.getString("proxy"))) {
       stopSelf();
       return;
     }
 
-    port = bundle.getInt("port");
-    sitekey = bundle.getString("sitekey");
-    isGlobalProxy = bundle.getBoolean("isGlobalProxy");
-    isHTTPSProxy = bundle.getBoolean("isHTTPSProxy");
-    isGFWList = bundle.getBoolean("isGFWList");
-
-    Log.e(TAG, "GAE Proxy: " + appId + " " + appPath);
+    Log.e(TAG, "Proxy: " + appId + " " + appPath);
     Log.e(TAG, "Local Port: " + port);
 
     // APNManager.setAPNProxy("127.0.0.1", Integer.toString(port), this);
@@ -342,13 +358,10 @@ public class GAEProxyService extends Service {
     markServiceStarted();
   }
 
-  /**
-   * Called when the activity is first created.
-   */
-  public boolean handleConnection() {
-
+  private String parseHost(String host) {
+    String address = null;
     try {
-      Lookup lookup = new Lookup("www.google.com", Type.A);
+      Lookup lookup = new Lookup(host, Type.A);
       Resolver resolver = new SimpleResolver("8.8.4.4");
       resolver.setTCP(true);
       resolver.setTimeout(10);
@@ -367,36 +380,58 @@ public class GAEProxyService extends Service {
           }
           sb.append(addr.getHostAddress());
         }
-        appHost = sb.toString();
+        address = sb.toString();
       } else {
-        appHost = null;
+        address = null;
       }
     } catch (Exception ignore) {
-      appHost = null;
+      address = null;
     }
 
-    if (appHost == null) {
+    if (address == null) {
       try {
-        InetAddress addr = InetAddress.getByName("www.google.com");
-        appHost = addr.getHostAddress();
+        InetAddress addr = InetAddress.getByName(host);
+        address = addr.getHostAddress();
       } catch (Exception ignore) {
-        appHost = null;
+        address = null;
       }
     }
 
-    if (appHost == null || appHost.equals("")) {
-      appHost = DEFAULT_HOST;
+    return address;
+  }
+
+  /**
+   * Called when the activity is first created.
+   */
+  public boolean handleConnection() {
+
+    if (proxyType.equals("GAE")) {
+      appHost = parseHost("www.google.com");
+      if (appHost == null || appHost.equals("")) {
+        appHost = DEFAULT_HOST;
+      }
+      dnsHost = appHost;
+    } else if (proxyType.equals("PaaS")) {
+      appHost = parseHost(appId);
+      if (appHost == null || appHost.equals("")) {
+        return false;
+      }
+      dnsHost = parseHost("www.google.com");
+      if (dnsHost == null || dnsHost.equals("")) {
+        dnsHost = DEFAULT_HOST;
+      }
     }
 
-    appMask = appHost.split("\\|");
-
-    if (appMask.length <= 0) {
+    try {
+      dnsHost = dnsHost.split("\\|")[0];
+      appMask = appHost.split("\\|");
+    } catch (Exception ex) {
       return false;
     }
 
     // DNS Proxy Setup
     // with AsyncHttpClient
-    dnsServer = new DNSServer(this, appMask[0]);
+    dnsServer = new DNSServer(this, dnsHost);
     dnsPort = dnsServer.getServPort();
 
     // Random mirror for load balance
@@ -633,10 +668,6 @@ public class GAEProxyService extends Service {
     return START_STICKY;
   }
 
-  /**
-   * Internal method to request actual PTY terminal once we've finished
-   * authentication. If called before authenticated, it will just fail.
-   */
   private boolean preConnection() {
 
     if (isHTTPSProxy) {
@@ -761,11 +792,16 @@ public class GAEProxyService extends Service {
     for (String mask : appMask) {
       init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
     }
-    init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
-        + getApplicationInfo().uid));
+    if (Utils.isRoot()) {
+      init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-p tcp -m owner --uid-owner "
+          + 0));
+    } else {
+      init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-p tcp -m owner --uid-owner "
+          + getApplicationInfo().uid));
+    }
+    init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
 
     if (isGFWList) {
-
       String[] chn_list = getResources().getStringArray(R.array.chn_list);
 
       for (String item : chn_list) {
