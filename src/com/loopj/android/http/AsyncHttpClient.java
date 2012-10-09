@@ -429,7 +429,7 @@ public class AsyncHttpClient {
    * @param context         the Android Context which initiated the request.
    * @param url             the URL to send the request to.
    * @param headers         set headers only for this request
-   * @param entity          a raw {@link HttpEntity} to send with the request, for
+   * @param params          a raw {@link HttpEntity} to send with the request, for
    *                        example, use this to send string/json/xml payloads to a server
    *                        by passing a {@link org.apache.http.entity.StringEntity}.
    * @param contentType     the content type of the payload you are sending, for example
@@ -444,6 +444,14 @@ public class AsyncHttpClient {
     if (headers != null)
       request.setHeaders(headers);
     sendRequest(httpClient, httpContext, request, contentType, responseHandler, context);
+  }
+
+  public void post(String url, RequestParams params, String host, AsyncHttpResponseHandler responseHandler) {
+    HttpEntityEnclosingRequestBase request = new HttpPost(url);
+    request.setHeader("Host", host);
+    if (params != null)
+      request.setEntity(paramsToEntity(params));
+    sendRequest(httpClient, httpContext, request, null, responseHandler, null);
   }
 
   //
