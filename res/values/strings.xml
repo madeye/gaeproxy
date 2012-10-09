@@ -3,8 +3,8 @@
 
     <string name="service_running">Running in the background.</string>
     <string name="app_name">GAEProxy</string>
-    <string name="forward_success">Proxy Service Successed.</string>
-    <string name="forward_fail">Proxy Service Failed.</string>
+    <string name="forward_success">Service started.</string>
+    <string name="forward_fail">Service failed to start.</string>
     <string name="service_stopped">GAEProxy service stopped.</string>
     <string name="auto_reconnected">Auto Reconnected</string>
     <string name="reconnect_success">Reconnected successfully.</string>

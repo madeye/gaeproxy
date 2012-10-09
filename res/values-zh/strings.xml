@@ -3,8 +3,8 @@
 
     <string name="service_running">正通过GAE代理连接到互联网</string>
     <string name="app_name">GAE代理</string>
-    <string name="forward_success">GAE代理连接成功</string>
-    <string name="forward_fail">GAE代理连接失败</string>
+    <string name="forward_success">GAE代理启用成功</string>
+    <string name="forward_fail">GAE代理启用失败</string>
     <string name="service_stopped">GAE代理服务已停止</string>
     <string name="auto_reconnected">恢复连接中</string>
     <string name="reconnect_success">恢复连接成功</string>
