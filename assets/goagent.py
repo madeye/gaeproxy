@@ -140,8 +140,7 @@ class DNSCacheUtil(object):
         if conn is not None:
             try:
                 c = conn.cursor()
-                c.execute("select request from dnsresponse where address = '%s'"
-                        % address)
+                c.execute("select request,reqtimestamp from dnsresponse where address = '%s' order by reqtimestamp DESC" % address)
                 row = c.fetchone()
                 if row is not None:
                     host = row[0]

@@ -12,6 +12,8 @@ public class DNSResponse {
 	private String request;
 	@DatabaseField(columnName = "timestamp")
 	private long timestamp = System.currentTimeMillis();
+  @DatabaseField(columnName = "reqtimestamp")
+  private long reqTimestamp = System.currentTimeMillis();
 	@DatabaseField(columnName = "reqtimes")
 	private int reqTimes = 0;
 	@DatabaseField(columnName = "address")
@@ -52,15 +54,22 @@ public class DNSResponse {
 	}
 
 	/**
-	 * @return the reqTimes
-	 */
-	public int getReqTimes() {
-		return reqTimes;
-	}
+   * @return the reqTimes
+   */
+  public int getReqTimes() {
+    return reqTimes;
+  }
 
-	public String getRequest() {
-		return this.request;
-	}
+  public String getRequest() {
+    return this.request;
+  }
+
+  /**
+   * @return the reqTimes
+   */
+  public long getReqTimestamp() {
+    return reqTimestamp;
+  }
 
 	/**
 	 * @return the timestamp
@@ -80,6 +89,7 @@ public class DNSResponse {
 
 	public String getAddress() {
 		this.reqTimes++;
+    this.reqTimestamp = System.currentTimeMillis();
 		return address;
 	}
 
