@@ -163,7 +163,7 @@ class CertUtil(object):
         key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
         ca = OpenSSL.crypto.X509()
         ca.set_serial_number(0)
-        ca.set_version(2)
+        ca.set_version(3)
         subj = ca.get_subject()
         subj.countryName = 'CN'
         subj.stateOrProvinceName = 'Internet'
@@ -223,7 +223,7 @@ class CertUtil(object):
         req.sign(pkey, 'sha1')
 
         cert = OpenSSL.crypto.X509()
-        cert.set_version(2)
+        cert.set_version(3)
         try:
             cert.set_serial_number(int(hashlib.md5(commonname).hexdigest(), 16))
         except OpenSSL.SSL.Error:
