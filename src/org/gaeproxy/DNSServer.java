@@ -145,7 +145,7 @@ public class DNSServer implements Runnable {
     */
   protected byte[] createDNSResponse(byte[] quest, byte[] ips) {
     int start = 0;
-    byte[] response = new byte[512];
+    byte[] response = new byte[4096];
 
     for (int val : DNS_HEADERS) {
       response[start] = (byte) val;
