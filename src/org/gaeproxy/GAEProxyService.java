@@ -303,6 +303,8 @@ public class GAEProxyService extends Service {
       return;
     }
 
+    if ("fetch.py".equals(appPath)) appPath = "2";
+
     Log.e(TAG, "Proxy: " + appId + " " + appPath);
     Log.e(TAG, "Local Port: " + port);
 

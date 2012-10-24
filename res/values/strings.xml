@@ -115,7 +115,7 @@
     <string name="mirror_list">
         d3dxZ3R4eHByb3h5LTF8d3dxZ3R4eHByb3h5LTJ8d3dxZ3R4eHByb3h5LTN8d3dxZ3R4eHByb3h5LTR8d3dxZ3R4eHByb3h5LTV8d3dxZ3R4eHByb3h5LTZ8d3dxZ3R4eHByb3h5LTd8d3dxZ3R4eHByb3h5LTh8d3dxZ3R4eHByb3h5LTl8d3dxZ3R4eHByb3h5LTEwfHd3cWd0eHhwcm94eTEtMXx3d3FndHh4cHJveHkxLTJ8d3dxZ3R4eHByb3h5MS0zfHd3cWd0eHhwcm94eTEtNHx3d3FndHh4cHJveHkxLTV8d3dxZ3R4eHByb3h5MS02fHd3cWd0eHhwcm94eTEtN3x3d3FndHh4cHJveHkxLTh8d3dxZ3R4eHByb3h5MS05fHd3cWd0eHhwcm94eTEtMTB8d3dxZ3R4eHByb3h5Mi0xfHd3cWd0eHhwcm94eTItMnx3d3FndHh4cHJveHkyLTN8d3dxZ3R4eHByb3h5Mi00fHd3cWd0eHhwcm94eTItNXx3d3FndHh4cHJveHkyLTZ8d3dxZ3R4eHByb3h5Mi03fHd3cWd0eHhwcm94eTItOHx3d3FndHh4cHJveHkyLTl8d3dxZ3R4eHByb3h5Mi0xMA==
     </string>
-    <string name="mirror_path">fetch.py</string>
+    <string name="mirror_path">2</string>
     <string name="mirror_sitekey">wwqgtxx-goagent</string>
 
     <string name="connecting">Connecting...</string>

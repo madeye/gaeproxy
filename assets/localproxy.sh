@@ -24,7 +24,7 @@ appid = $3
 password = $7 
 path = /$6
 profile = google_hk
-mulconn = 1
+crlf = 0
 
 [paas]
 enable = 0
@@ -120,7 +120,7 @@ appid = dummy
 password = 123456
 path = /fetch.py
 profile = google_hk
-mulconn = 1
+crlf = 1
 
 [paas]
 enable = 1
