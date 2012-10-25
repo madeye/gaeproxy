@@ -10,7 +10,7 @@
 #      AlsoTang       <alsotang@gmail.com>
 #      Yonsm          <YonsmGuo@gmail.com>
 
-__version__ = '2.1.0'
+__version__ = '2.1.3'
 __config__  = 'proxy.ini'
 
 import sys
@@ -337,10 +337,8 @@ class Http(object):
         if not iplist:
             iplist = self.dns[host] = self.dns.default_factory([])
             if not dnsserver:
-                ips = [x[-1][0] for x in socket.getaddrinfo(host, 80)]
+                ips = socket.gethostbyname_ex(host)[-1]
             else:
-                #resolver = gevent.resolver_ares.Resolver(servers=[dnsserver], tcp_port=53)
-                #ips = [x[-1][0] for x in resolver.getaddrinfo(host, 80)]
                 index = os.urandom(2)
                 hoststr = ''.join(chr(len(x))+x for x in host.split('.'))
                 data = '%s\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00%s\x00\x00\x01\x00\x01' % (index, hoststr)
@@ -459,7 +457,7 @@ class Http(object):
     def parse_request(self, rfile, bufsize=8192):
         line = rfile.readline(bufsize)
         if not line:
-            raise socket.error('empty line')
+            raise EOFError('empty line')
         method, path, version = line.split(' ', 2)
         headers = self.MessageClass()
         while 1:
@@ -472,24 +470,33 @@ class Http(object):
             headers[keyword] = value
         return method, path, version, headers
 
-    def _request(self, sock, method, path, protocol_version, headers, data, bufsize=8192, crlf=0):
+    def _request(self, sock, method, path, protocol_version, headers, payload, bufsize=8192, crlf=None):
         skip_headers = self.skip_headers
 
-        request_data = '\r\n' * (crlf or self.crlf)
+        request_data = '\r\n' * (self.crlf if crlf is None else crlf)
         request_data += '%s %s %s\r\n' % (method, path, protocol_version)
         request_data += ''.join('%s: %s\r\n' % (k, v) for k, v in headers.iteritems() if k not in skip_headers)
         if self.proxy:
             username, password, _, _ = self.proxy
             request_data += 'Proxy-Authorization: Basic %s\r\n' % base64.b64encode('%s:%s' % (username, password))
-        request_data += '\r\n' if not data else '\r\n'+data
+        request_data += '\r\n'
         wfile = sock.makefile('wb', 0)
-        wfile.write(request_data)
+        if isinstance(payload, basestring):
+            request_data += payload
+            wfile.write(request_data)
+        else:
+            wfile.write(request_data)
+            while 1:
+                data = payload.read(bufsize)
+                if not data:
+                    break
+                wfile.write(data)
 
         rfile = sock.makefile('rb', -1)
 
         response_line = rfile.readline(bufsize)
         if not response_line:
-            raise socket.error('empty line')
+            raise EOFError('empty line')
         version, code, _ = response_line.split(' ', 2)
         code = int(code)
 
@@ -506,7 +513,7 @@ class Http(object):
             headers[keyword] = value.strip()
         return code, headers, rfile
 
-    def request(self, method, url, data=None, headers={}, fullurl=False, bufsize=8192, crlf=0):
+    def request(self, method, url, payload=None, headers={}, fullurl=False, bufsize=8192, crlf=None):
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
         if not re.search(r':\d+$', netloc):
             host = netloc
@@ -530,7 +537,7 @@ class Http(object):
                 if sock:
                     if scheme == 'https':
                         sock = ssl.wrap_socket(sock)
-                    code, headers, rfile = self._request(sock, method, path, self.protocol_version, headers, data, bufsize=bufsize, crlf=crlf)
+                    code, headers, rfile = self._request(sock, method, path, self.protocol_version, headers, payload, bufsize=bufsize, crlf=crlf)
                     return code, headers, rfile
             except Exception as e:
                 logging.debug('Http.request "%s %s" failed:%s', method, url, e)
@@ -611,6 +618,7 @@ class Common(object):
 
         self.PAAS_ENABLE           = self.CONFIG.getint('paas', 'enable')
         self.PAAS_LISTEN           = self.CONFIG.get('paas', 'listen')
+        self.PAAS_ISPHP            = self.CONFIG.getint('paas', 'isphp')
         self.PAAS_PASSWORD         = self.CONFIG.get('paas', 'password') if self.CONFIG.has_option('paas', 'password') else ''
         self.PAAS_FETCHSERVER      = self.CONFIG.get('paas', 'fetchserver')
 
@@ -864,7 +872,7 @@ class RangeFetch(object):
 
             content_range = response_headers.get('Content-Range')
             if not content_range:
-                logging.error('Range Fetch "%s %s" failed: response_kwargs=%s response_headers=%s', self.method, self.url, response_kwargs, response_headers)
+                logging.error('Range Fetch "%s %s" failed: response_headers=%s', self.method, self.url, response_headers)
                 return
             content_length = int(response_headers['Content-Length'])
             logging.info('>>>>>>>>>>>>>>> [thread %s] %s %s', id(gevent.getcurrent()), content_length, content_range)
@@ -887,7 +895,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
     rfile = sock.makefile('rb', 8192)
     try:
         method, path, version, headers = http.parse_request(rfile)
-    except socket.error as e:
+    except (EOFError, socket.error) as e:
         if e[0] in ('empty line', 10053, errno.EPIPE):
             return rfile.close()
         raise
@@ -906,23 +914,32 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
                     iplist = []
                     for host in hosts:
                         try:
-                            iplist += [x[-1][0] for x in socket.getaddrinfo(host, 80)]
+                            iplist += socket.gethostbyname_ex(host)[-1]
                         except socket.error as e:
-                            logging.error('socket.getaddrinfo(host=%r, 80) failed:%s', host, e)
+                            logging.error('socket.gethostbyname_ex(host=%r) failed:%s', host, e)
                     prefix = re.sub(r'\d+\.\d+$', '', common.GOOGLE_HOSTS[0])
                     iplist = [x for x in iplist if x.startswith(prefix) and re.match(r'\d+\.\d+\.\d+\.\d+', x)]
                     if iplist:
                         common.GOOGLE_HOSTS = set(iplist)
                     else:
-                        # google_cn is down, switch to google_hk
-                        common.GAE_PROFILE = 'google_hk'
-                        common.GOOGLE_MODE = 'https'
-                        common.GAE_FETCHSERVER = '%s://%s.appspot.com%s?' % (common.GOOGLE_MODE, common.GAE_APPIDS[0], common.GAE_PATH)
-                        common.GOOGLE_HOSTS = [x for x in common.CONFIG.get(common.GAE_PROFILE, 'hosts').split('|') if x]
+                        # seems google_cn is down, should switch to google_hk?
+                        need_switch = False
+                        for host in random.sample(common.GOOGLE_HOSTS, min(3, len(common.GOOGLE_HOSTS))):
+                            try:
+                                socket.create_connection((host, 80), timeout=2).close()
+                            except socket.error:
+                                need_switch = True
+                                break
+                        if need_switch:
+                            common.GAE_PROFILE = 'google_hk'
+                            common.GOOGLE_MODE = 'https'
+                            common.GAE_FETCHSERVER = '%s://%s.appspot.com%s?' % (common.GOOGLE_MODE, common.GAE_APPIDS[0], common.GAE_PATH)
+                            common.GOOGLE_HOSTS = [x for x in common.CONFIG.get(common.GAE_PROFILE, 'hosts').split('|') if x]
+                            common.GOOGLE_WITHGAE = common.CONFIG.get('google_hk', 'withgae').split('|')
             if any(not re.match(r'\d+\.\d+\.\d+\.\d+', x) for x in common.GOOGLE_HOSTS):
                 with hls['setuplock']:
                     if any(not re.match(r'\d+\.\d+\.\d+\.\d+', x) for x in common.GOOGLE_HOSTS):
-                        google_ipmap = dict((g, [x[-1][0] for x in socket.getaddrinfo(g, 80) if re.match(r'\d+\.\d+\.\d+\.\d+', x[-1][0])]) for g in common.GOOGLE_HOSTS)
+                        google_ipmap = dict((g, [x for x in socket.gethostbyname_ex(g)[-1] if re.match(r'\d+\.\d+\.\d+\.\d+', x)]) for g in common.GOOGLE_HOSTS)
                         need_resolve_remote = [x for x in google_ipmap if not re.match(r'\d+\.\d+\.\d+\.\d+', x) and len(google_ipmap[x]) <= 1]
                         try:
                             for g in need_resolve_remote:
@@ -984,7 +1001,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             rfile = sock.makefile('rb', 8192)
             try:
                 method, path, version, headers = http.parse_request(rfile)
-            except socket.error as e:
+            except (EOFError, socket.error) as e:
                 if e[0] in ('empty line', 10053, errno.EPIPE):
                     return rfile.close()
                 raise
@@ -1061,7 +1078,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
                 content_length = int(headers.get('Content-Length', 0))
                 payload = rfile.read(content_length) if content_length else ''
                 app_code, code, response_headers, response_rfile = gae_urlfetch(method, path, headers, payload, common.GAE_FETCHSERVER, password=common.GAE_PASSWORD)
-            except socket.error as e:
+            except (EOFError, socket.error) as e:
                 if e[0] in (11004, 10051, 10054, 10060, 'timed out', 'empty line'):
                     # connection reset or timeout, switch to https
                     common.GOOGLE_MODE = 'https'
@@ -1125,6 +1142,35 @@ def paas_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     metadata = 'G-Method:%s\nG-Url:%s\n%s\n%s\n' % (method, url, '\n'.join('G-%s:%s'%(k,v) for k,v in kwargs.iteritems() if v), '\n'.join('%s:%s'%(k,v) for k,v in headers.iteritems() if k not in skip_headers))
     metadata = zlib.compress(metadata)[2:-4]
     app_payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
+    app_code, app_headers, rfile = http.request('POST', fetchserver, app_payload, {'Content-Length':len(app_payload)}, crlf=0)
+    if app_code != 200 or 'Status' not in app_headers:
+        return app_code, app_code, app_headers, rfile
+    data = app_headers['Status']
+    data = zlib.decompress(base64.b64decode(data), -15)
+    headers = dict(x.split(':', 1) for x in data.splitlines())
+    if 'Transfer-Encoding' in app_headers:
+        headers['Transfer-Encoding'] = app_headers['Transfer-Encoding']
+        headers.pop('Content-Length', None)
+    if 'Connection' in app_headers:
+        headers['Connection'] = app_headers['Connection']
+    if 'Set-Cookie' in app_headers:
+        headers['Set-Cookie'] = app_headers['Set-Cookie']
+    code = int(headers.pop('G-Code'))
+    return app_code, code, headers, rfile
+
+def php_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
+    # deflate = lambda x:zlib.compress(x)[2:-4]
+    if payload:
+        if len(payload) < 10 * 1024 * 1024 and 'Content-Encoding' not in headers:
+            zpayload = zlib.compress(payload)[2:-4]
+            if len(zpayload) < len(payload):
+                payload = zpayload
+                headers['Content-Encoding'] = 'deflate'
+        headers['Content-Length'] = str(len(payload))
+    skip_headers = http.skip_headers
+    metadata = 'G-Method:%s\nG-Url:%s\n%s\n%s\n' % (method, url, '\n'.join('G-%s:%s'%(k,v) for k,v in kwargs.iteritems() if v), '\n'.join('%s:%s'%(k,v) for k,v in headers.iteritems() if k not in skip_headers))
+    metadata = zlib.compress(metadata)[2:-4]
+    app_payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
     app_code, headers, rfile = http.request('POST', fetchserver, app_payload, {'Content-Length':len(app_payload)}, crlf=0)
     return app_code, app_code, headers, rfile
 
@@ -1132,7 +1178,7 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
     rfile = sock.makefile('rb', 8192)
     try:
         method, path, version, headers = http.parse_request(rfile)
-    except socket.error as e:
+    except (EOFError, socket.error) as e:
         if e[0] in ('empty line', 10053, errno.EPIPE):
             return rfile.close()
         raise
@@ -1142,7 +1188,7 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
             fetchhost = re.sub(r':\d+$', '', urlparse.urlparse(common.PAAS_FETCHSERVER).netloc)
             logging.info('resolve common.PAAS_FETCHSERVER domian=%r to iplist', fetchhost)
             with hls['setuplock']:
-                fethhost_iplist = [x[-1][0] for x in socket.getaddrinfo(fetchhost, 80)]
+                fethhost_iplist = socket.gethostbyname_ex(fetchhost)[-1]
                 if len(fethhost_iplist) == 0:
                     logging.error('resolve %s domian return empty! please use ip list to replace domain list!', common.GAE_PROFILE)
                     sys.exit(-1)
@@ -1179,7 +1225,7 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
         rfile = sock.makefile('rb', 8192)
         try:
             method, path, version, headers = http.parse_request(rfile)
-        except socket.error as e:
+        except (EOFError, socket.error) as e:
             if e[0] in ('empty line', 10053, errno.EPIPE):
                 return rfile.close()
             raise
@@ -1194,7 +1240,10 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
         try:
             content_length = int(headers.get('Content-Length', 0))
             payload = rfile.read(content_length) if content_length else ''
-            app_code, code, response_headers, response_rfile = paas_urlfetch(method, path, headers, payload, common.PAAS_FETCHSERVER, password=common.PAAS_PASSWORD)
+            urlfetch = paas_urlfetch
+            if common.PAAS_ISPHP or common.PAAS_FETCHSERVER.endswith('.php'):
+                urlfetch = php_urlfetch
+            app_code, code, response_headers, response_rfile = urlfetch(method, path, headers, payload, common.PAAS_FETCHSERVER, password=common.PAAS_PASSWORD)
             logging.info('%s:%s "%s %s HTTP/1.1" %s -' % (remote_addr, remote_port, method, path, code))
         except socket.error as e:
             if e.reason[0] not in (11004, 10051, 10060, 'timed out', 10054):
@@ -1203,7 +1252,7 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
             logging.exception('error: %s', e)
             raise
 
-        if code in (400, 405):
+        if app_code in (400, 405):
             http.crlf = 0
 
         wfile = sock.makefile('wb', 0)
@@ -1229,7 +1278,7 @@ def socks5proxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()
             fetchhost = re.sub(r':\d+$', '', urlparse.urlparse(common.SOCKS5_FETCHSERVER).netloc)
             logging.info('resolve common.SOCKS5_FETCHSERVER domian=%r to iplist', fetchhost)
             with hls['setuplock']:
-                fethhost_iplist = [x[-1][0] for x in socket.getaddrinfo(fetchhost, 80)]
+                fethhost_iplist = socket.gethostbyname_ex(fetchhost)[-1]
                 if len(fethhost_iplist) == 0:
                     logging.error('resolve %s domian return empty! please use ip list to replace domain list!', fetchhost)
                     sys.exit(-1)
@@ -1349,7 +1398,7 @@ def pacserver_handler(sock, address, hls={}):
     rfile = sock.makefile('rb', 8192)
     try:
         method, path, version, headers = http.parse_request(rfile)
-    except socket.error as e:
+    except (EOFError, socket.error) as e:
         if e[0] in ('empty line', 10053, errno.EPIPE):
             return rfile.close()
         raise

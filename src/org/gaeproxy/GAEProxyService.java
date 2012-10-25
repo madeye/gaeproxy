@@ -101,7 +101,7 @@ public class GAEProxyService extends Service {
       + "--dport 443 -j DNAT --to-destination 127.0.0.1:8124\n";
 
   private static final String TAG = "GAEProxyService";
-  private static final String DEFAULT_HOST = "203.208.46.1";
+  private static final String DEFAULT_HOST = "74.125.128.18";
 
   public static volatile boolean statusLock = false;
 
