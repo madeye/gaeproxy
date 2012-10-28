@@ -294,6 +294,10 @@ public class GAEProxyService extends Service {
     sitekey = bundle.getString("sitekey");
     proxyType = bundle.getString("proxyType");
 
+    if (!"GAE".equals(proxyType) && !"PaaS".equals(proxyType)) {
+        proxyType = "GAE";
+    }
+
     isGlobalProxy = bundle.getBoolean("isGlobalProxy");
     isHTTPSProxy = bundle.getBoolean("isHTTPSProxy");
     isGFWList = bundle.getBoolean("isGFWList");
