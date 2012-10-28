@@ -254,7 +254,9 @@ class CertUtil(object):
         if commonname[0] == '.':
             sans = ['*'+commonname] + [x for x in sans if x != '*'+commonname]
         else:
-            sans = [commonname] + [x for x in sans if x != commonname]
+            index = commonname.find('.')
+            extensive = commonname if index == -1 else '*' + commonname[index:]
+            sans = [extensive] + [x for x in sans if x != extensive]
         cert.add_extensions([OpenSSL.crypto.X509Extension(b'subjectAltName', True, ', '.join('DNS: %s' % x for x in sans))])
         cert.sign(key, 'sha1')
 
