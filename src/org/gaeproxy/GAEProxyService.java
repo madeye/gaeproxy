@@ -248,11 +248,7 @@ public class GAEProxyService extends Service {
 
       Log.e(TAG, cmd);
 
-      if (Utils.isRoot()) {
-        Utils.runRootCommand(cmd);
-      } else {
-        Utils.runCommand(cmd);
-      }
+      Utils.runCommand(cmd);
 
     } catch (Exception e) {
       Log.e(TAG, "Cannot connect");
@@ -368,7 +364,7 @@ public class GAEProxyService extends Service {
     String address = null;
     try {
       Lookup lookup = new Lookup(host, Type.A);
-      Resolver resolver = new SimpleResolver("8.8.4.4");
+      Resolver resolver = new SimpleResolver("8.8.8.8");
       resolver.setTCP(true);
       resolver.setTimeout(10);
       lookup.setResolver(resolver);
@@ -798,13 +794,8 @@ public class GAEProxyService extends Service {
     for (String mask : appMask) {
       init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
     }
-    if (Utils.isRoot()) {
-      init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-p tcp -m owner --uid-owner "
-          + 0));
-    } else {
-      init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-p tcp -m owner --uid-owner "
+    init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
           + getApplicationInfo().uid));
-    }
     init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
 
     if (isGFWList) {
