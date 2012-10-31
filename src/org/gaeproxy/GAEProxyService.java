@@ -291,7 +291,7 @@ public class GAEProxyService extends Service {
     proxyType = bundle.getString("proxyType");
 
     if (!"GAE".equals(proxyType) && !"PaaS".equals(proxyType)) {
-        proxyType = "GAE";
+      proxyType = "GAE";
     }
 
     isGlobalProxy = bundle.getBoolean("isGlobalProxy");
@@ -364,8 +364,7 @@ public class GAEProxyService extends Service {
     String address = null;
     try {
       Lookup lookup = new Lookup(host, Type.A);
-      Resolver resolver = new SimpleResolver("8.8.8.8");
-      resolver.setTCP(true);
+      Resolver resolver = new SimpleResolver("114.114.114.114");
       resolver.setTimeout(10);
       lookup.setResolver(resolver);
       Record[] records = lookup.run();
@@ -794,9 +793,12 @@ public class GAEProxyService extends Service {
     for (String mask : appMask) {
       init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
     }
+    if (proxyType.equals("PaaS")) {
+      init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
+    }
     init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
-          + getApplicationInfo().uid));
-    init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
+        + getApplicationInfo().uid));
+
 
     if (isGFWList) {
       String[] chn_list = getResources().getStringArray(R.array.chn_list);
