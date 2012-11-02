@@ -125,6 +125,7 @@ public class GAEProxyService extends Service {
   private boolean isGlobalProxy = false;
   private boolean isHTTPSProxy = false;
   private boolean isGFWList = false;
+  private boolean isBypassApps = false;
 
   private ProxyedApp apps[];
 
@@ -297,6 +298,7 @@ public class GAEProxyService extends Service {
     isGlobalProxy = bundle.getBoolean("isGlobalProxy");
     isHTTPSProxy = bundle.getBoolean("isHTTPSProxy");
     isGFWList = bundle.getBoolean("isGFWList");
+    isBypassApps = bundle.getBoolean("isBypassApps");
 
     if (!parseProxyURL(bundle.getString("proxy"))) {
       stopSelf();
@@ -807,33 +809,38 @@ public class GAEProxyService extends Service {
         init_sb.append(cmd_bypass.replace("0.0.0.0", item));
       }
     }
-    if (isGlobalProxy) {
+    if (isGlobalProxy || isBypassApps) {
       http_sb.append(hasRedirectSupport ? Utils.getIptables()
           + CMD_IPTABLES_REDIRECT_ADD_HTTP : Utils.getIptables()
           + CMD_IPTABLES_DNAT_ADD_HTTP);
       https_sb.append(hasRedirectSupport ? Utils.getIptables()
           + CMD_IPTABLES_REDIRECT_ADD_HTTPS : Utils.getIptables()
           + CMD_IPTABLES_DNAT_ADD_HTTPS);
-    } else {
+    }
+    if (!isGlobalProxy) {
       // for proxy specified apps
       if (apps == null || apps.length <= 0)
         apps = AppManager.getProxyedApps(this);
 
       HashSet<Integer> uidSet = new HashSet<Integer>();
-      for (int i = 0; i < apps.length; i++) {
-        if (apps[i].isProxyed()) {
-          uidSet.add(apps[i].getUid());
+      for (ProxyedApp app : apps) {
+        if (app.isProxyed()) {
+          uidSet.add(app.getUid());
         }
       }
       for (int uid : uidSet) {
-        http_sb.append((hasRedirectSupport ? Utils.getIptables()
-            + CMD_IPTABLES_REDIRECT_ADD_HTTP : Utils.getIptables()
-            + CMD_IPTABLES_DNAT_ADD_HTTP).replace("-t nat",
-            "-t nat -m owner --uid-owner " + uid));
-        https_sb.append((hasRedirectSupport ? Utils.getIptables()
-            + CMD_IPTABLES_REDIRECT_ADD_HTTPS : Utils.getIptables()
-            + CMD_IPTABLES_DNAT_ADD_HTTPS).replace("-t nat",
-            "-t nat -m owner --uid-owner " + uid));
+        if (!isBypassApps) {
+          http_sb.append((hasRedirectSupport ? Utils.getIptables()
+              + CMD_IPTABLES_REDIRECT_ADD_HTTP : Utils.getIptables()
+              + CMD_IPTABLES_DNAT_ADD_HTTP).replace("-t nat",
+              "-t nat -m owner --uid-owner " + uid));
+          https_sb.append((hasRedirectSupport ? Utils.getIptables()
+              + CMD_IPTABLES_REDIRECT_ADD_HTTPS : Utils.getIptables()
+              + CMD_IPTABLES_DNAT_ADD_HTTPS).replace("-t nat",
+              "-t nat -m owner --uid-owner " + uid));
+        } else {
+          init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner " + uid));
+        }
       }
     }
 

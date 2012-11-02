@@ -107,6 +107,7 @@ public class GAEProxy extends PreferenceActivity implements
   private boolean isGlobalProxy = false;
   private boolean isHTTPSProxy = false;
   private boolean isGFWList = false;
+  private boolean isBypassApps = false;
 
   private static final int MSG_CRASH_RECOVER = 1;
   private static final int MSG_INITIAL_FINISH = 2;
@@ -149,6 +150,7 @@ public class GAEProxy extends PreferenceActivity implements
   private CheckBoxPreference isRunningCheck;
   private AdView adView;
   private Preference proxyedApps;
+  private CheckBoxPreference isBypassAppsCheck;
 
   private Preference browser;
 
@@ -210,6 +212,7 @@ public class GAEProxy extends PreferenceActivity implements
     sitekeyText.setEnabled(false);
     proxyedApps.setEnabled(false);
     isGFWListCheck.setEnabled(false);
+    isBypassAppsCheck.setEnabled(false);
 
     isAutoConnectCheck.setEnabled(false);
     isGlobalProxyCheck.setEnabled(false);
@@ -221,8 +224,10 @@ public class GAEProxy extends PreferenceActivity implements
     proxyText.setEnabled(true);
     portText.setEnabled(true);
     sitekeyText.setEnabled(true);
-    if (!isGlobalProxyCheck.isChecked())
+    if (!isGlobalProxyCheck.isChecked()) {
       proxyedApps.setEnabled(true);
+      isBypassAppsCheck.setEnabled(true);
+    }
 
     isGlobalProxyCheck.setEnabled(true);
     isAutoConnectCheck.setEnabled(true);
@@ -298,6 +303,7 @@ public class GAEProxy extends PreferenceActivity implements
     isHTTPSProxyCheck = (CheckBoxPreference) findPreference("isHTTPSProxy");
     isGlobalProxyCheck = (CheckBoxPreference) findPreference("isGlobalProxy");
     isGFWListCheck = (CheckBoxPreference) findPreference("isGFWList");
+    isBypassAppsCheck = (CheckBoxPreference) findPreference("isBypassApps");
 
     proxyTypeList = (ListPreference) findPreference("proxyType");
 
@@ -507,10 +513,13 @@ public class GAEProxy extends PreferenceActivity implements
     SharedPreferences settings = PreferenceManager
         .getDefaultSharedPreferences(this);
 
-    if (settings.getBoolean("isGlobalProxy", false))
+    if (settings.getBoolean("isGlobalProxy", false)) {
       proxyedApps.setEnabled(false);
-    else
+      isBypassAppsCheck.setEnabled(false);
+    } else {
       proxyedApps.setEnabled(true);
+      isBypassAppsCheck.setEnabled(true);
+    }
 
     sitekeyText.setEnabled(true);
 
@@ -615,10 +624,13 @@ public class GAEProxy extends PreferenceActivity implements
     }
 
     if (key.equals("isGlobalProxy")) {
-      if (settings.getBoolean("isGlobalProxy", false))
+      if (settings.getBoolean("isGlobalProxy", false)) {
         proxyedApps.setEnabled(false);
-      else
+        isBypassAppsCheck.setEnabled(false);
+      } else {
         proxyedApps.setEnabled(true);
+        isBypassAppsCheck.setEnabled(true);
+      }
     }
 
     if (key.equals("isRunning")) {
@@ -818,6 +830,7 @@ public class GAEProxy extends PreferenceActivity implements
     isGlobalProxy = settings.getBoolean("isGlobalProxy", false);
     isHTTPSProxy = settings.getBoolean("isHTTPSProxy", false);
     isGFWList = settings.getBoolean("isGFWList", false);
+    isBypassApps = settings.getBoolean("isBypassApps", false);
 
     try {
 
@@ -830,6 +843,7 @@ public class GAEProxy extends PreferenceActivity implements
       bundle.putBoolean("isHTTPSProxy", isHTTPSProxy);
       bundle.putString("proxyType", proxyType);
       bundle.putBoolean("isGFWList", isGFWList);
+      bundle.putBoolean("isBypassApps", isBypassApps);
 
       it.putExtras(bundle);
       startService(it);

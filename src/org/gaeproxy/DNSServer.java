@@ -480,18 +480,18 @@ public class DNSServer implements Runnable {
         // begin to query from dns cache
         final String questDomain = getRequestDomain(udpreq);
         DNSResponse resp = queryFromCache(questDomain);
-        if (resp != null) {
-          String addr = resp.getAddress();
-          updateCache(resp);
-          sendDns(createDNSResponse(udpreq, parseIPString(addr)), dnsq,
-              srvSocket);
-          Log.d(TAG, "DNS cache hit: " + questDomain);
-        } else if (orgCache.containsKey(questDomain)) {
+        if (orgCache.containsKey(questDomain)) {
           byte[] ips = parseIPString(orgCache.get(questDomain));
           byte[] answer = createDNSResponse(udpreq, ips);
           addToCache(questDomain, answer);
           sendDns(answer, dnsq, srvSocket);
           Log.d(TAG, "Custom DNS resolver: " + questDomain);
+        } else if (resp != null) {
+          String addr = resp.getAddress();
+          updateCache(resp);
+          sendDns(createDNSResponse(udpreq, parseIPString(addr)), dnsq,
+              srvSocket);
+          Log.d(TAG, "DNS cache hit: " + questDomain);
         } else if (questDomain.toLowerCase().contains("appspot.com")) {
           byte[] ips = parseIPString(appHost);
           byte[] answer = createDNSResponse(udpreq, ips);
@@ -499,18 +499,14 @@ public class DNSServer implements Runnable {
           sendDns(answer, dnsq, srvSocket);
           Log.d(TAG, "Custom DNS resolver: " + questDomain);
         } else {
-
           synchronized (domains) {
             if (domains.contains(questDomain))
               continue;
             else
               domains.add(questDomain);
           }
-
           fetchAnswerHTTP(dnsq, udpreq);
-
         }
-
       } catch (SocketException e) {
         Log.e(TAG, e.getLocalizedMessage());
         break;
