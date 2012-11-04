@@ -43,101 +43,74 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class GAEProxyReceiver extends BroadcastReceiver {
 
-	private String proxy;
-	private String proxyType;
-	private int port;
-	private boolean isAutoConnect = false;
-	private boolean isInstalled = false;
-	private String sitekey;
-	private boolean isGlobalProxy;
-	private boolean isHTTPSProxy;
-	private boolean isGFWList = false;
+  private static final String TAG = "GAEProxy";
 
-	private static final String TAG = "GAEProxy";
+  @Override
+  public void onReceive(Context context, Intent intent) {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
+    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+    String versionName;
+    try {
+      versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+    } catch (NameNotFoundException e) {
+      versionName = "NONE";
+    }
 
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		String versionName;
-		try {
-			versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) {
-			versionName = "NONE";
-		}
+    final boolean isAutoConnect = settings.getBoolean("isAutoConnect", false);
+    final boolean isInstalled = settings.getBoolean(versionName, false);
 
-		isAutoConnect = settings.getBoolean("isAutoConnect", false);
-		isInstalled = settings.getBoolean(versionName, false);
+    boolean isMarketEnable = settings.getBoolean("isMarketEnable", false);
 
-		boolean isMarketEnable = settings.getBoolean("isMarketEnable", false);
+    if (isMarketEnable) {
+      TelephonyManager tm = (TelephonyManager) context
+          .getSystemService(Context.TELEPHONY_SERVICE);
+      String countryCode = tm.getSimCountryIso();
 
-		if (isMarketEnable) {
-			TelephonyManager tm = (TelephonyManager) context
-					.getSystemService(Context.TELEPHONY_SERVICE);
-			String countryCode = tm.getSimCountryIso();
+      try {
+        Log.d(TAG, "Location: " + countryCode);
+        if (countryCode.toLowerCase().equals("cn")) {
+          String command = "setprop gsm.sim.operator.numeric 31026\n"
+              + "setprop gsm.operator.numeric 31026\n"
+              + "setprop gsm.sim.operator.iso-country us\n"
+              + "setprop gsm.operator.iso-country us\n"
+              + "chmod 777 /data/data/com.android.vending/shared_prefs\n"
+              + "chmod 666 /data/data/com.android.vending/shared_prefs/vending_preferences.xml\n"
+              + "setpref com.android.vending vending_preferences boolean metadata_paid_apps_enabled true\n"
+              + "chmod 660 /data/data/com.android.vending/shared_prefs/vending_preferences.xml\n"
+              + "chmod 771 /data/data/com.android.vending/shared_prefs\n"
+              + "setown com.android.vending /data/data/com.android.vending/shared_prefs/vending_preferences.xml\n"
+              + "kill $(ps | grep vending | tr -s  ' ' | cut -d ' ' -f2)\n"
+              + "rm -rf /data/data/com.android.vending/cache/*\n";
+          Utils.runRootCommand(command);
+        }
+      } catch (Exception e) {
+        // Nothing
+      }
+    }
 
-			try {
-				Log.d(TAG, "Location: " + countryCode);
-				if (countryCode.toLowerCase().equals("cn")) {
-					String command = "setprop gsm.sim.operator.numeric 31026\n"
-							+ "setprop gsm.operator.numeric 31026\n"
-							+ "setprop gsm.sim.operator.iso-country us\n"
-							+ "setprop gsm.operator.iso-country us\n"
-							+ "chmod 777 /data/data/com.android.vending/shared_prefs\n"
-							+ "chmod 666 /data/data/com.android.vending/shared_prefs/vending_preferences.xml\n"
-							+ "setpref com.android.vending vending_preferences boolean metadata_paid_apps_enabled true\n"
-							+ "chmod 660 /data/data/com.android.vending/shared_prefs/vending_preferences.xml\n"
-							+ "chmod 771 /data/data/com.android.vending/shared_prefs\n"
-							+ "setown com.android.vending /data/data/com.android.vending/shared_prefs/vending_preferences.xml\n"
-							+ "kill $(ps | grep vending | tr -s  ' ' | cut -d ' ' -f2)\n"
-							+ "rm -rf /data/data/com.android.vending/cache/*\n";
-					Utils.runRootCommand(command);
-				}
-			} catch (Exception e) {
-				// Nothing
-			}
-		}
+    if (isAutoConnect && isInstalled) {
+      final String portText = settings.getString("port", "");
+      if (portText == null || portText.length() <= 0) {
+        return;
+      }
+      try {
+        int port = Integer.valueOf(portText);
+        if (port <= 1024) {
+          return;
+        }
+      } catch (Exception e) {
+        return;
+      }
 
-		if (isAutoConnect && isInstalled) {
-			proxy = settings.getString("proxy", "");
-			proxyType = settings.getString("proxyType", "GAppProxy");
-			String portText = settings.getString("port", "");
-			if (portText != null && portText.length() > 0) {
-				try {
-					port = Integer.valueOf(portText);
-				} catch (NumberFormatException e) {
-					port = 1984;
-				}
-				if (port <= 1024)
-					port = 1984;
-			} else {
-				port = 1984;
-			}
-			sitekey = settings.getString("sitekey", "");
-			isGlobalProxy = settings.getBoolean("isGlobalProxy", false);
-			isHTTPSProxy = settings.getBoolean("isHTTPSProxy", false);
-			isGFWList = settings.getBoolean("isGFWList", false);
-
-			Intent it = new Intent(context, GAEProxyService.class);
-			Bundle bundle = new Bundle();
-			bundle.putString("proxy", proxy);
-			bundle.putString("proxyType", proxyType);
-			bundle.putInt("port", port);
-			bundle.putString("sitekey", sitekey);
-			bundle.putBoolean("isGlobalProxy", isGlobalProxy);
-			bundle.putBoolean("isHTTPSProxy", isHTTPSProxy);
-			bundle.putBoolean("isGFWList", isGFWList);
-
-			it.putExtras(bundle);
-			context.startService(it);
-		}
-	}
+      Intent it = new Intent(context, GAEProxyService.class);
+      context.startService(it);
+    }
+  }
 
 }

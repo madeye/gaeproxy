@@ -21,11 +21,11 @@ import java.security.Key;
  * @author Patrick Woodworth
  */
 class BulkKeyCouplet {
-	public final Key cipherKey;
-	public final Key hmacKey;
+  public final Key cipherKey;
+  public final Key hmacKey;
 
-	public BulkKeyCouplet(Key cipherKey, Key hmacKey) {
-		this.cipherKey = cipherKey;
-		this.hmacKey = hmacKey;
-	}
+  public BulkKeyCouplet(Key cipherKey, Key hmacKey) {
+    this.cipherKey = cipherKey;
+    this.hmacKey = hmacKey;
+  }
 }

@@ -23,37 +23,37 @@ import java.net.URI;
  */
 public class WeaveFactory {
 
-	private WeaveTransport m_transport;
-	private final boolean m_acceptInvalidCerts;
-	private final boolean m_useConnectionPool;
+  private WeaveTransport m_transport;
+  private final boolean m_acceptInvalidCerts;
+  private final boolean m_useConnectionPool;
 
-	public WeaveFactory(boolean acceptInvalidCerts) {
-		m_acceptInvalidCerts = acceptInvalidCerts;
-		m_useConnectionPool = WeaveConstants.CONNECTION_POOL_ENABLED_DEFAULT;
-	}
+  public WeaveFactory(boolean acceptInvalidCerts) {
+    m_acceptInvalidCerts = acceptInvalidCerts;
+    m_useConnectionPool = WeaveConstants.CONNECTION_POOL_ENABLED_DEFAULT;
+  }
 
-	public UserWeave createUserWeave(URI server, String username,
-			String password) {
-		return new UserWeave(getWeaveTransport(), server, username, password);
-	}
+  public UserWeave createUserWeave(URI server, String username,
+                                   String password) {
+    return new UserWeave(getWeaveTransport(), server, username, password);
+  }
 
-	protected WeaveTransport createWeaveTransport() {
-		return new WeaveTransport(isConnectionPoolEnabled(),
-				isInvalidCertsAccepted());
-	}
+  protected WeaveTransport createWeaveTransport() {
+    return new WeaveTransport(isConnectionPoolEnabled(),
+        isInvalidCertsAccepted());
+  }
 
-	protected synchronized WeaveTransport getWeaveTransport() {
-		if (m_transport == null) {
-			m_transport = createWeaveTransport();
-		}
-		return m_transport;
-	}
+  protected synchronized WeaveTransport getWeaveTransport() {
+    if (m_transport == null) {
+      m_transport = createWeaveTransport();
+    }
+    return m_transport;
+  }
 
-	public boolean isConnectionPoolEnabled() {
-		return m_useConnectionPool;
-	}
+  public boolean isConnectionPoolEnabled() {
+    return m_useConnectionPool;
+  }
 
-	public boolean isInvalidCertsAccepted() {
-		return m_acceptInvalidCerts;
-	}
+  public boolean isInvalidCertsAccepted() {
+    return m_acceptInvalidCerts;
+  }
 }

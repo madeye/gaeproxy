@@ -15,19 +15,14 @@
 
 package org.gaeproxy.zirco.ui.activities.preferences;
 
-import org.gaeproxy.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import org.gaeproxy.R;
 
 /**
  * Base class for a dialog activity for a preference which can have several
@@ -35,99 +30,98 @@ import android.widget.Spinner;
  */
 public abstract class BaseSpinnerCustomPreferenceActivity extends Activity {
 
-	protected Spinner mSpinner;
-	protected EditText mCustomEditText;
+  protected Spinner mSpinner;
+  protected EditText mCustomEditText;
 
-	/**
-	 * Get the resource id for the prompt of the spinner.
-	 * 
-	 * @return The resource id.
-	 */
-	protected abstract int getSpinnerPromptId();
+  /**
+   * Get the resource id for the prompt of the spinner.
+   *
+   * @return The resource id.
+   */
+  protected abstract int getSpinnerPromptId();
 
-	/**
-	 * Get the resource id for the array values of the spinner.
-	 * 
-	 * @return The array id.
-	 */
-	protected abstract int getSpinnerValuesArrayId();
+  /**
+   * Get the resource id for the array values of the spinner.
+   *
+   * @return The array id.
+   */
+  protected abstract int getSpinnerValuesArrayId();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-		Window w = getWindow();
-		w.requestFeature(Window.FEATURE_LEFT_ICON);
+    Window w = getWindow();
+    w.requestFeature(Window.FEATURE_LEFT_ICON);
 
-		setContentView(R.layout.base_spinner_custom_preference_activity);
+    setContentView(R.layout.base_spinner_custom_preference_activity);
 
-		w.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
-				android.R.drawable.ic_dialog_map);
+    w.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
+        android.R.drawable.ic_dialog_map);
 
-		mCustomEditText = (EditText) findViewById(R.id.BaseSpinnerCustomPreferenceEditText);
+    mCustomEditText = (EditText) findViewById(R.id.BaseSpinnerCustomPreferenceEditText);
 
-		mSpinner = (Spinner) findViewById(R.id.BaseSpinnerCustomPreferenceSpinner);
+    mSpinner = (Spinner) findViewById(R.id.BaseSpinnerCustomPreferenceSpinner);
 
-		mSpinner.setPromptId(getSpinnerPromptId());
+    mSpinner.setPromptId(getSpinnerPromptId());
 
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				this, getSpinnerValuesArrayId(),
-				android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mSpinner.setAdapter(adapter);
+    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+        this, getSpinnerValuesArrayId(),
+        android.R.layout.simple_spinner_item);
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    mSpinner.setAdapter(adapter);
 
-		setSpinnerValueFromPreferences();
+    setSpinnerValueFromPreferences();
 
-		mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+    mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int position, long id) {
-				onSpinnerItemSelected(position);
-			}
+      @Override
+      public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                 int position, long id) {
+        onSpinnerItemSelected(position);
+      }
 
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-			}
+      @Override
+      public void onNothingSelected(AdapterView<?> arg0) {
+      }
 
-		});
+    });
 
-		Button okBtn = (Button) findViewById(R.id.BaseSpinnerCustomPreferenceOk);
-		okBtn.setOnClickListener(new OnClickListener() {
+    Button okBtn = (Button) findViewById(R.id.BaseSpinnerCustomPreferenceOk);
+    okBtn.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				onOk();
-				finish();
-			}
-		});
+      @Override
+      public void onClick(View v) {
+        onOk();
+        finish();
+      }
+    });
 
-		Button cancelBtn = (Button) findViewById(R.id.BaseSpinnerCustomPreferenceCancel);
-		cancelBtn.setOnClickListener(new OnClickListener() {
+    Button cancelBtn = (Button) findViewById(R.id.BaseSpinnerCustomPreferenceCancel);
+    cancelBtn.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
-	}
+      @Override
+      public void onClick(View v) {
+        finish();
+      }
+    });
+  }
 
-	/**
-	 * Behavior when the user press the Ok button.
-	 */
-	protected abstract void onOk();
+  /**
+   * Behavior when the user press the Ok button.
+   */
+  protected abstract void onOk();
 
-	/**
-	 * Behavior when the spinner selected item change.
-	 * 
-	 * @param position
-	 *            The new selected index.
-	 */
-	protected abstract void onSpinnerItemSelected(int position);
+  /**
+   * Behavior when the spinner selected item change.
+   *
+   * @param position The new selected index.
+   */
+  protected abstract void onSpinnerItemSelected(int position);
 
-	/**
-	 * Initialize the spinner with the current value in preferences.
-	 */
-	protected abstract void setSpinnerValueFromPreferences();
+  /**
+   * Initialize the spinner with the current value in preferences.
+   */
+  protected abstract void setSpinnerValueFromPreferences();
 
 }

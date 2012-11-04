@@ -15,184 +15,177 @@
 
 package org.gaeproxy.zirco.ui.runnables;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-
+import android.os.Handler;
+import android.os.Message;
 import org.gaeproxy.zirco.model.items.DownloadItem;
 import org.gaeproxy.zirco.utils.IOUtils;
 
-import android.os.Handler;
-import android.os.Message;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Background downloader.
  */
 public class DownloadRunnable implements Runnable {
 
-	private static final int BUFFER_SIZE = 4096;
+  private static final int BUFFER_SIZE = 4096;
 
-	private DownloadItem mParent;
+  private DownloadItem mParent;
 
-	private boolean mAborted;
+  private boolean mAborted;
 
-	private Handler mHandler = new Handler() {
+  private Handler mHandler = new Handler() {
 
-		@Override
-		public void handleMessage(Message msg) {
-			mParent.onFinished();
-		}
-	};
+    @Override
+    public void handleMessage(Message msg) {
+      mParent.onFinished();
+    }
+  };
 
-	/**
-	 * Contructor.
-	 * 
-	 * @param parent
-	 *            The item to download.
-	 */
-	public DownloadRunnable(DownloadItem parent) {
-		mParent = parent;
-		mAborted = false;
-	}
+  /**
+   * Contructor.
+   *
+   * @param parent The item to download.
+   */
+  public DownloadRunnable(DownloadItem parent) {
+    mParent = parent;
+    mAborted = false;
+  }
 
-	/**
-	 * Abort this download.
-	 */
-	public void abort() {
-		mAborted = true;
-	}
+  /**
+   * Abort this download.
+   */
+  public void abort() {
+    mAborted = true;
+  }
 
-	/**
-	 * Get a file object representation of the file name, in th right folder of
-	 * the SD card.
-	 * 
-	 * @return A file object.
-	 */
-	private File getFile() {
+  /**
+   * Get a file object representation of the file name, in th right folder of
+   * the SD card.
+   *
+   * @return A file object.
+   */
+  private File getFile() {
 
-		File downloadFolder = IOUtils.getDownloadFolder();
+    File downloadFolder = IOUtils.getDownloadFolder();
 
-		if (downloadFolder != null) {
+    if (downloadFolder != null) {
 
-			return new File(downloadFolder, getFileNameFromUrl());
+      return new File(downloadFolder, getFileNameFromUrl());
 
-		} else {
-			mParent.setErrorMessage("Unable to get download folder from SD Card.");
-			return null;
-		}
-	}
+    } else {
+      mParent.setErrorMessage("Unable to get download folder from SD Card.");
+      return null;
+    }
+  }
 
-	/**
-	 * Compute the file name given the url.
-	 * 
-	 * @return The file name.
-	 */
-	private String getFileNameFromUrl() {
-		return mParent.getUrl()
-				.substring(mParent.getUrl().lastIndexOf("/") + 1);
-	}
+  /**
+   * Compute the file name given the url.
+   *
+   * @return The file name.
+   */
+  private String getFileNameFromUrl() {
+    return mParent.getUrl()
+        .substring(mParent.getUrl().lastIndexOf("/") + 1);
+  }
 
-	@Override
-	public void run() {
-		File downloadFile = getFile();
+  @Override
+  public void run() {
+    File downloadFile = getFile();
 
-		if (downloadFile != null) {
+    if (downloadFile != null) {
 
-			if (downloadFile.exists()) {
-				downloadFile.delete();
-			}
+      if (downloadFile.exists()) {
+        downloadFile.delete();
+      }
 
-			BufferedInputStream bis = null;
-			BufferedOutputStream bos = null;
+      BufferedInputStream bis = null;
+      BufferedOutputStream bos = null;
 
-			try {
+      try {
 
-				mParent.onStart();
+        mParent.onStart();
 
-				URL url = new URL(mParent.getUrl());
-				URLConnection conn = url.openConnection();
+        URL url = new URL(mParent.getUrl());
+        URLConnection conn = url.openConnection();
 
-				InputStream is = conn.getInputStream();
+        InputStream is = conn.getInputStream();
 
-				int size = conn.getContentLength();
+        int size = conn.getContentLength();
 
-				double oldCompleted = 0;
-				double completed = 0;
+        double oldCompleted = 0;
+        double completed = 0;
 
-				bis = new BufferedInputStream(is);
-				bos = new BufferedOutputStream(new FileOutputStream(
-						downloadFile));
+        bis = new BufferedInputStream(is);
+        bos = new BufferedOutputStream(new FileOutputStream(
+            downloadFile));
 
-				boolean downLoading = true;
-				byte[] buffer = new byte[BUFFER_SIZE];
-				int downloaded = 0;
-				int read;
-				int stepRead = 0;
+        boolean downLoading = true;
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int downloaded = 0;
+        int read;
+        int stepRead = 0;
 
-				while ((downLoading) && (!mAborted)) {
+        while ((downLoading) && (!mAborted)) {
 
-					if ((size - downloaded < BUFFER_SIZE)
-							&& (size - downloaded > 0)) {
-						buffer = new byte[size - downloaded];
-					}
+          if ((size - downloaded < BUFFER_SIZE)
+              && (size - downloaded > 0)) {
+            buffer = new byte[size - downloaded];
+          }
 
-					read = bis.read(buffer);
+          read = bis.read(buffer);
 
-					if (read > 0) {
-						bos.write(buffer, 0, read);
-						downloaded += read;
+          if (read > 0) {
+            bos.write(buffer, 0, read);
+            downloaded += read;
 
-						completed = ((downloaded * 100f) / size);
+            completed = ((downloaded * 100f) / size);
 
-						stepRead++;
-					} else {
-						downLoading = false;
-					}
+            stepRead++;
+          } else {
+            downLoading = false;
+          }
 
-					// Notify each 5% or more.
-					if (oldCompleted + 5 < completed) {
-						mParent.onProgress((int) completed);
-						oldCompleted = completed;
-					}
-				}
+          // Notify each 5% or more.
+          if (oldCompleted + 5 < completed) {
+            mParent.onProgress((int) completed);
+            oldCompleted = completed;
+          }
+        }
 
-			} catch (MalformedURLException mue) {
-				mParent.setErrorMessage(mue.getMessage());
-			} catch (IOException ioe) {
-				mParent.setErrorMessage(ioe.getMessage());
-			} finally {
+      } catch (MalformedURLException mue) {
+        mParent.setErrorMessage(mue.getMessage());
+      } catch (IOException ioe) {
+        mParent.setErrorMessage(ioe.getMessage());
+      } finally {
 
-				if (bis != null) {
-					try {
-						bis.close();
-					} catch (IOException ioe) {
-						mParent.setErrorMessage(ioe.getMessage());
-					}
-				}
-				if (bos != null) {
-					try {
-						bos.close();
-					} catch (IOException ioe) {
-						mParent.setErrorMessage(ioe.getMessage());
-					}
-				}
-			}
+        if (bis != null) {
+          try {
+            bis.close();
+          } catch (IOException ioe) {
+            mParent.setErrorMessage(ioe.getMessage());
+          }
+        }
+        if (bos != null) {
+          try {
+            bos.close();
+          } catch (IOException ioe) {
+            mParent.setErrorMessage(ioe.getMessage());
+          }
+        }
+      }
 
-			if (mAborted) {
-				if (downloadFile.exists()) {
-					downloadFile.delete();
-				}
-			}
+      if (mAborted) {
+        if (downloadFile.exists()) {
+          downloadFile.delete();
+        }
+      }
 
-		}
+    }
 
-		mHandler.sendEmptyMessage(0);
-	}
+    mHandler.sendEmptyMessage(0);
+  }
 
 }

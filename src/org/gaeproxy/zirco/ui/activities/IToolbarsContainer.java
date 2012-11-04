@@ -20,9 +20,9 @@ package org.gaeproxy.zirco.ui.activities;
  */
 public interface IToolbarsContainer {
 
-	/**
-	 * Hide the tool bars of this item.
-	 */
-	void hideToolbars();
+  /**
+   * Hide the tool bars of this item.
+   */
+  void hideToolbars();
 
 }

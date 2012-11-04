@@ -15,67 +15,64 @@
 
 package org.gaeproxy.zirco.ui.runnables;
 
-import org.gaeproxy.zirco.ui.activities.IToolbarsContainer;
-
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import org.gaeproxy.zirco.ui.activities.IToolbarsContainer;
 
 /**
  * A runnable to hide tool bars after the given delay.
  */
 public class HideToolbarsRunnable implements Runnable {
 
-	private static final String TAG = "HideToolbarsRunnable";
+  private static final String TAG = "HideToolbarsRunnable";
 
-	private IToolbarsContainer mParent;
-	private boolean mDisabled;
-	private int mDelay;
+  private IToolbarsContainer mParent;
+  private boolean mDisabled;
+  private int mDelay;
 
-	private Handler mHandler = new Handler() {
+  private Handler mHandler = new Handler() {
 
-		@Override
-		public void handleMessage(Message msg) {
-			if ((mParent != null) && (!mDisabled)) {
-				mParent.hideToolbars();
-			}
-		}
-	};
+    @Override
+    public void handleMessage(Message msg) {
+      if ((mParent != null) && (!mDisabled)) {
+        mParent.hideToolbars();
+      }
+    }
+  };
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param parent
-	 *            The parent tool bar container.
-	 * @param delay
-	 *            The delay before hiding, in milliseconds.
-	 */
-	public HideToolbarsRunnable(IToolbarsContainer parent, int delay) {
-		mParent = parent;
-		mDisabled = false;
-		mDelay = delay;
-	}
+  /**
+   * Constructor.
+   *
+   * @param parent The parent tool bar container.
+   * @param delay  The delay before hiding, in milliseconds.
+   */
+  public HideToolbarsRunnable(IToolbarsContainer parent, int delay) {
+    mParent = parent;
+    mDisabled = false;
+    mDelay = delay;
+  }
 
-	@Override
-	public void run() {
-		try {
+  @Override
+  public void run() {
+    try {
 
-			Thread.sleep(mDelay);
+      Thread.sleep(mDelay);
 
-			mHandler.sendEmptyMessage(0);
+      mHandler.sendEmptyMessage(0);
 
-		} catch (InterruptedException e) {
-			Log.w(TAG, "Exception in thread: " + e.getMessage());
+    } catch (InterruptedException e) {
+      Log.w(TAG, "Exception in thread: " + e.getMessage());
 
-			mHandler.sendEmptyMessage(0);
-		}
-	}
+      mHandler.sendEmptyMessage(0);
+    }
+  }
 
-	/**
-	 * Disable this runnable.
-	 */
-	public void setDisabled() {
-		mDisabled = true;
-	}
+  /**
+   * Disable this runnable.
+   */
+  public void setDisabled() {
+    mDisabled = true;
+  }
 
 }

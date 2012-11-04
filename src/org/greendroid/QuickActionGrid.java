@@ -15,10 +15,6 @@
  */
 package org.greendroid;
 
-import java.util.List;
-
-import org.gaeproxy.R;
-
 import android.content.Context;
 import android.graphics.Rect;
 import android.view.LayoutInflater;
@@ -31,105 +27,108 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+import org.gaeproxy.R;
+
+import java.util.List;
 
 /**
  * A {@link QuickActionGrid} is an implementation of a {@link QuickActionWidget}
  * that displays {@link QuickAction}s in a grid manner. This is usually used to
  * create a shortcut to jump between different type of information on screen.
- * 
+ *
  * @author Benjamin Fellous
  * @author Cyril Mottier
  */
 public class QuickActionGrid extends QuickActionWidget {
 
-	private GridView mGridView;
+  private GridView mGridView;
 
-	private OnItemClickListener mInternalItemClickListener = new OnItemClickListener() {
-		@Override
-		public void onItemClick(AdapterView<?> adapterView, View view,
-				int position, long id) {
-			getOnQuickActionClickListener().onQuickActionClicked(
-					QuickActionGrid.this, position);
-			if (getDismissOnClick()) {
-				dismiss();
-			}
-		}
-	};
+  private OnItemClickListener mInternalItemClickListener = new OnItemClickListener() {
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view,
+                            int position, long id) {
+      getOnQuickActionClickListener().onQuickActionClicked(
+          QuickActionGrid.this, position);
+      if (getDismissOnClick()) {
+        dismiss();
+      }
+    }
+  };
 
-	public QuickActionGrid(Context context) {
-		super(context);
+  public QuickActionGrid(Context context) {
+    super(context);
 
-		setContentView(R.layout.gd_quick_action_grid);
+    setContentView(R.layout.gd_quick_action_grid);
 
-		final View v = getContentView();
-		mGridView = (GridView) v.findViewById(R.id.gdi_grid);
-	}
+    final View v = getContentView();
+    mGridView = (GridView) v.findViewById(R.id.gdi_grid);
+  }
 
-	@Override
-	protected void onMeasureAndLayout(Rect anchorRect, View contentView) {
+  @Override
+  protected void onMeasureAndLayout(Rect anchorRect, View contentView) {
 
-		contentView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
-		contentView.measure(MeasureSpec.makeMeasureSpec(getScreenWidth(),
-				MeasureSpec.EXACTLY), LayoutParams.WRAP_CONTENT);
+    contentView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
+        LayoutParams.WRAP_CONTENT));
+    contentView.measure(MeasureSpec.makeMeasureSpec(getScreenWidth(),
+        MeasureSpec.EXACTLY), LayoutParams.WRAP_CONTENT);
 
-		int rootHeight = contentView.getMeasuredHeight();
+    int rootHeight = contentView.getMeasuredHeight();
 
-		int offsetY = getArrowOffsetY();
-		int dyTop = anchorRect.top;
-		int dyBottom = getScreenHeight() - anchorRect.bottom;
+    int offsetY = getArrowOffsetY();
+    int dyTop = anchorRect.top;
+    int dyBottom = getScreenHeight() - anchorRect.bottom;
 
-		boolean onTop = (dyTop > dyBottom);
-		int popupY = (onTop) ? anchorRect.top - rootHeight + offsetY
-				: anchorRect.bottom - offsetY;
+    boolean onTop = (dyTop > dyBottom);
+    int popupY = (onTop) ? anchorRect.top - rootHeight + offsetY
+        : anchorRect.bottom - offsetY;
 
-		setWidgetSpecs(popupY, onTop);
-	}
+    setWidgetSpecs(popupY, onTop);
+  }
 
-	@Override
-	protected void populateQuickActions(final List<QuickAction> quickActions) {
+  @Override
+  protected void populateQuickActions(final List<QuickAction> quickActions) {
 
-		mGridView.setAdapter(new BaseAdapter() {
+    mGridView.setAdapter(new BaseAdapter() {
 
-			@Override
-			public int getCount() {
-				return quickActions.size();
-			}
+      @Override
+      public int getCount() {
+        return quickActions.size();
+      }
 
-			@Override
-			public Object getItem(int position) {
-				return null;
-			}
+      @Override
+      public Object getItem(int position) {
+        return null;
+      }
 
-			@Override
-			public long getItemId(int position) {
-				return position;
-			}
+      @Override
+      public long getItemId(int position) {
+        return position;
+      }
 
-			@Override
-			public View getView(int position, View view, ViewGroup parent) {
+      @Override
+      public View getView(int position, View view, ViewGroup parent) {
 
-				TextView textView = (TextView) view;
+        TextView textView = (TextView) view;
 
-				if (view == null) {
-					final LayoutInflater inflater = LayoutInflater
-							.from(getContext());
-					textView = (TextView) inflater.inflate(
-							R.layout.gd_quick_action_grid_item, mGridView,
-							false);
-				}
+        if (view == null) {
+          final LayoutInflater inflater = LayoutInflater
+              .from(getContext());
+          textView = (TextView) inflater.inflate(
+              R.layout.gd_quick_action_grid_item, mGridView,
+              false);
+        }
 
-				QuickAction quickAction = quickActions.get(position);
-				textView.setText(quickAction.mTitle);
-				textView.setCompoundDrawablesWithIntrinsicBounds(null,
-						quickAction.mDrawable, null, null);
+        QuickAction quickAction = quickActions.get(position);
+        textView.setText(quickAction.mTitle);
+        textView.setCompoundDrawablesWithIntrinsicBounds(null,
+            quickAction.mDrawable, null, null);
 
-				return textView;
+        return textView;
 
-			}
-		});
+      }
+    });
 
-		mGridView.setOnItemClickListener(mInternalItemClickListener);
-	}
+    mGridView.setOnItemClickListener(mInternalItemClickListener);
+  }
 
 }

@@ -52,8 +52,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.*;
+import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Pair;
@@ -62,7 +64,10 @@ import com.google.analytics.tracking.android.EasyTracker;
 import org.apache.commons.codec.binary.Base64;
 import org.xbill.DNS.*;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -70,10 +75,6 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Random;
-import java.lang.Process;
 
 public class GAEProxyService extends Service {
 
@@ -286,29 +287,26 @@ public class GAEProxyService extends Service {
       return;
     }
 
-    Bundle bundle = intent.getExtras();
+    proxyType = settings.getString("proxyType", "GAE");
+    sitekey = settings.getString("sitekey", "");
+    try {
+      port = Integer.valueOf(settings.getString("port", "1984"));
+    } catch (NumberFormatException ex) {
+      port = 1984;
+    }
 
-    if (bundle == null) {
+    isGlobalProxy = settings.getBoolean("isGlobalProxy", false);
+    isHTTPSProxy = settings.getBoolean("isHTTPSProxy", false);
+    isGFWList = settings.getBoolean("isGFWList", false);
+    isBypassApps = settings.getBoolean("isBypassApps", false);
+
+    if (!parseProxyURL(settings.getString("proxy", "proxyofmax.appspot.com"))) {
       stopSelf();
       return;
     }
-
-    port = bundle.getInt("port");
-    sitekey = bundle.getString("sitekey");
-    proxyType = bundle.getString("proxyType");
 
     if (!"GAE".equals(proxyType) && !"PaaS".equals(proxyType)) {
       proxyType = "GAE";
-    }
-
-    isGlobalProxy = bundle.getBoolean("isGlobalProxy");
-    isHTTPSProxy = bundle.getBoolean("isHTTPSProxy");
-    isGFWList = bundle.getBoolean("isGFWList");
-    isBypassApps = bundle.getBoolean("isBypassApps");
-
-    if (!parseProxyURL(bundle.getString("proxy"))) {
-      stopSelf();
-      return;
     }
 
     if ("fetch.py".equals(appPath)) appPath = "2";

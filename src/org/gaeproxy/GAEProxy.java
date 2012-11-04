@@ -38,21 +38,6 @@
 
 package org.gaeproxy;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import org.gaeproxy.db.DNSResponse;
-import org.gaeproxy.db.DatabaseHelper;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -67,13 +52,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
+import android.preference.*;
 import android.telephony.TelephonyManager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -85,13 +64,21 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import org.gaeproxy.db.DNSResponse;
+import org.gaeproxy.db.DatabaseHelper;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class GAEProxy extends PreferenceActivity implements
     OnSharedPreferenceChangeListener {
@@ -99,15 +86,6 @@ public class GAEProxy extends PreferenceActivity implements
   private static final String TAG = "GAEProxy";
 
   public static final String PREFS_NAME = "GAEProxy";
-  private String proxy;
-
-  private int port;
-  private String sitekey = "";
-  private String proxyType = "GAE";
-  private boolean isGlobalProxy = false;
-  private boolean isHTTPSProxy = false;
-  private boolean isGFWList = false;
-  private boolean isBypassApps = false;
 
   private static final int MSG_CRASH_RECOVER = 1;
   private static final int MSG_INITIAL_FINISH = 2;
@@ -782,9 +760,7 @@ public class GAEProxy extends PreferenceActivity implements
     SharedPreferences settings = PreferenceManager
         .getDefaultSharedPreferences(this);
 
-    proxyType = settings.getString("proxyType", "GAE");
-
-    proxy = settings.getString("proxy", "");
+    final String proxy = settings.getString("proxy", "");
     if (isTextEmpty(proxy, getString(R.string.proxy_empty)))
       return false;
 
@@ -815,7 +791,7 @@ public class GAEProxy extends PreferenceActivity implements
     if (isTextEmpty(portText, getString(R.string.port_empty)))
       return false;
     try {
-      port = Integer.valueOf(portText);
+      int port = Integer.valueOf(portText);
       if (port <= 1024) {
         this.showAToast(getString(R.string.port_alert));
         return false;
@@ -825,27 +801,8 @@ public class GAEProxy extends PreferenceActivity implements
       return false;
     }
 
-    sitekey = settings.getString("sitekey", "");
-
-    isGlobalProxy = settings.getBoolean("isGlobalProxy", false);
-    isHTTPSProxy = settings.getBoolean("isHTTPSProxy", false);
-    isGFWList = settings.getBoolean("isGFWList", false);
-    isBypassApps = settings.getBoolean("isBypassApps", false);
-
     try {
-
       Intent it = new Intent(this, GAEProxyService.class);
-      Bundle bundle = new Bundle();
-      bundle.putString("proxy", proxy);
-      bundle.putInt("port", port);
-      bundle.putString("sitekey", sitekey);
-      bundle.putBoolean("isGlobalProxy", isGlobalProxy);
-      bundle.putBoolean("isHTTPSProxy", isHTTPSProxy);
-      bundle.putString("proxyType", proxyType);
-      bundle.putBoolean("isGFWList", isGFWList);
-      bundle.putBoolean("isBypassApps", isBypassApps);
-
-      it.putExtras(bundle);
       startService(it);
     } catch (Exception e) {
       // Nothing

@@ -21,17 +21,17 @@ package org.emergent.android.weave.client;
  */
 enum WeaveHeader {
 
-	X_WEAVE_BACKOFF("X-Weave-Backoff"), X_WEAVE_ALERT("X-Weave-Alert"), X_WEAVE_TIMESTAMP(
-			"X-Weave-Timestamp"), X_WEAVE_RECORDS("X-Weave-Records"), X_WEAVE_IF_UNMODIFIED_SINCE(
-			"X-If-Unmodified-Since"), ;
+  X_WEAVE_BACKOFF("X-Weave-Backoff"), X_WEAVE_ALERT("X-Weave-Alert"), X_WEAVE_TIMESTAMP(
+      "X-Weave-Timestamp"), X_WEAVE_RECORDS("X-Weave-Records"), X_WEAVE_IF_UNMODIFIED_SINCE(
+      "X-If-Unmodified-Since"),;
 
-	private final String m_name;
+  private final String m_name;
 
-	WeaveHeader(String name) {
-		m_name = name;
-	}
+  WeaveHeader(String name) {
+    m_name = name;
+  }
 
-	public String getName() {
-		return m_name;
-	}
+  public String getName() {
+    return m_name;
+  }
 }

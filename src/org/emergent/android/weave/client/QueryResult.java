@@ -24,41 +24,41 @@ import java.util.Date;
  */
 public class QueryResult<T> {
 
-	private final URI m_uri;
+  private final URI m_uri;
 
-	private Date m_serverTimestamp;
+  private Date m_serverTimestamp;
 
-	private T m_value;
+  private T m_value;
 
-	QueryResult(WeaveResponse response) {
-		this(response, null);
-	}
+  QueryResult(WeaveResponse response) {
+    this(response, null);
+  }
 
-	QueryResult(WeaveResponse response, T value) {
-		m_uri = response.getUri();
-		m_serverTimestamp = response.getServerTimestamp();
-		m_value = value;
-	}
+  QueryResult(WeaveResponse response, T value) {
+    m_uri = response.getUri();
+    m_serverTimestamp = response.getServerTimestamp();
+    m_value = value;
+  }
 
-	public Date getServerTimestamp() {
-		return m_serverTimestamp;
-	}
+  public Date getServerTimestamp() {
+    return m_serverTimestamp;
+  }
 
-	public long getServerTimestampInSeconds() {
-		if (m_serverTimestamp != null)
-			return m_serverTimestamp.getTime();
-		return 0;
-	}
+  public long getServerTimestampInSeconds() {
+    if (m_serverTimestamp != null)
+      return m_serverTimestamp.getTime();
+    return 0;
+  }
 
-	public URI getUri() {
-		return m_uri;
-	}
+  public URI getUri() {
+    return m_uri;
+  }
 
-	public T getValue() {
-		return m_value;
-	}
+  public T getValue() {
+    return m_value;
+  }
 
-	void setValue(T value) {
-		m_value = value;
-	}
+  void setValue(T value) {
+    m_value = value;
+  }
 }

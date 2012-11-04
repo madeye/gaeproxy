@@ -1,60 +1,57 @@
 package org.gaeproxy;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.Socket;
 
-import android.util.Log;
-
 public class InnerSocketBuilder {
 
-	private String proxyHost = "127.0.0.1";
-	private int proxyPort = 1053;
+  private String proxyHost = "127.0.0.1";
+  private int proxyPort = 1053;
 
-	private Socket innerSocket = null;
+  private Socket innerSocket = null;
 
-	private boolean isConnected = false;
+  private boolean isConnected = false;
 
-	private final String TAG = "CMWRAP->InnerSocketBuilder";
+  private final String TAG = "CMWRAP->InnerSocketBuilder";
 
-	/**
-	 * 建立经由代理服务器至目标服务器的连接
-	 * 
-	 * @param proxyHost
-	 *            代理服务器地址
-	 * @param proxyPort
-	 *            代理服务器端口
-	 * @param target
-	 *            目标服务器
-	 */
-	public InnerSocketBuilder(String proxyHost, int proxyPort, String target) {
-		this.proxyHost = proxyHost;
-		this.proxyPort = proxyPort;
+  /**
+   * 建立经由代理服务器至目标服务器的连接
+   *
+   * @param proxyHost 代理服务器地址
+   * @param proxyPort 代理服务器端口
+   * @param target    目标服务器
+   */
+  public InnerSocketBuilder(String proxyHost, int proxyPort, String target) {
+    this.proxyHost = proxyHost;
+    this.proxyPort = proxyPort;
 
-		connect();
-	}
+    connect();
+  }
 
-	private void connect() {
+  private void connect() {
 
-		// starTime = System.currentTimeMillis();
-		Log.v(TAG, "建立通道");
+    // starTime = System.currentTimeMillis();
+    Log.v(TAG, "建立通道");
 
-		try {
-			innerSocket = new Socket(proxyHost, proxyPort);
-			innerSocket.setKeepAlive(true);
-			innerSocket.setSoTimeout(60 * 1000);
-			isConnected = true;
+    try {
+      innerSocket = new Socket(proxyHost, proxyPort);
+      innerSocket.setKeepAlive(true);
+      innerSocket.setSoTimeout(60 * 1000);
+      isConnected = true;
 
-		} catch (IOException e) {
-			Log.e(TAG, "建立隧道失败：" + e.getLocalizedMessage());
-		}
-	}
+    } catch (IOException e) {
+      Log.e(TAG, "建立隧道失败：" + e.getLocalizedMessage());
+    }
+  }
 
-	public Socket getSocket() {
-		return innerSocket;
-	}
+  public Socket getSocket() {
+    return innerSocket;
+  }
 
-	public boolean isConnected() {
-		return this.isConnected;
-	}
+  public boolean isConnected() {
+    return this.isConnected;
+  }
 
 }

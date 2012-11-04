@@ -24,207 +24,207 @@ import android.view.animation.TranslateAnimation;
  */
 public final class AnimationManager {
 
-	/**
-	 * Holder for singleton implementation.
-	 */
-	private static class AnimationManagerHolder {
-		private static final AnimationManager INSTANCE = new AnimationManager();
-	}
+  /**
+   * Holder for singleton implementation.
+   */
+  private static class AnimationManagerHolder {
+    private static final AnimationManager INSTANCE = new AnimationManager();
+  }
 
-	private static final int BARS_ANIMATION_DURATION = 150;
+  private static final int BARS_ANIMATION_DURATION = 150;
 
-	private static final int ANIMATION_DURATION = 350;
+  private static final int ANIMATION_DURATION = 350;
 
-	/**
-	 * Get the unique instance of the Controller.
-	 * 
-	 * @return The instance of the Controller
-	 */
-	public static AnimationManager getInstance() {
-		return AnimationManagerHolder.INSTANCE;
-	}
+  /**
+   * Get the unique instance of the Controller.
+   *
+   * @return The instance of the Controller
+   */
+  public static AnimationManager getInstance() {
+    return AnimationManagerHolder.INSTANCE;
+  }
 
-	private Animation mTopBarShowAnimation = null;
-	private Animation mTopBarHideAnimation = null;
+  private Animation mTopBarShowAnimation = null;
+  private Animation mTopBarHideAnimation = null;
 
-	private Animation mBottomBarShowAnimation = null;
-	private Animation mBottomBarHideAnimation = null;
-	private Animation mPreviousTabViewShowAnimation = null;
-	private Animation mPreviousTabViewHideAnimation = null;
+  private Animation mBottomBarShowAnimation = null;
+  private Animation mBottomBarHideAnimation = null;
+  private Animation mPreviousTabViewShowAnimation = null;
+  private Animation mPreviousTabViewHideAnimation = null;
 
-	private Animation mNextTabViewShowAnimation = null;
-	private Animation mNextTabViewHideAnimation = null;
-	private Animation mInFromRightAnimation;
-	private Animation mOutToLeftAnimation;
+  private Animation mNextTabViewShowAnimation = null;
+  private Animation mNextTabViewHideAnimation = null;
+  private Animation mInFromRightAnimation;
+  private Animation mOutToLeftAnimation;
 
-	private Animation mInFromLeftAnimation;
+  private Animation mInFromLeftAnimation;
 
-	private Animation mOutToRightAnimation;
+  private Animation mOutToRightAnimation;
 
-	/**
-	 * Contructor.
-	 */
-	private AnimationManager() {
+  /**
+   * Contructor.
+   */
+  private AnimationManager() {
 
-		mTopBarShowAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, -1.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f);
+    mTopBarShowAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+        0.0f, Animation.RELATIVE_TO_SELF, -1.0f,
+        Animation.RELATIVE_TO_SELF, 0.0f);
 
-		mTopBarShowAnimation.setDuration(BARS_ANIMATION_DURATION);
+    mTopBarShowAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-		mTopBarHideAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, -1.0f);
+    mTopBarHideAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+        0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+        Animation.RELATIVE_TO_SELF, -1.0f);
 
-		mTopBarHideAnimation.setDuration(BARS_ANIMATION_DURATION);
+    mTopBarHideAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-		mBottomBarShowAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f);
+    mBottomBarShowAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+        0.0f, Animation.RELATIVE_TO_SELF, 1.0f,
+        Animation.RELATIVE_TO_SELF, 0.0f);
 
-		mBottomBarShowAnimation.setDuration(BARS_ANIMATION_DURATION);
+    mBottomBarShowAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-		mBottomBarHideAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 1.0f);
+    mBottomBarHideAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+        0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+        Animation.RELATIVE_TO_SELF, 1.0f);
 
-		mBottomBarHideAnimation.setDuration(BARS_ANIMATION_DURATION);
+    mBottomBarHideAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-		mPreviousTabViewShowAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f);
+    mPreviousTabViewShowAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF,
+        0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+        Animation.RELATIVE_TO_SELF, 0.0f);
 
-		mPreviousTabViewShowAnimation.setDuration(BARS_ANIMATION_DURATION);
+    mPreviousTabViewShowAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-		mPreviousTabViewHideAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				-1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f);
+    mPreviousTabViewHideAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+        -1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+        Animation.RELATIVE_TO_SELF, 0.0f);
 
-		mPreviousTabViewHideAnimation.setDuration(BARS_ANIMATION_DURATION);
+    mPreviousTabViewHideAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-		mNextTabViewShowAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF,
-				0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f);
+    mNextTabViewShowAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF,
+        0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+        Animation.RELATIVE_TO_SELF, 0.0f);
 
-		mNextTabViewShowAnimation.setDuration(BARS_ANIMATION_DURATION);
+    mNextTabViewShowAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-		mNextTabViewHideAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-				1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-				Animation.RELATIVE_TO_SELF, 0.0f);
+    mNextTabViewHideAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+        1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+        Animation.RELATIVE_TO_SELF, 0.0f);
 
-		mNextTabViewHideAnimation.setDuration(BARS_ANIMATION_DURATION);
+    mNextTabViewHideAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-		mInFromRightAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT, +1.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f);
+    mInFromRightAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_PARENT, +1.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f);
 
-		mInFromRightAnimation.setDuration(ANIMATION_DURATION);
-		mInFromRightAnimation.setInterpolator(new AccelerateInterpolator());
+    mInFromRightAnimation.setDuration(ANIMATION_DURATION);
+    mInFromRightAnimation.setInterpolator(new AccelerateInterpolator());
 
-		mOutToLeftAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, -1.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f);
+    mOutToLeftAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_PARENT, 0.0f,
+        Animation.RELATIVE_TO_PARENT, -1.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f);
 
-		mOutToLeftAnimation.setDuration(ANIMATION_DURATION);
-		mOutToLeftAnimation.setInterpolator(new AccelerateInterpolator());
+    mOutToLeftAnimation.setDuration(ANIMATION_DURATION);
+    mOutToLeftAnimation.setInterpolator(new AccelerateInterpolator());
 
-		mInFromLeftAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT, -1.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f);
+    mInFromLeftAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_PARENT, -1.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f);
 
-		mInFromLeftAnimation.setDuration(ANIMATION_DURATION);
-		mInFromLeftAnimation.setInterpolator(new AccelerateInterpolator());
+    mInFromLeftAnimation.setDuration(ANIMATION_DURATION);
+    mInFromLeftAnimation.setInterpolator(new AccelerateInterpolator());
 
-		mOutToRightAnimation = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, +1.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f);
+    mOutToRightAnimation = new TranslateAnimation(
+        Animation.RELATIVE_TO_PARENT, 0.0f,
+        Animation.RELATIVE_TO_PARENT, +1.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f,
+        Animation.RELATIVE_TO_PARENT, 0.0f);
 
-		mOutToRightAnimation.setDuration(ANIMATION_DURATION);
-		mOutToRightAnimation.setInterpolator(new AccelerateInterpolator());
-	}
+    mOutToRightAnimation.setDuration(ANIMATION_DURATION);
+    mOutToRightAnimation.setInterpolator(new AccelerateInterpolator());
+  }
 
-	public Animation getBottomBarHideAnimation() {
-		return mBottomBarHideAnimation;
-	}
+  public Animation getBottomBarHideAnimation() {
+    return mBottomBarHideAnimation;
+  }
 
-	public Animation getBottomBarShowAnimation() {
-		return mBottomBarShowAnimation;
-	}
+  public Animation getBottomBarShowAnimation() {
+    return mBottomBarShowAnimation;
+  }
 
-	/**
-	 * Get the in from left animation object.
-	 * 
-	 * @return The animation object.
-	 */
-	public Animation getInFromLeftAnimation() {
-		return mInFromLeftAnimation;
-	}
+  /**
+   * Get the in from left animation object.
+   *
+   * @return The animation object.
+   */
+  public Animation getInFromLeftAnimation() {
+    return mInFromLeftAnimation;
+  }
 
-	/**
-	 * Get the in from right animation object.
-	 * 
-	 * @return The animation object.
-	 */
-	public Animation getInFromRightAnimation() {
-		return mInFromRightAnimation;
-	}
+  /**
+   * Get the in from right animation object.
+   *
+   * @return The animation object.
+   */
+  public Animation getInFromRightAnimation() {
+    return mInFromRightAnimation;
+  }
 
-	public Animation getNextTabViewHideAnimation() {
-		return mNextTabViewHideAnimation;
-	}
+  public Animation getNextTabViewHideAnimation() {
+    return mNextTabViewHideAnimation;
+  }
 
-	public Animation getNextTabViewShowAnimation() {
-		return mNextTabViewShowAnimation;
-	}
+  public Animation getNextTabViewShowAnimation() {
+    return mNextTabViewShowAnimation;
+  }
 
-	/**
-	 * Get the out to left animation object.
-	 * 
-	 * @return The animation object.
-	 */
-	public Animation getOutToLeftAnimation() {
-		return mOutToLeftAnimation;
-	}
+  /**
+   * Get the out to left animation object.
+   *
+   * @return The animation object.
+   */
+  public Animation getOutToLeftAnimation() {
+    return mOutToLeftAnimation;
+  }
 
-	/**
-	 * Get the out to right animation object.
-	 * 
-	 * @return The animation object.
-	 */
-	public Animation getOutToRightAnimation() {
-		return mOutToRightAnimation;
-	}
+  /**
+   * Get the out to right animation object.
+   *
+   * @return The animation object.
+   */
+  public Animation getOutToRightAnimation() {
+    return mOutToRightAnimation;
+  }
 
-	public Animation getPreviousTabViewHideAnimation() {
-		return mPreviousTabViewHideAnimation;
-	}
+  public Animation getPreviousTabViewHideAnimation() {
+    return mPreviousTabViewHideAnimation;
+  }
 
-	public Animation getPreviousTabViewShowAnimation() {
-		return mPreviousTabViewShowAnimation;
-	}
+  public Animation getPreviousTabViewShowAnimation() {
+    return mPreviousTabViewShowAnimation;
+  }
 
-	public Animation getTopBarHideAnimation() {
-		return mTopBarHideAnimation;
-	}
+  public Animation getTopBarHideAnimation() {
+    return mTopBarHideAnimation;
+  }
 
-	public Animation getTopBarShowAnimation() {
-		return mTopBarShowAnimation;
-	}
+  public Animation getTopBarShowAnimation() {
+    return mTopBarShowAnimation;
+  }
 
 }
