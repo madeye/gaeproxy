@@ -2,6 +2,7 @@ package org.gaeproxy;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.Pair;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.loopj.android.http.AsyncHttpClient;
@@ -64,9 +65,11 @@ public class DNSServer implements Runnable {
 
   private final static AsyncHttpClient client = new AsyncHttpClient();
 
-  public DNSServer(Context ctx, String appHost) {
+  public DNSServer(Context ctx, String appHost, Pair<String, String> orgHost) {
 
     this.appHost = appHost;
+
+    if (orgHost != null) this.orgCache.put(orgHost.first, orgHost.second);
 
     client.setTimeout(6 * 1000);
 

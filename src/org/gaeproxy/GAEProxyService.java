@@ -56,6 +56,7 @@ import android.os.*;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.RemoteViews;
 import com.google.analytics.tracking.android.EasyTracker;
 import org.apache.commons.codec.binary.Base64;
@@ -69,6 +70,8 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.Random;
 import java.lang.Process;
 
@@ -249,7 +252,10 @@ public class GAEProxyService extends Service {
 
       Log.e(TAG, cmd);
 
-      Utils.runCommand(cmd);
+      if (Utils.isRoot())
+        Utils.runRootCommand(cmd);
+      else
+        Utils.runCommand(cmd);
 
     } catch (Exception e) {
       Log.e(TAG, "Cannot connect");
@@ -434,7 +440,12 @@ public class GAEProxyService extends Service {
 
     // DNS Proxy Setup
     // with AsyncHttpClient
-    dnsServer = new DNSServer(this, dnsHost);
+    if ("PaaS".equals(proxyType)) {
+      Pair<String, String> orgHost = new Pair<String, String>(appId, appMask[0]);
+      dnsServer = new DNSServer(this, dnsHost, orgHost);
+    } else if ("GAE".equals(proxyType)) {
+      dnsServer = new DNSServer(this, dnsHost, null);
+    }
     dnsPort = dnsServer.getServPort();
 
     // Random mirror for load balance
@@ -798,8 +809,8 @@ public class GAEProxyService extends Service {
     if (proxyType.equals("PaaS")) {
       init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
     }
-    init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
-        + getApplicationInfo().uid));
+//    init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
+//        + getApplicationInfo().uid));
 
 
     if (isGFWList) {
