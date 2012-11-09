@@ -106,6 +106,7 @@ public class GAEProxyService extends Service {
 
   private static final String TAG = "GAEProxyService";
   private static final String DEFAULT_HOST = "74.125.128.18";
+  private static final String DEFAULT_DNS = "50.17.31.189";
 
   public static volatile boolean statusLock = false;
 
@@ -417,20 +418,21 @@ public class GAEProxyService extends Service {
       if (appHost == null || appHost.equals("")) {
         appHost = DEFAULT_HOST;
       }
-      dnsHost = appHost;
     } else if (proxyType.equals("PaaS")) {
       appHost = parseHost(appId);
       if (appHost == null || appHost.equals("")) {
         return false;
       }
-      dnsHost = parseHost("www.google.com");
-      if (dnsHost == null || dnsHost.equals("")) {
-        dnsHost = DEFAULT_HOST;
-      }
+    }
+
+    dnsHost = parseHost("www.hosts.dotcloud.com");
+    if (dnsHost == null || dnsHost.equals("")) {
+      dnsHost = DEFAULT_DNS;
     }
 
     try {
-      dnsHost = dnsHost.split("\\|")[0];
+      String[] hosts = dnsHost.split("\\|");
+      dnsHost = hosts[hosts.length - 1];
       appMask = appHost.split("\\|");
     } catch (Exception ex) {
       return false;
@@ -804,9 +806,9 @@ public class GAEProxyService extends Service {
     for (String mask : appMask) {
       init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
     }
-    if (proxyType.equals("PaaS")) {
-      init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
-    }
+
+    init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
+
 //    init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
 //        + getApplicationInfo().uid));
 
