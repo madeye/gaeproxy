@@ -11,8 +11,9 @@
 #      Yonsm          <YonsmGuo@gmail.com>
 #      Ming Bai       <mbbill@gmail.com>
 
-__version__ = '2.1.7'
+__version__ = '2.1.8'
 __config__  = 'proxy.ini'
+__bufsize__ = 1024*1024
 
 import sys
 import os
@@ -92,6 +93,7 @@ except ImportError:
     gevent.pool   = GeventImport('gevent.pool')
 
     gevent.queue.Queue           = Queue.Queue
+    gevent.queue.Empty           = Queue.Empty
     gevent.coros.Semaphore       = threading.Semaphore
     gevent.getcurrent            = threading.currentThread
     gevent.spawn                 = GeventSpawn
@@ -99,8 +101,6 @@ except ImportError:
     gevent.server.StreamServer   = GeventServerStreamServer
     gevent.server.DatagramServer = GeventServerDatagramServer
     gevent.pool.Pool             = GeventPoolPool
-
-    gevent.fake = True
 
     del GeventImport, GeventSpawn, GeventSpawnLater, GeventServerStreamServer, GeventServerDatagramServer, GeventPoolPool
 
@@ -363,7 +363,7 @@ class Http(object):
     MessageClass = dict
     protocol_version = 'HTTP/1.1'
     skip_headers = frozenset(['Vary', 'Via', 'X-Forwarded-For', 'Proxy-Authorization', 'Proxy-Connection', 'Upgrade', 'X-Chrome-Variations'])
-    dns_blacklist = set(['203.98.7.65','159.106.121.75','159.24.3.173','46.82.174.68','78.16.49.15','59.24.3.173','243.185.187.39','243.185.187.30','8.7.198.45','37.61.54.158','93.46.8.89',])
+    dns_blacklist = set(['4.36.66.178', '8.7.198.45', '37.61.54.158', '46.82.174.68', '59.24.3.173', '64.33.88.161', '64.33.99.47', '64.66.163.251', '65.104.202.252', '65.160.219.113', '66.45.252.237', '72.14.205.104', '72.14.205.99', '78.16.49.15', '93.46.8.89', '128.121.126.139', '159.106.121.75', '169.132.13.103', '192.67.198.6', '202.106.1.2', '202.181.7.85', '203.161.230.171', '207.12.88.98', '208.56.31.43', '209.145.54.50', '209.220.30.174', '209.36.73.33', '211.94.66.147', '213.169.251.35', '216.221.188.182', '216.234.179.13', '59.24.3.173'])
 
     def __init__(self, min_window=4, max_window=64, max_retry=2, max_timeout=30, proxy_uri=''):
         self.min_window = min_window
@@ -399,7 +399,7 @@ class Http(object):
                 sock.sendto(data, (dnsserver, 53))
                 for i in xrange(max_wait):
                     data = sock.recv(512)
-                    iplist = ['.'.join(str(ord(x)) for x in s) for s in re.findall('\xC0.\x00\x01\x00\x01.{6}(.{4})', data) if all(ord(x)<=255 for x in s)]
+                    iplist = ['.'.join(str(ord(x)) for x in s) for s in re.findall('\xc0.\x00\x01\x00\x01.{6}(.{4})', data) if all(ord(x)<=255 for x in s)]
                     iplist = [x for x in iplist if x not in blacklist]
                     if iplist:
                         return iplist
@@ -451,7 +451,7 @@ class Http(object):
         if poolkey in _pool:
             while _pool[poolkey]:
                 sock, mtime = _pool[poolkey].pop()
-                if time.time() - mtime > 30:
+                if time.time() - mtime > 60:
                     sock.close()
                 else:
                     break
@@ -493,10 +493,12 @@ class Http(object):
             ssl_sock = None
             try:
                 sock = socket.socket(socket.AF_INET if ':' not in ip else socket.AF_INET6)
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 60*1024)
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 60*1024)
                 if isinstance(timeout, (int, long)):
                     sock.settimeout(timeout)
-                sock.connect((ip, port))
                 ssl_sock = ssl.wrap_socket(sock)
+                ssl_sock.connect((ip, port))
                 ssl_sock.sock = sock
                 ssl_sock.mtime = time.time()
             except socket.error as e:
@@ -519,8 +521,10 @@ class Http(object):
         ssl_sock = None
         if poolkey in _pool:
             while _pool[poolkey]:
+                if len(_pool[poolkey]) < 5 and random.random() < 0.5:
+                    break
                 ssl_sock = _pool[poolkey].pop()
-                if time.time() - ssl_sock.mtime > 30:
+                if time.time() - ssl_sock.mtime > 60:
                     sock = ssl_sock.sock
                     del ssl_sock.sock
                     ssl_sock.close()
@@ -589,7 +593,7 @@ class Http(object):
         except socket.error as e:
             logging.error('Http.create_connection_withproxy error %s', e)
 
-    def forward_socket(self, local, remote, timeout=60, tick=2, bufsize=8192, maxping=None, maxpong=None, trans=''):
+    def forward_socket(self, local, remote, timeout=60, tick=2, bufsize=__bufsize__, maxping=None, maxpong=None, trans=''):
         try:
             timecount = timeout
             while 1:
@@ -620,7 +624,7 @@ class Http(object):
             local.close()
             remote.close()
 
-    def parse_request(self, rfile, bufsize=8192):
+    def parse_request(self, rfile, bufsize=__bufsize__):
         line = rfile.readline(bufsize)
         if not line:
             raise EOFError('empty line')
@@ -636,13 +640,14 @@ class Http(object):
             headers[keyword] = value
         return method, path, version.strip(), headers
 
-    def _request(self, sock, method, path, protocol_version, headers, payload, bufsize=8192, crlf=None, return_sock=None):
+    def _request(self, sock, method, path, protocol_version, headers, payload, bufsize=__bufsize__, crlf=None, return_sock=None):
         skip_headers = self.skip_headers
         need_crlf = http.crlf
         if crlf:
             need_crlf = 1
         if need_crlf:
-            request_data = 'GET / HTTP/1.1\r\n\r\n\r\n'
+            request_data = 'GET /%s HTTP/1.1\r\n\r\n' % random.randint(1, sys.maxint)
+            request_data += '\r' * random.randint(1,10) + '\r\n' + '\r' * random.randint(1,10)
         else:
             request_data = ''
         request_data += '%s %s %s\r\n' % (method, path, protocol_version)
@@ -668,7 +673,7 @@ class Http(object):
             else:
                 raise TypeError('http.request(payload) must be a string or buffer, not %r' % type(payload))
 
-        bufsize = 0 if return_sock else 8192
+        bufsize = 0 if return_sock else __bufsize__
         rfile = sock.makefile('rb', bufsize)
 
         if need_crlf:
@@ -710,7 +715,7 @@ class Http(object):
             headers[keyword] = value.strip()
         return code, headers, rfile
 
-    def request(self, method, url, payload=None, headers={}, fullurl=False, bufsize=8192, crlf=None, return_sock=None, _poolkey=None):
+    def request(self, method, url, payload=None, headers={}, fullurl=False, bufsize=__bufsize__, crlf=None, return_sock=None, _poolkey=None):
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
         if not re.search(r':\d+$', netloc):
             host = netloc
@@ -768,7 +773,7 @@ class Http(object):
         if need_return:
             return output.getvalue()
 
-    def copy_body(self, rfile, headers, content_length=0, bufsize=8192, write=None):
+    def copy_body(self, rfile, headers, content_length=0, bufsize=__bufsize__, write=None):
         need_return = False
         if write is None:
             output = cStringIO.StringIO()
@@ -996,7 +1001,6 @@ def gae_hosts_updater(sleeptime, threads):
     iplist = [x.get() for x in greenlets if x.get()]
     print iplist
 
-
 class RangeFetch(object):
     """Range Fetch Class"""
 
@@ -1130,7 +1134,7 @@ class RangeFetch(object):
             raise
 
 def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
-    rfile = sock.makefile('rb', 8192)
+    rfile = sock.makefile('rb', __bufsize__)
     try:
         method, path, version, headers = http.parse_request(rfile)
     except (EOFError, socket.error) as e:
@@ -1199,7 +1203,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
                                 logging.info('resolve remote domain=%r from dnsserver=%r', domain, dnsserver)
                                 try:
                                     iplist = Http.dns_remote_resolve(domain, dnsserver, timeout=3)
-                                    if iplist:
+                                    if all(x not in Http.dns_blacklist for x in iplist):
                                         google_ipmap[domain] = iplist
                                         logging.info('resolve remote domain=%r to iplist=%s', domain, google_ipmap[domain])
                                 except socket.error as e:
@@ -1269,7 +1273,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             except Exception as e:
                 logging.exception('ssl.wrap_socket(__realsock=%r) failed: %s', __realsock, e)
                 sock = ssl.wrap_socket(__realsock, certfile=certfile, keyfile=keyfile, server_side=True, ssl_version=ssl.PROTOCOL_TLSv1)
-            rfile = sock.makefile('rb', 8192)
+            rfile = sock.makefile('rb', __bufsize__)
             try:
                 method, path, version, headers = http.parse_request(rfile)
             except (EOFError, socket.error) as e:
@@ -1362,8 +1366,11 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             except (EOFError, socket.error) as e:
                 if e[0] in (11004, 10051, 10054, 10060, 'timed out', 'empty line'):
                     # connection reset or timeout, switch to https
-                    common.GOOGLE_MODE = 'https'
-                    common.GAE_FETCHSERVER = '%s://%s.appspot.com%s?' % (common.GOOGLE_MODE, common.GAE_APPIDS[0], common.GAE_PATH)
+                    if e[0] == 10054:
+                        logging.error('gae_urlfetch %r failed:%s, perhaps should use mode=https', path, e)
+                    else:
+                        common.GOOGLE_MODE = 'https'
+                        common.GAE_FETCHSERVER = '%s://%s.appspot.com%s?' % (common.GOOGLE_MODE, common.GAE_APPIDS[0], common.GAE_PATH)
                 else:
                     raise
 
@@ -1470,7 +1477,7 @@ def php_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     return app_code, app_code, headers, rfile
 
 def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
-    rfile = sock.makefile('rb', 8192)
+    rfile = sock.makefile('rb', __bufsize__)
     try:
         method, path, version, headers = http.parse_request(rfile)
     except (EOFError, socket.error) as e:
@@ -1508,7 +1515,7 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
             __realrfile.close()
             __realsock.close()
             return
-        rfile = sock.makefile('rb', 8192)
+        rfile = sock.makefile('rb', __bufsize__)
         try:
             method, path, version, headers = http.parse_request(rfile)
         except (EOFError, socket.error) as e:
@@ -1692,7 +1699,7 @@ class Autoproxy2Pac(object):
         logging.info('autoproxy pac filename=%r updated', filename)
 
 def pacserver_handler(sock, address, hls={}):
-    rfile = sock.makefile('rb', 8192)
+    rfile = sock.makefile('rb', __bufsize__)
     try:
         method, path, version, headers = http.parse_request(rfile)
     except (EOFError, socket.error) as e:
@@ -1724,12 +1731,12 @@ def pacserver_handler(sock, address, hls={}):
 
 class DNSServer(gevent.server.DatagramServer):
     """DNS Proxy over TCP to avoid DNS poisoning"""
-    remote_address = ('8.8.8.8', 53)
-    max_wait = 2
+    remote_addresses = [('8.8.8.8', 53)]
+    max_wait = 1
     max_retry = 2
     max_cache_size = 2000
     timeout   = 3
-    dns_blacklist = set(['203.98.7.65','159.106.121.75','159.24.3.173','46.82.174.68','78.16.49.15','59.24.3.173','243.185.187.39','243.185.187.30','8.7.198.45','37.61.54.158','93.46.8.89',])
+    dns_blacklist = set(['4.36.66.178', '8.7.198.45', '37.61.54.158', '46.82.174.68', '59.24.3.173', '64.33.88.161', '64.33.99.47', '64.66.163.251', '65.104.202.252', '65.160.219.113', '66.45.252.237', '72.14.205.104', '72.14.205.99', '78.16.49.15', '93.46.8.89', '128.121.126.139', '159.106.121.75', '169.132.13.103', '192.67.198.6', '202.106.1.2', '202.181.7.85', '203.161.230.171', '207.12.88.98', '208.56.31.43', '209.145.54.50', '209.220.30.174', '209.36.73.33', '211.94.66.147', '213.169.251.35', '216.221.188.182', '216.234.179.13', '59.24.3.173'])
 
     def __init__(self, *args, **kwargs):
         gevent.server.DatagramServer.__init__(self, *args, **kwargs)
@@ -1737,7 +1744,6 @@ class DNSServer(gevent.server.DatagramServer):
     def handle(self, data, address):
         cache   = self.cache
         timeout = self.timeout
-        remote_address = self.remote_address
         reqid   = data[:2]
         domain  = data[12:data.find('\x00', 12)]
         if len(cache) > self.max_cache_size:
@@ -1751,13 +1757,14 @@ class DNSServer(gevent.server.DatagramServer):
             sock = None
             try:
                 data = '%s\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00%s\x00\x00\x01\x00\x01' % (os.urandom(2), domain)
-                address_family = socket.AF_INET6 if ':' in remote_address[0] else socket.AF_INET
+                address_family = socket.AF_INET
                 sock = socket.socket(family=address_family, type=socket.SOCK_DGRAM)
                 if isinstance(timeout, (int, long)):
                     sock.settimeout(timeout)
-                sock.sendto(data, remote_address)
-                for i in xrange(self.max_wait):
-                    data, address = sock.recvfrom(1024)
+                for remote_address in self.remote_addresses:
+                    sock.sendto(data, remote_address)
+                for i in xrange(self.max_wait+len(self.remote_addresses)):
+                    data, address = sock.recvfrom(512)
                     iplist = ['.'.join(str(ord(x)) for x in s) for s in re.findall('\x00\x01\x00\x01.{6}(.{4})', data)]
                     if not any(x in self.dns_blacklist for x in iplist):
                         if not iplist:
@@ -1801,6 +1808,10 @@ def pre_start():
                 with open(__config__, 'w') as fp:
                     common.CONFIG.set('love', 'timestamp', int(time.time()))
                     common.CONFIG.write(fp)
+        if '360safe' in os.popen('tasklist').read().lower():
+            lineno = [sys._getframe().f_lineno-1, sys._getframe().f_lineno+2]
+            ctypes.windll.user32.MessageBoxW(None, u'某些安全软件可能和本软件存在冲突.\n可以删除proxy.py第%r行或者暂时退出安全软件来继续运行' % lineno, u'建议', 0)
+            sys.exit(0)
 
 def main():
     global __file__
@@ -1856,7 +1867,7 @@ def main():
     if common.DNS_ENABLE:
         host, port = common.DNS_LISTEN.split(':')
         server = DNSServer((host, int(port)))
-        server.remote_address = (common.DNS_REMOTE, 53)
+        server.remote_addresses = [(x, 53) for x in common.DNS_REMOTE.split('|')]
         server.timeout = common.DNS_TIMEOUT
         server.max_cache_size = common.DNS_CACHESIZE
         gevent.spawn(server.serve_forever)
