@@ -390,40 +390,41 @@ public class GAEProxyService extends Service {
     }
   }
 
-  private String parseHost(String host, boolean isHttp) {
+  private String parseHost(String host, boolean isSafe) {
     String address = null;
-    if (isHttp) {
+    if (isSafe) {
       address = resolve(host);
-    }
-    try {
-      Lookup lookup = new Lookup(host, Type.A);
-      Resolver resolver = new SimpleResolver("8.8.8.8");
-      resolver.setTCP(true);
-      resolver.setTimeout(10);
-      lookup.setResolver(resolver);
-      Record[] records = lookup.run();
-      if (records.length > 0) {
-        boolean first = true;
-        StringBuilder sb = new StringBuilder();
-        for (Record record : records) {
-          ARecord r = (ARecord) record;
-          InetAddress addr = r.getAddress();
-          if (!first) {
-            sb.append("|");
-          } else {
-            first = false;
+      try {
+        Lookup lookup = new Lookup(host, Type.A);
+        Resolver resolver = new SimpleResolver("8.8.8.8");
+        resolver.setTCP(true);
+        resolver.setTimeout(10);
+        lookup.setResolver(resolver);
+        Record[] records = lookup.run();
+        if (records.length > 0) {
+          boolean first = true;
+          StringBuilder sb = new StringBuilder();
+          for (Record record : records) {
+            ARecord r = (ARecord) record;
+            InetAddress addr = r.getAddress();
+            if (!first) {
+              sb.append("|");
+            } else {
+              first = false;
+            }
+            sb.append(addr.getHostAddress());
           }
-          sb.append(addr.getHostAddress());
+          if (address != null) {
+            address += "|" + sb.toString();
+          } else {
+            address = sb.toString();
+          }
         }
-        if (address != null) {
-          address += "|" + sb.toString();
-        } else {
-          address = sb.toString();
-        }
+      } catch (Exception ignore) {
+        address = null;
       }
-    } catch (Exception ignore) {
-      address = null;
     }
+
     if (address == null) {
       try {
         InetAddress addr = InetAddress.getByName(host);
@@ -462,7 +463,7 @@ public class GAEProxyService extends Service {
       }
     }
 
-    dnsHost = parseHost("mail.google.com", false);
+    dnsHost = parseHost("myhosts.sinaapp.com", false);
     if (dnsHost == null || dnsHost.equals("")
         || isInBlackList(appHost)) {
       dnsHost = DEFAULT_DNS;
