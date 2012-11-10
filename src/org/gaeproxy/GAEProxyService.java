@@ -64,10 +64,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import org.apache.commons.codec.binary.Base64;
 import org.xbill.DNS.*;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -373,8 +370,31 @@ public class GAEProxyService extends Service {
     markServiceStarted();
   }
 
-  private String parseHost(String host) {
+  private String resolve(String name) {
+    String encode_temp = new String(Base64.encodeBase64(name.getBytes(), false));
+    // Log.d(TAG, "BASE 64 pass 1: " + encode_temp);
+    String encode_domain = new String(Base64.encodeBase64(encode_temp.getBytes(), false));
+    // Log.d(TAG, "BASE 64 pass 2: " + encode_domain);
+
+    try {
+      URL url = new URL("http://dns-gaeproxy.rhcloud.com/lookup.php?host="
+          + encode_domain);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setConnectTimeout(2000);
+      conn.setReadTimeout(2000);
+      conn.connect();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+      return reader.readLine();
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  private String parseHost(String host, boolean isHttp) {
     String address = null;
+    if (isHttp) {
+      address = resolve(host);
+    }
     try {
       Lookup lookup = new Lookup(host, Type.A);
       Resolver resolver = new SimpleResolver("8.8.8.8");
@@ -384,7 +404,7 @@ public class GAEProxyService extends Service {
       Record[] records = lookup.run();
       if (records.length > 0) {
         boolean first = true;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (Record record : records) {
           ARecord r = (ARecord) record;
           InetAddress addr = r.getAddress();
@@ -395,14 +415,15 @@ public class GAEProxyService extends Service {
           }
           sb.append(addr.getHostAddress());
         }
-        address = sb.toString();
-      } else {
-        address = null;
+        if (address != null) {
+          address += "|" + sb.toString();
+        } else {
+          address = sb.toString();
+        }
       }
     } catch (Exception ignore) {
       address = null;
     }
-
     if (address == null) {
       try {
         InetAddress addr = InetAddress.getByName(host);
@@ -428,20 +449,20 @@ public class GAEProxyService extends Service {
   public boolean handleConnection() {
 
     if (proxyType.equals("GAE")) {
-      appHost = parseHost("www.google.com");
+      appHost = parseHost("www.google.com", true);
       if (appHost == null || appHost.equals("")
           || isInBlackList(appHost)) {
         appHost = DEFAULT_HOST;
       }
     } else if (proxyType.equals("PaaS")) {
-      appHost = parseHost(appId);
+      appHost = parseHost(appId, false);
       if (appHost == null || appHost.equals("")
           || isInBlackList(appHost)) {
         return false;
       }
     }
 
-    dnsHost = parseHost("www.hosts.dotcloud.com");
+    dnsHost = parseHost("dns-gaeproxy.rhcloud.com", false);
     if (dnsHost == null || dnsHost.equals("")
         || isInBlackList(appHost)) {
       dnsHost = DEFAULT_DNS;

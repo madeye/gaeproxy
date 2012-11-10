@@ -439,9 +439,9 @@ public class DNSServer implements Runnable {
     String encode_domain = new String(Base64.encodeBase64(encode_temp.getBytes(), false));
     // Log.d(TAG, "BASE 64 pass 2: " + encode_domain);
 
-    String url = "http://www.hosts.dotcloud.com/lookup.php?host="
+    String url = "http://dns-gaeproxy.rhcloud.com/lookup.php?host="
         + encode_domain;
-    String host = "www.hosts.dotcloud.com";
+    String host = "dns-gaeproxy.rhcloud.com";
     url = url.replace(host, appHost);
 
     client.get(url, host, handler);
