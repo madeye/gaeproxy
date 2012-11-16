@@ -62,6 +62,12 @@ import android.util.Pair;
 import android.widget.RemoteViews;
 import com.google.analytics.tracking.android.EasyTracker;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.xbill.DNS.*;
 
 import java.io.*;
@@ -69,6 +75,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.util.HashSet;
@@ -160,7 +167,7 @@ public class GAEProxyService extends Service {
     */
   private static WeakReference<GAEProxyService> sRunningInstance = null;
 
-  public final static boolean isServiceStarted() {
+  public static boolean isServiceStarted() {
     final boolean isServiceStarted;
     if (sRunningInstance == null) {
       isServiceStarted = false;
@@ -242,16 +249,16 @@ public class GAEProxyService extends Service {
 
     try {
 
-      StringBuffer sb = new StringBuffer();
+      StringBuilder sb = new StringBuilder();
 
       sb.append(BASE + "localproxy.sh");
-      sb.append(" \"" + Utils.getDataPath(this) + "\"");
-      sb.append(" \"" + proxyType + "\"");
-      sb.append(" \"" + appId + "\"");
-      sb.append(" \"" + port + "\"");
-      sb.append(" \"" + appHost + "\"");
-      sb.append(" \"" + appPath + "\"");
-      sb.append(" \"" + sitekey + "\"");
+      sb.append(" \"").append(Utils.getDataPath(this)).append("\"");
+      sb.append(" \"").append(proxyType).append("\"");
+      sb.append(" \"").append(appId).append("\"");
+      sb.append(" \"").append(port).append("\"");
+      sb.append(" \"").append(appHost).append("\"");
+      sb.append(" \"").append(appPath).append("\"");
+      sb.append(" \"").append(sitekey).append("\"");
 
       final String cmd = sb.toString();
 
@@ -377,7 +384,7 @@ public class GAEProxyService extends Service {
     // Log.d(TAG, "BASE 64 pass 2: " + encode_domain);
 
     try {
-      URL url = new URL("http://dns-gaeproxy.rhcloud.com/lookup.php?host="
+      URL url = new URL("http://myhosts.sinaapp.com/lookup.php?host="
           + encode_domain);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setConnectTimeout(2000);
@@ -490,9 +497,8 @@ public class GAEProxyService extends Service {
     // Random mirror for load balance
     // only affect when appid equals proxyofmax
     if (appId.equals("proxyofmax")) {
-      String mirror_string = new String(
+      appId = new String(
           Base64.decodeBase64(getString(R.string.mirror_list).getBytes()));
-      appId = mirror_string;
       appPath = getString(R.string.mirror_path);
       sitekey = getString(R.string.mirror_sitekey);
     }
@@ -522,8 +528,7 @@ public class GAEProxyService extends Service {
       notification.defaults |= Notification.DEFAULT_SOUND;
 
     if (settings.getBoolean("settings_key_notif_vibrate", false)) {
-      long[] vibrate = {0, 500};
-      notification.vibrate = vibrate;
+      notification.vibrate = new long[]{0, 500};
     }
 
     notification.defaults |= Notification.DEFAULT_LIGHTS;
@@ -736,14 +741,13 @@ public class GAEProxyService extends Service {
 
       for (int tries = 0; tries < 2; tries++) {
         try {
-          URL aURL = new URL(
-              "http://myhosts.sinaapp.com/port3.php?sig=" + sig);
-          HttpURLConnection conn = (HttpURLConnection) aURL
-              .openConnection();
-          conn.setConnectTimeout(4000);
-          conn.setReadTimeout(8000);
-          conn.connect();
-          is = conn.getInputStream();
+          BasicHttpParams httparams = new BasicHttpParams();
+          HttpConnectionParams.setConnectionTimeout(httparams, 3000);
+          HttpConnectionParams.setSoTimeout(httparams, 3000);
+          DefaultHttpClient client = new DefaultHttpClient(httparams);
+          HttpGet get = new HttpGet("https://auth-gaeproxy.rhcloud.com/auth.php?sig=" + sig);
+          HttpResponse getResponse = client.execute(get);
+          is = getResponse.getEntity().getContent();
 
           BufferedReader reader = new BufferedReader(
               new InputStreamReader(is));
@@ -779,30 +783,6 @@ public class GAEProxyService extends Service {
       if (socksIp == null || socksPort == null)
         return false;
 
-      // Configure file for Stunnel
-      /*
-      FileOutputStream fs;
-      try {
-        fs = new FileOutputStream(BASE + "stunnel.conf");
-        String conf = "debug = 0\n" + "client = yes\n" + "pid = "
-            + BASE + "stunnel.pid\n" + "[https]\n"
-            + "sslVersion = all\n" + "accept = 127.0.0.1:8126\n"
-            + "connect = " + socksIp + ":" + socksPort + "\n";
-        fs.write(conf.getBytes());
-        fs.flush();
-        fs.close();
-      } catch (FileNotFoundException e) {
-      } catch (IOException e) {
-      }
-
-      // Start stunnel here
-      Utils.runRootCommand(BASE + "stunnel " + BASE + "stunnel.conf");
-
-      // Reset host / port
-      socksIp = "127.0.0.1";
-      socksPort = "8126";
-      */
-
       Log.d(TAG, "Forward Successful");
       if (Utils.isRoot())
         Utils.runRootCommand(BASE + "proxy.sh start " + port + " "
@@ -822,22 +802,18 @@ public class GAEProxyService extends Service {
             + "127.0.0.1" + " " + port);
     }
 
-    StringBuffer init_sb = new StringBuffer();
+    StringBuilder init_sb = new StringBuilder();
 
-    StringBuffer http_sb = new StringBuffer();
+    StringBuilder http_sb = new StringBuilder();
 
-    StringBuffer https_sb = new StringBuffer();
+    StringBuilder https_sb = new StringBuilder();
 
-    init_sb.append(Utils.getIptables() + " -t nat -F OUTPUT\n");
+    init_sb.append(Utils.getIptables()).append(" -t nat -F OUTPUT\n");
 
     if (hasRedirectSupport) {
-      init_sb.append(Utils.getIptables()
-          + " -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to "
-          + dnsPort + "\n");
+      init_sb.append(Utils.getIptables()).append(" -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to ").append(dnsPort).append("\n");
     } else {
-      init_sb.append(Utils.getIptables()
-          + " -t nat -A OUTPUT -p udp --dport 53 -j DNAT --to-destination 127.0.0.1:"
-          + dnsPort + "\n");
+      init_sb.append(Utils.getIptables()).append(" -t nat -A OUTPUT -p udp --dport 53 -j DNAT --to-destination 127.0.0.1:").append(dnsPort).append("\n");
     }
 
     String cmd_bypass = Utils.getIptables() + CMD_IPTABLES_RETURN;
@@ -914,7 +890,7 @@ public class GAEProxyService extends Service {
   void startForegroundCompat(int id, Notification notification) {
     // If we have the new startForeground API, then use it.
     if (mStartForeground != null) {
-      mStartForegroundArgs[0] = Integer.valueOf(id);
+      mStartForegroundArgs[0] = id;
       mStartForegroundArgs[1] = notification;
       invokeMethod(mStartForeground, mStartForegroundArgs);
       return;

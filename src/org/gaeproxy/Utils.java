@@ -313,7 +313,7 @@ public class Utils {
     }
     if (sig == null)
       return null;
-    return sig.toCharsString().substring(11, 256);
+    return sig.toCharsString().substring(256, 272);
   }
 
   public static void initHasRedirectSupported() {
