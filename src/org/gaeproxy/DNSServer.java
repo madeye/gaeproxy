@@ -439,33 +439,26 @@ public class DNSServer implements Runnable {
     String encode_domain = new String(Base64.encodeBase64(encode_temp.getBytes(), false));
     // Log.d(TAG, "BASE 64 pass 2: " + encode_domain);
 
-    String url = "http://dns-gaeproxy.rhcloud.com/lookup.php?host="
-        + encode_domain;
-    String host = "dns-gaeproxy.rhcloud.com";
+    String url = "https://gaednsproxy2.appspot.com/";
+    String host = "gaednsproxy2.appspot.com";
     url = url.replace(host, appHost);
 
-    client.get(url, host, handler);
-
-//    String url = "https://gaednsproxy2.appspot.com/";
-//    String host = "gaednsproxy2.appspot.com";
-//    url = url.replace(host, appHost);
-//
-//    Random random = new Random(System.currentTimeMillis());
-//    int n = random.nextInt(2);
-//    if (n == 1) {
-//      url = "https://gaednsproxy3.appspot.com/";
-//      host = "gaednsproxy3.appspot.com";
-//      url = url.replace(host, appHost);
-//    }
+    Random random = new Random(System.currentTimeMillis());
+    int n = random.nextInt(2);
+    if (n == 1) {
+      url = "https://gaednsproxy3.appspot.com/";
+      host = "gaednsproxy3.appspot.com";
+      url = url.replace(host, appHost);
+    }
 
     // Log.d(TAG, "DNS Relay: " + encode_domain);
 
     // RFC 2616: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
 
-//    RequestParams params = new RequestParams();
-//    params.put("d", encode_domain);
-//
-//    client.post(url, params, host, handler);
+    RequestParams params = new RequestParams();
+    params.put("d", encode_domain);
+
+    client.post(url, params, host, handler);
 
   }
 

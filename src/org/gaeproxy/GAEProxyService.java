@@ -462,7 +462,7 @@ public class GAEProxyService extends Service {
       }
     }
 
-    dnsHost = parseHost("dns-gaeproxy.rhcloud.com", false);
+    dnsHost = parseHost("mail.google.com", false);
     if (dnsHost == null || dnsHost.equals("")
         || isInBlackList(appHost)) {
       dnsHost = DEFAULT_DNS;
