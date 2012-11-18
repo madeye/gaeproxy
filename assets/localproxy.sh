@@ -50,9 +50,9 @@ withgae = plus.google.com|plusone.google.com|reader.googleusercontent.com|music.
 [google_hk]
 mode = https
 hosts = $5
-sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
+sites = .googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = www.google.com/url|groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com|www.google.com.hk|webcache.googleusercontent.com
-withgae = android.clients.google.com|translate.googleapis.com|plus.url.google.com|plus.google.com|plusone.google.com|reader.googleusercontent.com|music.google.com|apis.google.com|feedproxy.google.com|books.google.com|autoproxy-gfwlist.googlecode.com
+withgae = translate.googleapis.com|plus.url.google.com|plus.google.com|plusone.google.com|reader.googleusercontent.com|music.google.com|apis.google.com|feedproxy.google.com|books.google.com|autoproxy-gfwlist.googlecode.com
 
 [google_ipv6]
 mode = http
