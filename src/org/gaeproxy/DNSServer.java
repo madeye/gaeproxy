@@ -502,12 +502,6 @@ public class DNSServer implements Runnable {
           sendDns(createDNSResponse(udpreq, parseIPString(addr)), dnsq,
               srvSocket);
           Log.d(TAG, "DNS cache hit: " + questDomain);
-        } else if (questDomain.toLowerCase().contains("appspot.com")) {
-          byte[] ips = parseIPString(appHost);
-          byte[] answer = createDNSResponse(udpreq, ips);
-          addToCache(questDomain, answer);
-          sendDns(answer, dnsq, srvSocket);
-          Log.d(TAG, "Custom DNS resolver: " + questDomain);
         } else {
           synchronized (domains) {
             if (domains.contains(questDomain))
