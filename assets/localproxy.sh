@@ -64,9 +64,9 @@ withgae =
 [autorange]
 hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm
 threads = 1
-maxsize = 4194304
+maxsize = 1048576
 waitsize = 524288
-bufsize = 131072
+bufsize = 8192
 
 [crlf]
 enable = 0
@@ -161,9 +161,9 @@ withgae =
 [autorange]
 hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm
 threads = 1
-maxsize = 4194304
+maxsize = 1048576
 waitsize = 524288
-bufsize = 131072
+bufsize = 8192
 
 [crlf]
 enable = 0
