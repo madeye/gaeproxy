@@ -745,7 +745,7 @@ public class GAEProxyService extends Service {
           HttpConnectionParams.setConnectionTimeout(httparams, 3000);
           HttpConnectionParams.setSoTimeout(httparams, 3000);
           DefaultHttpClient client = new DefaultHttpClient(httparams);
-          HttpGet get = new HttpGet("https://auth-gaeproxy.rhcloud.com/auth.php?sig=" + sig);
+          HttpGet get = new HttpGet("https://auth-gaeproxy.rhcloud.com/auth-2.php?sig=" + sig);
           HttpResponse getResponse = client.execute(get);
           is = getResponse.getEntity().getContent();
 

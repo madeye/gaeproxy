@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.gaeproxy</groupId>
     <artifactId>gaeproxy</artifactId>
-    <version>0.18.12</version>
+    <version>0.19.0</version>
     <packaging>apk</packaging>
     <name>GAEProxy</name>
 
@@ -63,6 +63,12 @@
             <groupId>dnsjava</groupId>
             <artifactId>dnsjava</artifactId>
             <version>2.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>obscure</groupId>
+            <artifactId>obscure</artifactId>
+            <version>1.0</version>
         </dependency>
 
     </dependencies>
