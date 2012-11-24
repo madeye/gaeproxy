@@ -23,7 +23,7 @@
                 android:title="@string/proxy_type">
         </ListPreference>
         <EditTextPreference
-                android:defaultValue="https://proxyofmax.appspot.com/fetch.py"
+                android:defaultValue="https://proxyofmax.appspot.com/2"
                 android:key="proxy"
                 android:summary="@string/proxy_summary"
                 android:title="@string/proxy">
