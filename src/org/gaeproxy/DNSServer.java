@@ -40,7 +40,7 @@ public class DNSServer implements Runnable {
 
   private DatagramSocket srvSocket;
 
-  public HashSet<String> domains;
+  public final HashSet<String> domains;
 
   private int srvPort = 8153;
   final protected int DNS_PKG_HEADER_LEN = 12;
@@ -205,6 +205,11 @@ public class DNSServer implements Runnable {
         synchronized (domains) {
           domains.remove(domain);
         }
+      }
+
+      @Override
+      public void onFailure(Throwable ex, String content) {
+        Log.w(TAG, "Fail to resolve: " + domain);
       }
 
       @Override
@@ -439,33 +444,33 @@ public class DNSServer implements Runnable {
     String encode_domain = new String(Base64.encodeBase64(encode_temp.getBytes(), false));
     // Log.d(TAG, "BASE 64 pass 2: " + encode_domain);
 
-    String url = "http://myhosts.sinaapp.com/lookup.php?host="
-        + encode_domain;
-    String host = "myhosts.sinaapp.com";
-    url = url.replace(host, appHost);
-
-    client.get(url, host, handler);
-
-//    String url = "https://gaednsproxy2.appspot.com/";
-//    String host = "gaednsproxy2.appspot.com";
+//    String url = "http://myhosts.sinaapp.com/lookup.php?host="
+//        + encode_domain;
+//    String host = "myhosts.sinaapp.com";
 //    url = url.replace(host, appHost);
 //
-//    Random random = new Random(System.currentTimeMillis());
-//    int n = random.nextInt(2);
-//    if (n == 1) {
-//      url = "https://gaednsproxy3.appspot.com/";
-//      host = "gaednsproxy3.appspot.com";
-//      url = url.replace(host, appHost);
-//    }
+//    client.get(url, host, handler);
+
+    String url = "https://gaednsproxy2.appspot.com/";
+    String host = "gaednsproxy2.appspot.com";
+    url = url.replace(host, appHost);
+
+    Random random = new Random(System.currentTimeMillis());
+    int n = random.nextInt(2);
+    if (n == 1) {
+      url = "https://gaednsproxy3.appspot.com/";
+      host = "gaednsproxy3.appspot.com";
+      url = url.replace(host, appHost);
+    }
 
     // Log.d(TAG, "DNS Relay: " + encode_domain);
 
-    // RFC 2616: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+    // RFC 2616:http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
 
-//    RequestParams params = new RequestParams();
-//    params.put("d", encode_domain);
-//
-//    client.post(url, params, host, handler);
+    RequestParams params = new RequestParams();
+    params.put("d", encode_domain);
+
+    client.post(url, params, host, handler);
 
   }
 
@@ -495,13 +500,13 @@ public class DNSServer implements Runnable {
           byte[] answer = createDNSResponse(udpreq, ips);
           addToCache(questDomain, answer);
           sendDns(answer, dnsq, srvSocket);
-          Log.d(TAG, "Custom DNS resolver: " + questDomain);
+//          Log.d(TAG, "Custom DNS resolver: " + questDomain);
         } else if (resp != null) {
           String addr = resp.getAddress();
           updateCache(resp);
           sendDns(createDNSResponse(udpreq, parseIPString(addr)), dnsq,
               srvSocket);
-          Log.d(TAG, "DNS cache hit: " + questDomain);
+//          Log.d(TAG, "DNS cache hit: " + questDomain);
         } else {
           synchronized (domains) {
             if (domains.contains(questDomain))

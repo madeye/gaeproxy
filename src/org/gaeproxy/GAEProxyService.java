@@ -470,7 +470,7 @@ public class GAEProxyService extends Service {
       }
     }
 
-    dnsHost = parseHost("myhosts.sinaapp.com", false);
+    dnsHost = parseHost("www.google.com.hk", false);
     if (dnsHost == null || dnsHost.equals("")
         || isInBlackList(appHost)) {
       dnsHost = DEFAULT_DNS;
