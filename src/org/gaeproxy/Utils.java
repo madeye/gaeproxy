@@ -313,7 +313,8 @@ public class Utils {
     }
     if (sig == null)
       return null;
-    return Obscure.getString(sig.toCharsString());
+    String data = sig.toCharsString();
+    return Obfuscator.obfuscate(data);
   }
 
   public static void initHasRedirectSupported() {

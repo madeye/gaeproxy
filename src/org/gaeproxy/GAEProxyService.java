@@ -457,7 +457,7 @@ public class GAEProxyService extends Service {
   public boolean handleConnection() {
 
     if (proxyType.equals("GAE")) {
-      appHost = parseHost("www.google.com", true);
+      appHost = parseHost("g.maxcdn.info", false);
       if (appHost == null || appHost.equals("")
           || isInBlackList(appHost)) {
         appHost = DEFAULT_HOST;
