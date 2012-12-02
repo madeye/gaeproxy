@@ -377,30 +377,9 @@ public class GAEProxyService extends Service {
     markServiceStarted();
   }
 
-  private String resolve(String name) {
-    String encode_temp = new String(Base64.encodeBase64(name.getBytes(), false));
-    // Log.d(TAG, "BASE 64 pass 1: " + encode_temp);
-    String encode_domain = new String(Base64.encodeBase64(encode_temp.getBytes(), false));
-    // Log.d(TAG, "BASE 64 pass 2: " + encode_domain);
-
-    try {
-      URL url = new URL("http://myhosts.sinaapp.com/lookup.php?host="
-          + encode_domain);
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setConnectTimeout(2000);
-      conn.setReadTimeout(2000);
-      conn.connect();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-      return reader.readLine();
-    } catch (IOException e) {
-      return null;
-    }
-  }
-
   private String parseHost(String host, boolean isSafe) {
     String address = null;
     if (isSafe) {
-      address = resolve(host);
       try {
         Lookup lookup = new Lookup(host, Type.A);
         Resolver resolver = new SimpleResolver("8.8.8.8");
@@ -457,7 +436,7 @@ public class GAEProxyService extends Service {
   public boolean handleConnection() {
 
     if (proxyType.equals("GAE")) {
-      appHost = parseHost("g.maxcdn.info", false);
+      appHost = parseHost("g.maxcdn.info", true);
       if (appHost == null || appHost.equals("")
           || isInBlackList(appHost)) {
         appHost = DEFAULT_HOST;
