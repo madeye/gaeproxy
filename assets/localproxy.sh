@@ -24,7 +24,7 @@ appid = $3
 password = $7 
 path = /$6
 profile = google_hk
-crlf = 0
+crlf = 1
 
 [paas]
 enable = 0
