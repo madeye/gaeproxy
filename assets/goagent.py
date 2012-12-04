@@ -1165,7 +1165,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             if common.GAE_PROFILE == 'google_cn':
                 with hls['setuplock']:
                     if common.GAE_PROFILE == 'google_cn':
-                        hosts = ('www.google.cn', 'www.g.cn')
+                        hosts = ('www.google.co.jp', 'www.google.com.tw')
                         iplist = []
                         for host in hosts:
                             try:

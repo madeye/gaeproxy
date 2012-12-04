@@ -42,7 +42,7 @@ password = 123456
 
 [google_cn]
 mode = http
-hosts = 203.208.47.1|203.208.47.2|203.208.47.3|203.208.47.4|203.208.47.5|203.208.47.6|203.208.47.7|203.208.47.8
+hosts = 203.208.46.131|203.208.46.132|203.208.46.133|203.208.46.134|203.208.46.135|203.208.46.136|203.208.46.137|203.208.46.138
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.appspot.com|.android.com|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
 withgae = plus.google.com|plusone.google.com|reader.googleusercontent.com|music.google.com|apis.google.com
@@ -62,7 +62,7 @@ forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|p
 withgae = 
 
 [autorange]
-hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm
+hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm|.xvideos.com|.phncdn.com|.edgecastcdn.net
 threads = 2
 maxsize = 1048576
 waitsize = 524288
@@ -139,7 +139,7 @@ password = 123456
 
 [google_cn]
 mode = http
-hosts = 203.208.47.1|203.208.47.2|203.208.47.3|203.208.47.4|203.208.47.5|203.208.47.6|203.208.47.7|203.208.47.8
+hosts = 203.208.46.131|203.208.46.132|203.208.46.133|203.208.46.134|203.208.46.135|203.208.46.136|203.208.46.137|203.208.46.138
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.appspot.com|.android.com|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
 withgae = plus.google.com|plusone.google.com|reader.googleusercontent.com|music.google.com|apis.google.com
@@ -159,7 +159,7 @@ forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|p
 withgae =
 
 [autorange]
-hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm
+hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm|.xvideos.com|.phncdn.com|.edgecastcdn.net
 threads = 2
 maxsize = 1048576
 waitsize = 524288
