@@ -118,9 +118,9 @@
     <string name="mirror_path">2</string>
     <string name="mirror_sitekey">wwqgtxx-goagent</string>
 
-    <string name="connecting">Connecting...</string>
-    <string name="initializing">Initializing...</string>
-    <string name="recovering">Reseting...</string>
+    <string name="connecting">Connecting…</string>
+    <string name="initializing">Initializing…</string>
+    <string name="recovering">Reseting…</string>
     <string name="https_alert">Please modify your proxy host to start with
         "https://"
     </string>
@@ -135,7 +135,7 @@
     <string name="notif_ringtone_summary">Select the notification\'s ringtone</string>
     <string name="notif_vibrate_title">Vibrate</string>
     <string name="notif_vibrate_summary">Also vibrate when connection status changes</string>
-    <string name="loading">Loading app list...</string>
+    <string name="loading">Loading app list…</string>
     <string name="enable_market">Enable Market</string>
     <string name="enable_market_summary">Only for users in China, help to update app from
         Android Market (need reboot)
@@ -158,6 +158,10 @@
         information here: https://github.com/phus/goagent
     </string>
     <string name="warning">Warning</string>
+
+    <string name="system_proxy">Enable System Proxy</string>
+    <string name="system_proxy_summary">Enable system wide proxy. Set proxy automatically without ROOT permission,
+        but only works on Android 4.0 and above.</string>
 
     <!--
          Zirco Browser for Android Copyright (C) 2010 - 2011 J. Devauchelle 

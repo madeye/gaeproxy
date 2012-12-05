@@ -80,6 +80,9 @@
     <string name="default_proxy_alert">您正在使用默认的代理地址，此地址每天只有10G的带宽配额，也就说您将随时无法正常使用本应用\n\n因此，请尽快部署自己的服务器端，具体步骤和说明见：http://code.google.com/p/goagent/</string>
     <string name="warning">警告</string>
 
+    <string name="system_proxy">系统代理</string>
+    <string name="system_proxy_summary">启用系统代理，无需ROOT权限，仅工作在 Android 4.0 及以上系统。</string>
+
     <!--
          Zirco Browser for Android Copyright (C) 2010 - 2011 J. Devauchelle 
 		and contributors. This program is free software; you can redistribute it 

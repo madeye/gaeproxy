@@ -48,6 +48,11 @@
                 android:title="@string/auto_connect">
         </CheckBoxPreference>
         <CheckBoxPreference
+                android:key="isSystemProxy"
+                android:summary="@string/system_proxy_summary"
+                android:title="@string/system_proxy">
+        </CheckBoxPreference>
+        <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="isHTTPSProxy"
                 android:summary="@string/https_proxy_summary"

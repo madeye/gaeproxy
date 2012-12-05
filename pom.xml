@@ -11,7 +11,7 @@
     <repositories>
         <repository>
             <id>madeye-maven-repository</id>
-            <url>https://github.com/madeye/maven-repository/raw/master</url>
+            <url>http://madeye-maven-repository.googlecode.com/git</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>4.1.1.4</version>
+            <version>15</version>
             <scope>provided</scope>
         </dependency>
 
@@ -46,6 +46,13 @@
             <artifactId>analytics</artifactId>
             <version>V2</version>
         </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.5</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.j256.ormlite</groupId>
@@ -142,8 +149,11 @@
                         </outputApk>
                     </zipalign>
                     <sdk>
-                        <platform>16</platform>
+                        <platform>15</platform>
                     </sdk>
+                    <dex>
+                        <coreLibrary>true</coreLibrary>
+                    </dex>
                 </configuration>
             </plugin>
         </plugins>

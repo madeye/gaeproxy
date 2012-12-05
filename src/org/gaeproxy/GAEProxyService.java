@@ -141,6 +141,7 @@ public class GAEProxyService extends Service {
   private boolean isHTTPSProxy = false;
   private boolean isGFWList = false;
   private boolean isBypassApps = false;
+  private boolean isSystemProxy = false;
 
   private ProxyedApp apps[];
 
@@ -306,6 +307,7 @@ public class GAEProxyService extends Service {
       port = 1984;
     }
 
+    isSystemProxy = settings.getBoolean("isSystemProxy", false);
     isGlobalProxy = settings.getBoolean("isGlobalProxy", false);
     isHTTPSProxy = settings.getBoolean("isHTTPSProxy", false);
     isGFWList = settings.getBoolean("isGFWList", false);
@@ -325,7 +327,7 @@ public class GAEProxyService extends Service {
     Log.e(TAG, "Proxy: " + appId + " " + appPath);
     Log.e(TAG, "Local Port: " + port);
 
-    // APNManager.setAPNProxy("127.0.0.1", Integer.toString(port), this);
+    // APNProxyManager.setAPNProxy("127.0.0.1", Integer.toString(port), this);
 
     new Thread(new Runnable() {
       @Override
@@ -482,12 +484,20 @@ public class GAEProxyService extends Service {
       sitekey = getString(R.string.mirror_sitekey);
     }
 
-    if (!preConnection())
-      return false;
+    if (isSystemProxy) {
+      APNProxyManager.setAPNProxy("127.0.0.1", Integer.toString(port),
+          getApplicationContext());
+      if (!WifiProxyManager.setWifiProxy("127.0.0.1", port,
+          getApplicationContext())) {
+        return false;
+      }
+    } else {
+      if (!preConnection()) return false;
 
-    Thread dnsThread = new Thread(dnsServer);
-    dnsThread.setDaemon(true);
-    dnsThread.start();
+      Thread dnsThread = new Thread(dnsServer);
+      dnsThread.setDaemon(true);
+      dnsThread.start();
+    }
 
     connect();
 
@@ -670,7 +680,7 @@ public class GAEProxyService extends Service {
       // Nothing
     }
 
-    // APNManager.clearAPNProxy("127.0.0.1", Integer.toString(port), this);
+    // APNProxyManager.clearAPNProxy("127.0.0.1", Integer.toString(port), this);
 
     super.onDestroy();
 
@@ -685,6 +695,12 @@ public class GAEProxyService extends Service {
       Utils.runRootCommand(BASE + "proxy.sh stop");
     else
       Utils.runCommand(BASE + "proxy.sh stop");
+
+    if (isSystemProxy) {
+      APNProxyManager.clearAPNProxy("127.0.0.1", Integer.toString(port),
+          getApplicationContext());
+      WifiProxyManager.clearWifiProxy(getApplicationContext());
+    }
   }
 
   // This is the old onStart method that will be called on the pre-2.0

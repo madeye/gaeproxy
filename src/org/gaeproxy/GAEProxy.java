@@ -117,7 +117,7 @@ public class GAEProxy extends PreferenceActivity implements
   private static ProgressDialog pd = null;
 
   private CheckBoxPreference isAutoConnectCheck;
-
+  private CheckBoxPreference isSystemProxyCheck;
   private CheckBoxPreference isGlobalProxyCheck;
   private EditTextPreference proxyText;
   private EditTextPreference portText;
@@ -194,6 +194,7 @@ public class GAEProxy extends PreferenceActivity implements
 
     isAutoConnectCheck.setEnabled(false);
     isGlobalProxyCheck.setEnabled(false);
+    isSystemProxyCheck.setEnabled(false);
     isHTTPSProxyCheck.setEnabled(false);
     proxyTypeList.setEnabled(false);
   }
@@ -202,15 +203,17 @@ public class GAEProxy extends PreferenceActivity implements
     proxyText.setEnabled(true);
     portText.setEnabled(true);
     sitekeyText.setEnabled(true);
-    if (!isGlobalProxyCheck.isChecked()) {
-      proxyedApps.setEnabled(true);
-      isBypassAppsCheck.setEnabled(true);
+    if (!isSystemProxyCheck.isChecked()) {
+      isGlobalProxyCheck.setEnabled(true);
+      isGFWListCheck.setEnabled(true);
+      isHTTPSProxyCheck.setEnabled(true);
+      if (!isGlobalProxyCheck.isChecked()) {
+        proxyedApps.setEnabled(true);
+        isBypassAppsCheck.setEnabled(true);
+      }
     }
 
-    isGlobalProxyCheck.setEnabled(true);
     isAutoConnectCheck.setEnabled(true);
-    isGFWListCheck.setEnabled(true);
-    isHTTPSProxyCheck.setEnabled(true);
     proxyTypeList.setEnabled(true);
   }
 
@@ -280,6 +283,7 @@ public class GAEProxy extends PreferenceActivity implements
     isAutoConnectCheck = (CheckBoxPreference) findPreference("isAutoConnect");
     isHTTPSProxyCheck = (CheckBoxPreference) findPreference("isHTTPSProxy");
     isGlobalProxyCheck = (CheckBoxPreference) findPreference("isGlobalProxy");
+    isSystemProxyCheck = (CheckBoxPreference) findPreference("isSystemProxy");
     isGFWListCheck = (CheckBoxPreference) findPreference("isGFWList");
     isBypassAppsCheck = (CheckBoxPreference) findPreference("isBypassApps");
 
@@ -491,12 +495,20 @@ public class GAEProxy extends PreferenceActivity implements
     SharedPreferences settings = PreferenceManager
         .getDefaultSharedPreferences(this);
 
-    if (settings.getBoolean("isGlobalProxy", false)) {
+    if (settings.getBoolean("isSystemProxy", false)) {
+      isGlobalProxyCheck.setEnabled(false);
+      isGFWListCheck.setEnabled(false);
+      isHTTPSProxyCheck.setEnabled(false);
       proxyedApps.setEnabled(false);
       isBypassAppsCheck.setEnabled(false);
     } else {
-      proxyedApps.setEnabled(true);
-      isBypassAppsCheck.setEnabled(true);
+      if (settings.getBoolean("isGlobalProxy", false)) {
+        proxyedApps.setEnabled(false);
+        isBypassAppsCheck.setEnabled(false);
+      } else {
+        proxyedApps.setEnabled(true);
+        isBypassAppsCheck.setEnabled(true);
+      }
     }
 
     sitekeyText.setEnabled(true);
@@ -597,6 +609,27 @@ public class GAEProxy extends PreferenceActivity implements
           }
         } catch (Exception e) {
           // Nothing
+        }
+      }
+    }
+
+    if (key.equals("isSystemProxy")) {
+      if (settings.getBoolean("isSystemProxy", false)) {
+        isGlobalProxyCheck.setEnabled(false);
+        isGFWListCheck.setEnabled(false);
+        isHTTPSProxyCheck.setEnabled(false);
+        proxyedApps.setEnabled(false);
+        isBypassAppsCheck.setEnabled(false);
+      } else {
+        isGlobalProxyCheck.setEnabled(true);
+        isGFWListCheck.setEnabled(true);
+        isHTTPSProxyCheck.setEnabled(true);
+        if (settings.getBoolean("isGlobalProxy", false)) {
+          proxyedApps.setEnabled(false);
+          isBypassAppsCheck.setEnabled(false);
+        } else {
+          proxyedApps.setEnabled(true);
+          isBypassAppsCheck.setEnabled(true);
         }
       }
     }
