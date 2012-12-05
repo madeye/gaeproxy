@@ -40,7 +40,14 @@ public class WifiProxyManager {
 
       config.linkProperties.setHttpProxy(new ProxyProperties("127.0.0.1", port, ""));
       manager.updateNetwork(config);
-      manager.reconnect();
+
+      manager.setWifiEnabled(false);
+      handler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          manager.setWifiEnabled(true);
+        }
+      }, 1000);
 
       networkID = cur;
     } catch (Exception ignored) {
@@ -54,7 +61,10 @@ public class WifiProxyManager {
   public static void clearWifiProxy(Context context) {
     if (networkID == -1) return;
     try {
-      WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+
+      Handler handler = new Handler(context.getMainLooper());
+
+      final WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
       List<WifiConfiguration> configurationList = manager.getConfiguredNetworks();
       WifiConfiguration configuration = null;
       for (WifiConfiguration wifiConfiguration : configurationList) {
@@ -69,7 +79,14 @@ public class WifiProxyManager {
       config.linkProperties.clear();
 
       manager.updateNetwork(config);
-      manager.reconnect();
+
+      manager.setWifiEnabled(false);
+      handler.postDelayed(new Runnable() {
+        @Override
+        public void run() {
+          manager.setWifiEnabled(true);
+        }
+      }, 1000);
 
       networkID = -1;
     } catch (Exception ignored) {
