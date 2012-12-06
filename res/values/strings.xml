@@ -124,7 +124,7 @@
     <string name="https_alert">Please modify your proxy host to start with
         "https://"
     </string>
-    <string name="https_proxy">Enable HTTPS proxy</string>
+    <string name="https_proxy">HTTPS proxy</string>
     <string name="https_proxy_summary">Proxy HTTPS through GAE, not compatible with most
         apps
     </string>
@@ -136,11 +136,11 @@
     <string name="notif_vibrate_title">Vibrate</string>
     <string name="notif_vibrate_summary">Also vibrate when connection status changes</string>
     <string name="loading">Loading app list…</string>
-    <string name="enable_market">Enable Market</string>
+    <string name="enable_market">Market Proxy</string>
     <string name="enable_market_summary">Only for users in China, help to update app from
         Android Market (need reboot)
     </string>
-    <string name="auto_set_gfwlist">Enable CHN Route</string>
+    <string name="auto_set_gfwlist">CHN Route</string>
     <string name="auto_set_gfwlist_summary">Bypass all sites located in China (needs ROOT
         permission and
         IPTABLES support)
@@ -159,9 +159,9 @@
     </string>
     <string name="warning">Warning</string>
 
-    <string name="system_proxy">Enable System Proxy</string>
-    <string name="system_proxy_summary">Enable system wide proxy. Set proxy automatically without ROOT permission,
-        but only works on Android 4.0 and above.</string>
+    <string name="system_proxy">System Proxy</string>
+    <string name="system_proxy_summary">Enable system wide proxy automatically without ROOT permission,
+        only works for Wifi on Android 4.0 and above.</string>
 
     <!--
          Zirco Browser for Android Copyright (C) 2010 - 2011 J. Devauchelle 

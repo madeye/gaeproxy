@@ -23,7 +23,7 @@ public class WifiProxyManager {
 
       final WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
-      if (!manager.isWifiEnabled()) return false;
+      if (!manager.isWifiEnabled()) return true;
       List<WifiConfiguration> configurationList = manager.getConfiguredNetworks();
       WifiConfiguration configuration = null;
       int cur = manager.getConnectionInfo().getNetworkId();
@@ -31,7 +31,7 @@ public class WifiProxyManager {
         if (wifiConfiguration.networkId == cur)
           configuration = wifiConfiguration;
       }
-      if (configuration == null) return false;
+      if (configuration == null) return true;
 
       WifiConfiguration config = new WifiConfiguration(configuration);
       config.ipAssignment = WifiConfiguration.IpAssignment.UNASSIGNED;

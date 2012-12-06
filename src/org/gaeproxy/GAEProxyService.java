@@ -327,8 +327,6 @@ public class GAEProxyService extends Service {
     Log.e(TAG, "Proxy: " + appId + " " + appPath);
     Log.e(TAG, "Local Port: " + port);
 
-    // APNProxyManager.setAPNProxy("127.0.0.1", Integer.toString(port), this);
-
     new Thread(new Runnable() {
       @Override
       public void run() {
@@ -485,8 +483,8 @@ public class GAEProxyService extends Service {
     }
 
     if (isSystemProxy) {
-      APNProxyManager.setAPNProxy("127.0.0.1", Integer.toString(port),
-          getApplicationContext());
+      //APNProxyManager.setAPNProxy("127.0.0.1", Integer.toString(port),
+          //getApplicationContext());
       if (!WifiProxyManager.setWifiProxy("127.0.0.1", port,
           getApplicationContext())) {
         return false;
@@ -680,8 +678,6 @@ public class GAEProxyService extends Service {
       // Nothing
     }
 
-    // APNProxyManager.clearAPNProxy("127.0.0.1", Integer.toString(port), this);
-
     super.onDestroy();
 
     statusLock = false;
@@ -697,8 +693,8 @@ public class GAEProxyService extends Service {
       Utils.runCommand(BASE + "proxy.sh stop");
 
     if (isSystemProxy) {
-      APNProxyManager.clearAPNProxy("127.0.0.1", Integer.toString(port),
-          getApplicationContext());
+      //APNProxyManager.clearAPNProxy("127.0.0.1", Integer.toString(port),
+          //getApplicationContext());
       WifiProxyManager.clearWifiProxy(getApplicationContext());
     }
   }

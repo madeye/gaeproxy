@@ -81,7 +81,7 @@
     <string name="warning">警告</string>
 
     <string name="system_proxy">系统代理</string>
-    <string name="system_proxy_summary">启用系统代理，无需ROOT权限，仅工作在 Android 4.0 及以上系统。</string>
+    <string name="system_proxy_summary">设置系统代理，无需ROOT权限，仅工作在Android 4.0及以上系统，并仅对当前Wifi连接生效</string>
 
     <!--
          Zirco Browser for Android Copyright (C) 2010 - 2011 J. Devauchelle 

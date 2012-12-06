@@ -213,6 +213,7 @@ public class GAEProxy extends PreferenceActivity implements
       }
     }
 
+    isSystemProxyCheck.setEnabled(true);
     isAutoConnectCheck.setEnabled(true);
     proxyTypeList.setEnabled(true);
   }
