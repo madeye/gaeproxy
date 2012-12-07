@@ -374,8 +374,8 @@ public class GAEProxyService extends Service {
     if (isSafe) {
       try {
         Lookup lookup = new Lookup(host, Type.A);
-        Resolver resolver = new SimpleResolver("8.8.8.8");
-        resolver.setTCP(true);
+        Resolver resolver = new SimpleResolver("114.114.114.114");
+        resolver.setTCP(false);
         resolver.setTimeout(10);
         lookup.setResolver(resolver);
         Record[] records = lookup.run();
