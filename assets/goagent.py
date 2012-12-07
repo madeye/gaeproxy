@@ -184,40 +184,6 @@ try:
 except ImportError:
     sqlite3 = None
     
-class DNSCacheUtil(object):
-    '''DNSCache module, integrated with GAEProxy'''
-
-    cache = {"127.0.0.1": 'localhost'}
-
-    @staticmethod
-    def getHost(address):
-
-        if DNSCacheUtil.cache.has_key(address):
-            return DNSCacheUtil.cache[address]
-
-        host = "www.google.com"
-
-        if sqlite3 is not None:
-            try:
-                conn = sqlite3.connect('/data/data/org.gaeproxy/databases/dnscache.db')
-            except Exception:
-                logging.exception('DNSCacheUtil.initConn failed')
-                conn = None
-
-        if conn is not None:
-            try:
-                c = conn.cursor()
-                c.execute("select request,reqtimestamp from dnsresponse where address = '%s' order by reqtimestamp DESC" % address)
-                row = c.fetchone()
-                if row is not None:
-                    host = row[0]
-                    DNSCacheUtil.cache[address] = host
-                c.close()
-                conn.close()
-            except Exception:
-                logging.exception('DNSCacheUtil.getHost failed: %s', address)
-
-        return host
 
 class CertUtil(object):
     """CertUtil module, based on mitmproxy"""
@@ -1243,7 +1209,9 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
         # GAEProxy Patch
         p = "(?:\d{1,3}\.){3}\d{1,3}"
         if re.match(p, host) is not None:
-            host = DNSCacheUtil.getHost(host)
+            domain = DNSServer.reverse_cache.get(host)
+            if domain:
+                host = domain
         port = int(port)
         if host.endswith(common.GOOGLE_SITES) and host not in common.GOOGLE_WITHGAE:
             logging.info('%s:%s "%s %s:%d HTTP/1.1" - -' % (remote_addr, remote_port, method, host, port))
@@ -1512,7 +1480,9 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
         # GAEProxy Patch
         p = "(?:\d{1,3}\.){3}\d{1,3}"
         if re.match(p, host) is not None:
-            host = DNSCacheUtil.getHost(host)
+            domain = DNSServer.reverse_cache.get(host)
+            if domain:
+                host = domain
         port = int(port)
         keyfile, certfile = CertUtil.get_cert(host)
         logging.info('%s:%s "%s:%d HTTP/1.1" - -' % (address[0], address[1], host, port))
@@ -1745,11 +1715,11 @@ def pacserver_handler(sock, address, hls={}):
 class DNSServer(gevent.server.DatagramServer):
     """DNS Proxy over TCP to avoid DNS poisoning"""
     remote_addresses = [('8.8.8.8', 53)]
-    max_wait = 1
-    max_retry = 2
+    max_wait       = 1
+    max_retry      = 2
     max_cache_size = 2000
-    timeout   = 3
-    dns_blacklist = set(['4.36.66.178', '8.7.198.45', '37.61.54.158', '46.82.174.68', '59.24.3.173', '64.33.88.161', '64.33.99.47', '64.66.163.251', '65.104.202.252', '65.160.219.113', '66.45.252.237', '72.14.205.104', '72.14.205.99', '78.16.49.15', '93.46.8.89', '128.121.126.139', '159.106.121.75', '169.132.13.103', '192.67.198.6', '202.106.1.2', '202.181.7.85', '203.161.230.171', '207.12.88.98', '208.56.31.43', '209.145.54.50', '209.220.30.174', '209.36.73.33', '211.94.66.147', '213.169.251.35', '216.221.188.182', '216.234.179.13'])
+    timeout        = 10
+    reverse_cache  = {"127.0.0.1": 'localhost'}
 
     def __init__(self, *args, **kwargs):
         gevent.server.DatagramServer.__init__(self, *args, **kwargs)
@@ -1762,31 +1732,31 @@ class DNSServer(gevent.server.DatagramServer):
         if len(cache) > self.max_cache_size:
             cache.clear()
         if domain in cache:
-            return self.sendto(reqid + cache[domain][2:], address)
+            return self.sendto(reqid + cache[domain], address)
         retry = 0
         while domain not in cache:
             qname = re.sub(r'[\x01-\x10]', '.', domain[1:])
             logging.info('DNSServer resolve domain=%r to iplist', qname)
             sock = None
             try:
-                data = '%s\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00%s\x00\x00\x01\x00\x01' % (os.urandom(2), domain)
+                data = '%s%s' % (struct.pack('>H', len(data)), data)
                 address_family = socket.AF_INET
-                sock = socket.socket(family=address_family, type=socket.SOCK_DGRAM)
+                sock = socket.socket(family=address_family, type=socket.SOCK_STREAM)
                 if isinstance(timeout, (int, long)):
                     sock.settimeout(timeout)
                 for remote_address in self.remote_addresses:
-                    sock.sendto(data, remote_address)
+                    sock.connect(remote_address)
+                    sock.sendall(data)
                 for i in xrange(self.max_wait+len(self.remote_addresses)):
-                    data, address = sock.recvfrom(512)
-                    iplist = ['.'.join(str(ord(x)) for x in s) for s in re.findall('\x00\x01\x00\x01.{6}(.{4})', data)]
-                    if not any(x in self.dns_blacklist for x in iplist):
-                        if not iplist:
-                            logging.info('DNS return unkown result, iplist=%s', iplist)
-                        cache[domain] = data
-                        self.sendto(reqid + cache[domain][2:], address)
-                        break
-                    else:
-                        logging.info('DNS Poisoning return %s from %s', iplist, sock)
+                    data = sock.recv(512)
+                    iplist = ['.'.join(str(ord(x)) for x in s) for s in re.findall('\xc0.\x00\x01\x00\x01.{6}(.{4})', data)] 
+                    if iplist:
+                        #logging.info("DNSServer get iplist: %s", iplist)
+                        for x in iplist:
+                            DNSServer.reverse_cache[x] = qname
+                    cache[domain] = data[4:]
+                    self.sendto(reqid + cache[domain], address)
+                    break
             except socket.error as e:
                 logging.error('DNSServer resolve domain=%r to iplist failed:%s', qname, e)
             finally:

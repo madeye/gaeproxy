@@ -53,19 +53,6 @@
             <version>1.5</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-core</artifactId>
-            <version>4.41</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-android</artifactId>
-            <version>4.41</version>
-        </dependency>
-
         <dependency>
             <groupId>dnsjava</groupId>
             <artifactId>dnsjava</artifactId>

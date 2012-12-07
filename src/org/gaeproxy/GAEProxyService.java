@@ -58,13 +58,11 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.Pair;
 import android.widget.RemoteViews;
 import com.google.analytics.tracking.android.EasyTracker;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -74,10 +72,7 @@ import java.io.*;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import javax.net.ssl.HttpsURLConnection;
 import java.net.InetAddress;
-import java.net.URL;
 import java.util.HashSet;
 
 public class GAEProxyService extends Service {
@@ -116,7 +111,7 @@ public class GAEProxyService extends Service {
 
   private static final String TAG = "GAEProxyService";
   private static final String DEFAULT_HOST = "74.125.128.18";
-  private static final String DEFAULT_DNS = "50.17.31.189";
+  private final static int DNS_PORT = 8053;
 
   public static volatile boolean statusLock = false;
 
@@ -130,9 +125,6 @@ public class GAEProxyService extends Service {
   private String[] appMask;
   private int port;
   private String sitekey;
-  private String dnsHost = null;
-  private DNSServer dnsServer = null;
-  private int dnsPort = 8153;
 
   private SharedPreferences settings = null;
 
@@ -449,29 +441,11 @@ public class GAEProxyService extends Service {
       }
     }
 
-    dnsHost = parseHost("www.google.com.hk", false);
-    if (dnsHost == null || dnsHost.equals("")
-        || isInBlackList(appHost)) {
-      dnsHost = DEFAULT_DNS;
-    }
-
     try {
-      String[] hosts = dnsHost.split("\\|");
-      dnsHost = hosts[hosts.length - 1];
       appMask = appHost.split("\\|");
     } catch (Exception ex) {
       return false;
     }
-
-    // DNS Proxy Setup
-    // with AsyncHttpClient
-    if ("PaaS".equals(proxyType)) {
-      Pair<String, String> orgHost = new Pair<String, String>(appId, appMask[0]);
-      dnsServer = new DNSServer(this, dnsHost, orgHost);
-    } else if ("GAE".equals(proxyType)) {
-      dnsServer = new DNSServer(this, dnsHost, null);
-    }
-    dnsPort = dnsServer.getServPort();
 
     // Random mirror for load balance
     // only affect when appid equals proxyofmax
@@ -484,17 +458,13 @@ public class GAEProxyService extends Service {
 
     if (isSystemProxy) {
       //APNProxyManager.setAPNProxy("127.0.0.1", Integer.toString(port),
-          //getApplicationContext());
+      //getApplicationContext());
       if (!WifiProxyManager.setWifiProxy("127.0.0.1", port,
           getApplicationContext())) {
         return false;
       }
     } else {
       if (!preConnection()) return false;
-
-      Thread dnsThread = new Thread(dnsServer);
-      dnsThread.setDaemon(true);
-      dnsThread.start();
     }
 
     connect();
@@ -632,13 +602,6 @@ public class GAEProxyService extends Service {
       Log.e(TAG, "HTTP Server close unexpected");
     }
 
-    try {
-      if (dnsServer != null)
-        dnsServer.close();
-    } catch (Exception e) {
-      Log.e(TAG, "DNS Server close unexpected");
-    }
-
     new Thread() {
       @Override
       public void run() {
@@ -694,7 +657,7 @@ public class GAEProxyService extends Service {
 
     if (isSystemProxy) {
       //APNProxyManager.clearAPNProxy("127.0.0.1", Integer.toString(port),
-          //getApplicationContext());
+      //getApplicationContext());
       WifiProxyManager.clearWifiProxy(getApplicationContext());
     }
   }
@@ -802,9 +765,9 @@ public class GAEProxyService extends Service {
     init_sb.append(Utils.getIptables()).append(" -t nat -F OUTPUT\n");
 
     if (hasRedirectSupport) {
-      init_sb.append(Utils.getIptables()).append(" -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to ").append(dnsPort).append("\n");
+      init_sb.append(Utils.getIptables()).append(" -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to ").append(DNS_PORT).append("\n");
     } else {
-      init_sb.append(Utils.getIptables()).append(" -t nat -A OUTPUT -p udp --dport 53 -j DNAT --to-destination 127.0.0.1:").append(dnsPort).append("\n");
+      init_sb.append(Utils.getIptables()).append(" -t nat -A OUTPUT -p udp --dport 53 -j DNAT --to-destination 127.0.0.1:").append(DNS_PORT).append("\n");
     }
 
     String cmd_bypass = Utils.getIptables() + CMD_IPTABLES_RETURN;
@@ -813,11 +776,8 @@ public class GAEProxyService extends Service {
       init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
     }
 
-    init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
-
-//    init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
-//        + getApplicationInfo().uid));
-
+    init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner "
+        + getApplicationInfo().uid));
 
     if (isGFWList) {
       String[] chn_list = getResources().getStringArray(R.array.chn_list);

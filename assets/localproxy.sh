@@ -26,6 +26,13 @@ path = /$6
 profile = google_hk
 crlf = 1
 
+[dns]
+enable = 1
+listen = 127.0.0.1:8053
+remote = 8.8.8.8|8.8.4.4|208.67.222.222|208.67.220.220
+cachesize = 5000
+timeout = 10
+
 [paas]
 enable = 0
 password = 123456
@@ -129,6 +136,13 @@ password = $7
 listen = 127.0.0.1:$4
 isphp = 0
 fetchserver = $6
+
+[dns]
+enable = 1
+listen = 127.0.0.1:8053
+remote = 8.8.8.8|8.8.4.4|208.67.222.222|208.67.220.220
+cachesize = 5000
+timeout = 10
 
 [proxy]
 enable = 0

@@ -68,10 +68,6 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
-import org.gaeproxy.db.DNSResponse;
-import org.gaeproxy.db.DatabaseHelper;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -722,22 +718,7 @@ public class GAEProxy extends PreferenceActivity implements
       public void run() {
 
         Utils.runRootCommand(Utils.getIptables() + " -t nat -F OUTPUT");
-
         Utils.runCommand(GAEProxyService.BASE + "proxy.sh stop");
-
-        try {
-          DatabaseHelper helper = OpenHelperManager.getHelper(
-              GAEProxy.this, DatabaseHelper.class);
-          Dao<DNSResponse, String> dnsCacheDao = helper
-              .getDNSCacheDao();
-          List<DNSResponse> list = dnsCacheDao.queryForAll();
-          for (DNSResponse resp : list) {
-            dnsCacheDao.delete(resp);
-          }
-          OpenHelperManager.releaseHelper();
-        } catch (Exception ignore) {
-          // Nothing
-        }
 
         File f = new File("/data/data/org.gaeproxy/certs");
         if (f.exists() && f.isFile())
