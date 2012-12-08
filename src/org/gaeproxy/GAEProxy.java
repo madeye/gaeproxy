@@ -259,7 +259,7 @@ public class GAEProxy extends PreferenceActivity implements
     addPreferencesFromResource(R.xml.gae_proxy_preference);
 
     // Create the adView
-    adView = new AdView(GAEProxy.this, AdSize.BANNER, "a14d8be8a284afc");
+    adView = new AdView(GAEProxy.this, AdSize.SMART_BANNER, "a14d8be8a284afc");
     // Lookup your LinearLayout assuming it’s been given
     // the attribute android:id="@+id/mainLayout"
     FrameLayout layout = (FrameLayout) findViewById(R.id.ad);
