@@ -10,8 +10,9 @@
 #      AlsoTang       <alsotang@gmail.com>
 #      Yonsm          <YonsmGuo@gmail.com>
 #      Ming Bai       <mbbill@gmail.com>
+#      binyuj         <yubinlove1991@gmail.com>
 
-__version__ = '2.1.9'
+__version__ = '2.1.10dev'
 __config__  = 'proxy.ini'
 __bufsize__ = 1024*1024
 
@@ -178,6 +179,7 @@ import fnmatch
 import ConfigParser
 import httplib
 import urllib2
+import heapq
 import threading
 try:
     import sqlite3
@@ -331,16 +333,12 @@ class Http(object):
     skip_headers = frozenset(['Vary', 'Via', 'X-Forwarded-For', 'Proxy-Authorization', 'Proxy-Connection', 'Upgrade', 'X-Chrome-Variations'])
     dns_blacklist = set(['4.36.66.178', '8.7.198.45', '37.61.54.158', '46.82.174.68', '59.24.3.173', '64.33.88.161', '64.33.99.47', '64.66.163.251', '65.104.202.252', '65.160.219.113', '66.45.252.237', '72.14.205.104', '72.14.205.99', '78.16.49.15', '93.46.8.89', '128.121.126.139', '159.106.121.75', '169.132.13.103', '192.67.198.6', '202.106.1.2', '202.181.7.85', '203.161.230.171', '207.12.88.98', '208.56.31.43', '209.145.54.50', '209.220.30.174', '209.36.73.33', '211.94.66.147', '213.169.251.35', '216.221.188.182', '216.234.179.13'])
 
-    def __init__(self, min_window=4, max_window=64, max_retry=2, max_timeout=30, proxy_uri=''):
-        self.min_window = min_window
+    def __init__(self, max_window=4, max_timeout=16, max_retry=4, proxy_uri=''):
         self.max_window = max_window
         self.max_retry = max_retry
         self.max_timeout = max_timeout
-        self.window = 20
-        self.window_ack = 0
-        self.http_ipr = collections.defaultdict(lambda:5)
-        self.https_ipr = collections.defaultdict(lambda:10)
-        self.timeout = max_timeout // 2
+        self.address_time = {}
+        self.max_timeout = max_timeout
         self.dns = collections.defaultdict(set)
         self.crlf = 0
         if proxy_uri:
@@ -393,46 +391,29 @@ class Http(object):
             iplist.update(ips)
         return iplist
 
-    def create_connection(self, (host, port), timeout=None, source_address=None, _pool=collections.defaultdict(set), _poolkey=None):
+    def create_connection(self, (host, port), timeout=None, source_address=None):
         def _create_connection((ip, port), timeout, queue):
             sock = None
             try:
                 sock = socket.socket(socket.AF_INET if ':' not in ip else socket.AF_INET6)
-                if isinstance(timeout, (int, long)):
-                    sock.settimeout(timeout)
+                sock.settimeout(timeout or self.max_timeout)
                 start_time = time.time()
                 sock.connect((ip, port))
-                self.http_ipr[ip] = time.time() - start_time
+                self.address_time['%s:%s'%(host,port)] = time.time() - start_time
             except socket.error as e:
-                self.http_ipr[ip] = self.http_ipr.default_factory()+random.random()
+                self.address_time['%s:%s'%(host,port)] = self.max_timeout+random.random()
                 if sock:
                     sock.close()
                     sock = None
             finally:
                 queue.put(sock)
-        def _close_connection(poolkey, count, queue):
+        def _close_connection(count, queue):
             for i in xrange(count):
                 sock = queue.get()
-                if sock:
-                    #sock.close()
-                    _pool[poolkey].add((sock, time.time()))
-        poolkey = _poolkey(host, port) if callable(_poolkey) else _poolkey if _poolkey else '%s:%s' % (host, port)
-        logging.debug('Http.create_connection connect (%r, %r) as poolkey=%r', host, port, poolkey)
         sock = None
-        if poolkey in _pool:
-            while _pool[poolkey]:
-                sock, mtime = _pool[poolkey].pop()
-                if time.time() - mtime > 20:
-                    sock.close()
-                else:
-                    break
-            if sock:
-                logging.debug('Http.create_connection reuse %s for (%r, %r) as poolkey=%r', sock, host, port, poolkey)
-                return sock
         iplist = self.dns_resolve(host)
         for i in xrange(self.max_retry):
-            window = self.window
-            ips = sorted(iplist, key=lambda x:(self.http_ipr[x], random.random()))[:min(len(iplist), int(window)+i)]
+            ips = heapq.nsmallest(self.max_window, iplist, key=lambda x:self.address_time.get('%s:%s'%(x,port),0))
             print ips
             queue = gevent.queue.Queue()
             start_time = time.time()
@@ -441,43 +422,27 @@ class Http(object):
             for i in xrange(len(ips)):
                 sock = queue.get()
                 if sock:
-                    gevent.spawn(_close_connection, poolkey, len(ips)-i-1, queue)
-                    if window > self.min_window:
-                        self.window_ack += 1
-                        if self.window_ack > 10:
-                            self.window_ack = 0
-                            self.window = window - 1
-                            logging.info('Http.create_connection to %s, port=%r successed, switch window=%r', ips, port, self.window)
-                    return sock
+                    gevent.spawn(_close_connection, len(ips)-i-1, queue)
+                return sock
             else:
                 logging.warning('Http.create_connection to %s, port=%r return None, try again.', ips, port)
-        else:
-            self.window = int(round(1.5 * self.window))
-            if self.window > self.max_window:
-                self.window = self.max_window
-            if self.min_window <= len(iplist) < self.window:
-                self.window = len(iplist)
-            self.window_ack = 0
-            logging.error('Http.create_connection to %s, port=%r failed, switch window=%r', iplist, port, self.window)
 
-    def create_ssl_connection(self, (host, port), timeout=None, source_address=None, _pool=collections.defaultdict(set), _poolkey=None):
+    def create_ssl_connection(self, (host, port), timeout=None, source_address=None):
         def _create_ssl_connection((ip, port), timeout, queue):
             sock = None
             ssl_sock = None
             try:
                 sock = socket.socket(socket.AF_INET if ':' not in ip else socket.AF_INET6)
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 60*1024)
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 60*1024)
-                if isinstance(timeout, (int, long)):
-                    sock.settimeout(timeout)
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 32*1024)
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 32*1024)
+                sock.settimeout(timeout or self.max_timeout)
                 ssl_sock = ssl.wrap_socket(sock)
                 start_time = time.time()
                 ssl_sock.connect((ip, port))
-                self.https_ipr[ip] = time.time() - start_time
+                self.address_time['%s:%s'%(ip,port)] = time.time() - start_time
                 ssl_sock.sock = sock
-                ssl_sock.mtime = time.time()
             except socket.error as e:
-                self.https_ipr[ip] = self.https_ipr.default_factory()+random.random()
+                self.address_time['%s:%s'%(ip,port)] = self.max_timeout + random.random()
                 if ssl_sock:
                     ssl_sock.close()
                     ssl_sock = None
@@ -486,34 +451,14 @@ class Http(object):
                     sock = None
             finally:
                 queue.put(ssl_sock)
-        def _close_ssl_connection(poolkey, count, queue):
+        def _close_ssl_connection(count, queue):
             for i in xrange(count):
                 sock = None
                 ssl_sock = queue.get()
-                if ssl_sock:
-                    _pool[poolkey].add(ssl_sock)
-        poolkey = _poolkey(host, port) if callable(_poolkey) else _poolkey if _poolkey else '%s:%s' % (host, port)
-        logging.debug('Http.create_ssl_connection connect (%r, %r) as poolkey=%r', host, port, poolkey)
         ssl_sock = None
-        if poolkey in _pool:
-            while _pool[poolkey]:
-                if len(_pool[poolkey]) < 5 and random.random() < 0.5:
-                    break
-                ssl_sock = _pool[poolkey].pop()
-                if time.time() - ssl_sock.mtime > 20:
-                    sock = ssl_sock.sock
-                    del ssl_sock.sock
-                    ssl_sock.close()
-                    sock.close()
-                else:
-                    break
-            if ssl_sock and hasattr(ssl_sock, 'sock'):
-                logging.debug('Http.create_ssl_connection reuse %s for (%r, %r) as poolkey=%r', ssl_sock, host, port, poolkey)
-                return ssl_sock
         iplist = self.dns_resolve(host)
         for i in xrange(self.max_retry):
-            window = self.window
-            ips = sorted(iplist, key=lambda x:(self.https_ipr[x], random.random()))[:min(len(iplist), int(window)+i)]
+            ips = heapq.nsmallest(self.max_window, iplist, key=lambda x:self.address_time.get('%s:%s'%(x,port),0))
             print ips
             queue = gevent.queue.Queue()
             start_time = time.time()
@@ -522,24 +467,10 @@ class Http(object):
             for i in xrange(len(ips)):
                 ssl_sock = queue.get()
                 if ssl_sock:
-                    gevent.spawn(_close_ssl_connection, poolkey, len(ips)-i-1, queue)
-                    if window > self.min_window:
-                        self.window_ack += 1
-                        if self.window_ack > 10:
-                            self.window_ack = 0
-                            self.window = window - 1
-                            logging.info('Http.create_ssl_connection to %s, port=%r successed, switch window=%r', ips, port, self.window)
+                    gevent.spawn(_close_ssl_connection, len(ips)-i-1, queue)
                     return ssl_sock
             else:
                 logging.warning('Http.create_ssl_connection to %s, port=%r return None, try again.', ips, port)
-        else:
-            self.window = int(round(1.5 * self.window))
-            if self.window > self.max_window:
-                self.window = self.max_window
-            if self.min_window <= len(iplist) < self.window:
-                self.window = len(iplist)
-            self.window_ack = 0
-            logging.error('Http.create_ssl_connection to %s, port=%r failed, switch window=%r', iplist, port, self.window)
 
     def create_connection_withproxy(self, (host, port), timeout=None, source_address=None, proxy=None):
         assert isinstance(proxy, (list, tuple, ))
@@ -692,7 +623,7 @@ class Http(object):
             headers[keyword] = value.strip()
         return code, headers, rfile
 
-    def request(self, method, url, payload=None, headers={}, fullurl=False, bufsize=__bufsize__, crlf=None, return_sock=None, _poolkey=None):
+    def request(self, method, url, payload=None, headers={}, fullurl=False, bufsize=__bufsize__, crlf=None, return_sock=None):
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
         if not re.search(r':\d+$', netloc):
             host = netloc
@@ -712,11 +643,11 @@ class Http(object):
             try:
                 if not self.proxy:
                     if scheme == 'https':
-                        ssl_sock = self.create_ssl_connection((host, port), self.timeout, _poolkey=_poolkey)
+                        ssl_sock = self.create_ssl_connection((host, port), self.max_timeout)
                         sock = ssl_sock.sock
                         del ssl_sock.sock
                     else:
-                        sock = self.create_connection((host, port), self.timeout)
+                        sock = self.create_connection((host, port), self.max_timeout)
                 else:
                     sock = self.create_connection_withproxy((host, port), port, self.timeout, proxy=self.proxy)
                     path = url
@@ -939,7 +870,7 @@ def gae_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     metadata = 'G-Method:%s\nG-Url:%s\n%s\n%s\n' % (method, url, '\n'.join('G-%s:%s'%(k,v) for k,v in kwargs.iteritems() if v), '\n'.join('%s:%s'%(k,v) for k,v in headers.iteritems() if k not in skip_headers))
     metadata = zlib.compress(metadata)[2:-4]
     gae_payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
-    app_code, headers, rfile = http.request('POST', fetchserver, gae_payload, {'Content-Length':len(gae_payload)}, crlf=common.GAE_CRLF, _poolkey='__google__')
+    app_code, headers, rfile = http.request('POST', fetchserver, gae_payload, {'Content-Length':len(gae_payload)}, crlf=common.GAE_CRLF)
     if app_code != 200:
         if app_code in (400, 405):
             # filter by some firewall
@@ -1223,7 +1154,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
                 data = sock.recv(1024)
                 for i in xrange(8):
                     try:
-                        remote = http.create_connection((host, port), 8, _poolkey='__google__')
+                        remote = http.create_connection((host, port), 8)
                         remote.sendall(data)
                     except socket.error as e:
                         if e[0] == 9:
@@ -1289,10 +1220,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
         try:
             content_length = int(headers.get('Content-Length', 0))
             payload = rfile.read(content_length) if content_length else None
-            poolkey = None
-            if host.endswith(common.GOOGLE_SITES):
-                poolkey = '__google__'
-            response = http.request(method, path, payload, headers, crlf=common.GAE_CRLF, _poolkey=poolkey)
+            response = http.request(method, path, payload, headers, crlf=common.GAE_CRLF)
             if not response:
                 logging.warning('http.request "%s %s") return %r', method, path, response)
                 return
@@ -1712,6 +1640,7 @@ def pacserver_handler(sock, address, hls={}):
         wfile.close()
     sock.close()
 
+#GAEProxy Patch
 class DNSServer(gevent.server.DatagramServer):
     """DNS Proxy over TCP to avoid DNS poisoning"""
     remote_addresses = [('8.8.8.8', 53)]

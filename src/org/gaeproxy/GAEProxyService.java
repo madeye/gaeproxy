@@ -392,11 +392,7 @@ public class GAEProxyService extends Service {
             }
             sb.append(addr.getHostAddress());
           }
-          if (address != null) {
-            address += "|" + sb.toString();
-          } else {
-            address = sb.toString();
-          }
+          address = sb.toString();
         }
       } catch (Exception ignore) {
         address = null;
@@ -699,7 +695,7 @@ public class GAEProxyService extends Service {
           HttpConnectionParams.setConnectionTimeout(httparams, 3000);
           HttpConnectionParams.setSoTimeout(httparams, 3000);
           DefaultHttpClient client = new DefaultHttpClient(httparams);
-          HttpGet get = new HttpGet("https://auth-gaeproxy.rhcloud.com/auth-2.php?sig=" + sig);
+          HttpGet get = new HttpGet("https://auth-gaeproxy.rhcloud.com/auth-3.php?sig=" + sig);
           HttpResponse getResponse = client.execute(get);
           is = getResponse.getEntity().getContent();
 

@@ -124,7 +124,7 @@
     <string name="https_alert">Please modify your proxy host to start with
         "https://"
     </string>
-    <string name="https_proxy">HTTPS proxy</string>
+    <string name="https_proxy">HTTPS Proxy</string>
     <string name="https_proxy_summary">Proxy HTTPS through GAE, not compatible with most
         apps
     </string>
