@@ -25,13 +25,14 @@ password = $7
 path = /$6
 profile = google_hk
 crlf = 1
+window = 4
 
 [dns]
 enable = 1
 listen = 127.0.0.1:8053
 remote = 8.8.8.8|8.8.4.4|208.67.222.222|208.67.220.220
 cachesize = 5000
-timeout = 10
+timeout = 5
 
 [paas]
 enable = 0
@@ -70,7 +71,7 @@ withgae =
 
 [autorange]
 hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm|.xvideos.com|.phncdn.com|.edgecastcdn.net
-threads = 2
+threads = 1
 maxsize = 1048576
 waitsize = 524288
 bufsize = 8192
@@ -129,6 +130,7 @@ password = 123456
 path = /fetch.py
 profile = google_hk
 crlf = 0
+window = 4
 
 [paas]
 enable = 1
@@ -142,7 +144,7 @@ enable = 1
 listen = 127.0.0.1:8053
 remote = 8.8.8.8|8.8.4.4|208.67.222.222|208.67.220.220
 cachesize = 5000
-timeout = 10
+timeout = 5
 
 [proxy]
 enable = 0
@@ -174,7 +176,7 @@ withgae =
 
 [autorange]
 hosts = .youtube.com|.atm.youku.com|.googlevideo.com|av.vimeo.com|smile-*.nicovideo.jp|video.*.fbcdn.net|s*.last.fm|x*.last.fm|.xvideos.com|.phncdn.com|.edgecastcdn.net
-threads = 2
+threads = 1
 maxsize = 1048576
 waitsize = 524288
 bufsize = 8192
