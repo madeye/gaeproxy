@@ -16,6 +16,8 @@
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
         android:drawSelectorOnTop="false"
         android:scrollbarAlwaysDrawVerticalTrack="true" />
 

@@ -68,7 +68,10 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.xbill.DNS.*;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -133,7 +136,6 @@ public class GAEProxyService extends Service {
   private boolean isHTTPSProxy = false;
   private boolean isGFWList = false;
   private boolean isBypassApps = false;
-  private boolean isSystemProxy = false;
 
   private ProxyedApp apps[];
 
@@ -299,7 +301,6 @@ public class GAEProxyService extends Service {
       port = 1984;
     }
 
-    isSystemProxy = settings.getBoolean("isSystemProxy", false);
     isGlobalProxy = settings.getBoolean("isGlobalProxy", false);
     isHTTPSProxy = settings.getBoolean("isHTTPSProxy", false);
     isGFWList = settings.getBoolean("isGFWList", false);
@@ -452,16 +453,7 @@ public class GAEProxyService extends Service {
       sitekey = getString(R.string.mirror_sitekey);
     }
 
-    if (isSystemProxy) {
-      //APNProxyManager.setAPNProxy("127.0.0.1", Integer.toString(port),
-      //getApplicationContext());
-      if (!WifiProxyManager.setWifiProxy("127.0.0.1", port,
-          getApplicationContext())) {
-        return false;
-      }
-    } else {
-      if (!preConnection()) return false;
-    }
+    if (!preConnection()) return false;
 
     connect();
 
@@ -469,21 +461,7 @@ public class GAEProxyService extends Service {
   }
 
   private void initSoundVibrateLights(Notification notification) {
-    final String ringtone = settings.getString(
-        "settings_key_notif_ringtone", null);
-    AudioManager audioManager = (AudioManager) this
-        .getSystemService(Context.AUDIO_SERVICE);
-    if (audioManager.getStreamVolume(AudioManager.STREAM_RING) == 0) {
-      notification.sound = null;
-    } else if (ringtone != null)
-      notification.sound = Uri.parse(ringtone);
-    else
-      notification.defaults |= Notification.DEFAULT_SOUND;
-
-    if (settings.getBoolean("settings_key_notif_vibrate", false)) {
-      notification.vibrate = new long[]{0, 500};
-    }
-
+    notification.sound = null;
     notification.defaults |= Notification.DEFAULT_LIGHTS;
   }
 
@@ -650,12 +628,6 @@ public class GAEProxyService extends Service {
       Utils.runRootCommand(BASE + "proxy.sh stop");
     else
       Utils.runCommand(BASE + "proxy.sh stop");
-
-    if (isSystemProxy) {
-      //APNProxyManager.clearAPNProxy("127.0.0.1", Integer.toString(port),
-      //getApplicationContext());
-      WifiProxyManager.clearWifiProxy(getApplicationContext());
-    }
   }
 
   // This is the old onStart method that will be called on the pre-2.0

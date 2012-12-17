@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>15</version>
+            <version>4.1.1.4</version>
             <scope>provided</scope>
         </dependency>
 
@@ -146,7 +146,7 @@
                         </outputApk>
                     </zipalign>
                     <sdk>
-                        <platform>15</platform>
+                        <platform>16</platform>
                     </sdk>
                     <dex>
                         <coreLibrary>true</coreLibrary>
