@@ -26,6 +26,7 @@ public class Utils {
     private final boolean asroot;
     public int exitcode = -1;
 
+
     /**
      * Creates a new scripts runner.
      *
@@ -45,7 +46,7 @@ public class Utils {
       String arg0 = argList.get(0);
       String[] args = argList.toArray(new String[1]);
 
-      return Exec.createSubprocess(arg0, args, null,
+      return Exec.createSubprocess(result != null ? 1 : 0, arg0, args, null,
           scripts + "\nexit\n", processId);
     }
 
@@ -109,6 +110,8 @@ public class Utils {
           fd = createSubprocess(pid, getShell());
         }
 
+        if (result == null) return;
+
         if (fd == null) {
           Log.e(TAG, "Cannot open the pipe");
           return;
@@ -125,14 +128,11 @@ public class Utils {
         InputStream stdout = new FileInputStream(fd);
         while (stdout.available() > 0) {
           read = stdout.read(buf);
-          if (result != null)
-            result.append(new String(buf, 0, read));
+          result.append(new String(buf, 0, read));
         }
 
       } catch (Exception ex) {
         Log.e(TAG, "Cannot execute the scripts.", ex);
-        if (result != null)
-          result.append("\n").append(ex);
       } finally {
         if (fd != null) {
           Exec.close(fd);

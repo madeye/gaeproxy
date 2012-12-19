@@ -632,7 +632,7 @@ class Http(object):
                     path = url
                     #crlf = self.crlf = 0
                     if scheme == 'https':
-                        sock = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1)
+                        sock = ssl.wrap_socket(sock)
                 if sock:
                     if scheme == 'https':
                         crlf = 0
@@ -824,7 +824,7 @@ def gae_hosts_updater(sleeptime, threads):
         try:
             with gevent.timeout.Timeout(3):
                 sock = socket.create_connection((ip, 443))
-                ssl_sock = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1)
+                ssl_sock = ssl.wrap_socket(sock)
                 peercert = ssl_sock.getpeercert(True)
                 if peercert_keyword in peer_cert:
                     return ip
@@ -1113,7 +1113,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             __realsock = sock
             __realrfile = rfile
             try:
-                sock = ssl.wrap_socket(__realsock, certfile=certfile, keyfile=keyfile, server_side=True,ssl_version=ssl.PROTOCOL_TLSv1)
+                sock = ssl.wrap_socket(__realsock, certfile=certfile, keyfile=keyfile, server_side=True)
             except Exception as e:
                 logging.exception('ssl.wrap_socket(__realsock=%r) failed: %s', __realsock, e)
                 sock = ssl.wrap_socket(__realsock, certfile=certfile, keyfile=keyfile, server_side=True, ssl_version=ssl.PROTOCOL_SSLv23)
@@ -1447,7 +1447,7 @@ def socks5proxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()
         host = random.choice(hls['dns'][host])
     remote = socket.create_connection((host, port))
     if scheme == 'https':
-        remote = ssl.wrap_socket(remote, ssl_version=ssl.PROTOCOL_TLSv1)
+        remote = ssl.wrap_socket(remote)
     password = common.SOCKS5_PASSWORD.strip()
     bitmask = ord(os.urandom(1))
     digest = hmac.new(password, chr(bitmask)).hexdigest()
@@ -1676,6 +1676,12 @@ def main():
     if os.path.islink(__file__):
         __file__ = getattr(os, 'readlink', lambda x:x)(__file__)
 
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(asctime)s %(message)s', datefmt='[%b %d %H:%M:%S]')
+    CertUtil.check_ca()
+    pre_start()
+    sys.stdout.write(common.info())
+
     # GAEProxy Patch
     # do the UNIX double-fork magic, see Stevens' "Advanced   
     # Programming in the UNIX Environment" for details (ISBN 0201563177)  
@@ -1699,12 +1705,6 @@ def main():
     except OSError, e:   
         print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)   
         sys.exit(1)
-
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    logging.basicConfig(level=logging.DEBUG if common.LISTEN_DEBUGINFO else logging.INFO, format='%(levelname)s - %(asctime)s %(message)s', datefmt='[%b %d %H:%M:%S]')
-    CertUtil.check_ca()
-    pre_start()
-    sys.stdout.write(common.info())
 
     # GAEProxy Patch
     pid = str(os.getpid())
