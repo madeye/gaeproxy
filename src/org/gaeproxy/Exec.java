@@ -47,12 +47,14 @@ public class Exec {
    * @param args      An array of arguments to the command
    * @param envVars   An array of strings of the form "VAR=value" to be added to the
    *                  environment of the process
+   * @param           The script file
    * @param processId A one-element array to which the process ID of the started
    *                  process will be written.
    * @return the file descriptor of the started process.
    */
   public static native FileDescriptor createSubprocess(String cmd,
-                                                       String[] args, String[] envVars, int[] processId);
+                                                       String[] args, String[] envVars,
+                                                       String scripts, int[] processId);
 
   /**
    * Send SIGHUP to a process group.

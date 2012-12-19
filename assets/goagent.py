@@ -1227,6 +1227,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
                 common.GAE_APPIDS.append(common.GAE_APPIDS.pop(0))
                 common.GAE_FETCHSERVER = '%s://%s.appspot.com%s?' % (common.GOOGLE_MODE, common.GAE_APPIDS[0], common.GAE_PATH)
                 http.dns[urlparse.urlparse(common.GAE_FETCHSERVER).netloc] = common.GOOGLE_HOSTS
+                logging.info('APPID Over Quota,Auto Switch to [%s]' % (common.GAE_APPIDS[0]))
             # bad request, disable CRLF injection
             if response.app_status in (400, 405):
                 http.crlf = 0
@@ -1289,7 +1290,7 @@ def paas_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     response.begin()
     response.app_status = response.status
 
-    if app_code != 200:
+    if response.app_status != 200:
         return response
 
     data = response.read(4)
@@ -1320,6 +1321,7 @@ def php_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     metadata = zlib.compress(metadata)[2:-4]
     app_payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
     response = http.request('POST', fetchserver, app_payload, {'Content-Length':len(app_payload)}, crlf=0)
+    response.app_status = response.status
     return response
 
 def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):

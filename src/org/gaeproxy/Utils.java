@@ -9,7 +9,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Utils {
@@ -18,51 +21,32 @@ public class Utils {
    * Internal thread used to execute scripts (as root or not).
    */
   private static final class ScriptRunner extends Thread {
-    private final File file;
-    private final String script;
-    private final StringBuilder res;
+    private final String scripts;
+    private final StringBuilder result;
     private final boolean asroot;
     public int exitcode = -1;
-    // private Process exec;
-    private int mProcId;
-    private FileDescriptor mTermFd;
 
     /**
-     * Creates a new script runner.
+     * Creates a new scripts runner.
      *
-     * @param file   temporary script file
-     * @param script script to run
-     * @param res    response output
-     * @param asroot if true, executes the script as root
+     * @param scripts scripts to run
+     * @param res     response output
+     * @param asroot  if true, executes the scripts as root
      */
-    public ScriptRunner(File file, String script, StringBuilder res,
+    public ScriptRunner(String scripts, StringBuilder res,
                         boolean asroot) {
-      this.file = file;
-      this.script = script;
-      this.res = res;
+      this.scripts = scripts;
+      this.result = res;
       this.asroot = asroot;
     }
 
-    private int createSubprocess(int[] processId, String cmd) {
+    private FileDescriptor createSubprocess(int[] processId, String cmd) {
       ArrayList<String> argList = parse(cmd);
       String arg0 = argList.get(0);
       String[] args = argList.toArray(new String[1]);
 
-      mTermFd = Exec.createSubprocess(arg0, args, null, processId);
-      return processId[0];
-    }
-
-    /**
-     * Destroy this script runner
-     */
-    @Override
-    public synchronized void destroy() {
-      try {
-        Exec.hangupProcessGroup(mProcId);
-        Exec.close(mTermFd);
-      } catch (NoClassDefFoundError ignore) {
-        // Nothing
-      }
+      return Exec.createSubprocess(arg0, args, null,
+          scripts + "\nexit\n", processId);
     }
 
     private ArrayList<String> parse(String cmd) {
@@ -115,61 +99,47 @@ public class Utils {
 
     @Override
     public void run() {
+      FileDescriptor fd = null;
+      int pid[] = new int[1];
+      pid[0] = -1;
       try {
-        new File(DEFOUT_FILE).createNewFile();
-        file.createNewFile();
-        final String abspath = file.getAbsolutePath();
-
-        // TODO: Rewrite this line
-        // make sure we have execution permission on the script file
-        // Runtime.getRuntime().exec("chmod 755 " + abspath).waitFor();
-
-        // Write the script to be executed
-        final OutputStreamWriter out = new OutputStreamWriter(
-            new FileOutputStream(file));
-        out.write("#!/system/bin/sh\n");
-        out.write(script);
-        if (!script.endsWith("\n"))
-          out.write("\n");
-        out.write("exit\n");
-        out.flush();
-        out.close();
-
         if (this.asroot) {
-          // Create the "su" request to run the script
-          // exec = Runtime.getRuntime().exec(
-          // root_shell + " -c " + abspath);
-
-          int pid[] = new int[1];
-          mProcId = createSubprocess(pid, root_shell + " -c "
-              + abspath);
+          fd = createSubprocess(pid, root_shell);
         } else {
-          // Create the "sh" request to run the script
-          // exec = Runtime.getRuntime().exec(getShell() + " " +
-          // abspath);
-
-          int pid[] = new int[1];
-          mProcId = createSubprocess(pid, getShell() + " " + abspath);
+          fd = createSubprocess(pid, getShell());
         }
 
-        final InputStream stdout = new FileInputStream(DEFOUT_FILE);
+        if (fd == null) {
+          Log.e(TAG, "Cannot open the pipe");
+          return;
+        }
+
         final byte buf[] = new byte[8192];
         int read = 0;
 
-        exitcode = Exec.waitFor(mProcId);
+        if (pid[0] != -1) {
+          exitcode = Exec.waitFor(pid[0]);
+        }
 
         // Read stdout
+        InputStream stdout = new FileInputStream(fd);
         while (stdout.available() > 0) {
           read = stdout.read(buf);
-          if (res != null)
-            res.append(new String(buf, 0, read));
+          if (result != null)
+            result.append(new String(buf, 0, read));
         }
 
       } catch (Exception ex) {
-        if (res != null)
-          res.append("\n" + ex);
+        Log.e(TAG, "Cannot execute the scripts.", ex);
+        if (result != null)
+          result.append("\n").append(ex);
       } finally {
-        destroy();
+        if (fd != null) {
+          Exec.close(fd);
+        }
+        if (pid[0] != -1) {
+          Exec.hangupProcessGroup(pid[0]);
+        }
       }
     }
   }
@@ -182,7 +152,7 @@ public class Utils {
   public final static String ALTERNATIVE_ROOT = "/system/xbin/su";
   public final static String DEFAULT_IPTABLES = "/data/data/org.gaeproxy/iptables";
   public final static String ALTERNATIVE_IPTABLES = "/system/bin/iptables";
-  public final static String SCRIPT_FILE = "/data/data/org.gaeproxy/script";
+  public final static String SCRIPT_FILE = "/data/data/org.gaeproxy/scripts";
   public final static String DEFOUT_FILE = "/data/data/org.gaeproxy/defout";
 
   public final static int TIME_OUT = -99;
@@ -282,7 +252,7 @@ public class Utils {
   public static boolean getHasRedirectSupport() {
     if (hasRedirectSupport == -1)
       initHasRedirectSupported();
-    return hasRedirectSupport == 1 ? true : false;
+    return hasRedirectSupport == 1;
   }
 
   public static String getIptables() {
@@ -356,7 +326,7 @@ public class Utils {
   public static boolean isRoot() {
 
     if (isRoot != -1)
-      return isRoot == 1 ? true : false;
+      return isRoot == 1;
 
     // switch between binaries
     if (new File(DEFAULT_ROOT).exists()) {
@@ -384,7 +354,7 @@ public class Utils {
       isRoot = 1;
     }
 
-    return isRoot == 1 ? true : false;
+    return isRoot == 1;
   }
 
   public static boolean runCommand(String command) {
@@ -422,8 +392,7 @@ public class Utils {
 
   private synchronized static int runScript(String script, StringBuilder res,
                                             long timeout, boolean asroot) {
-    final File file = new File(SCRIPT_FILE);
-    final ScriptRunner runner = new ScriptRunner(file, script, res, asroot);
+    final ScriptRunner runner = new ScriptRunner(script, res, asroot);
     runner.start();
     try {
       if (timeout > 0) {
