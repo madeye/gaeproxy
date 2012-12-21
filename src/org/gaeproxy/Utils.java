@@ -110,6 +110,10 @@ public class Utils {
           fd = createSubprocess(pid, getShell());
         }
 
+        if (pid[0] != -1) {
+          exitcode = Exec.waitFor(pid[0]);
+        }
+
         if (result == null) return;
 
         if (fd == null) {
@@ -119,10 +123,6 @@ public class Utils {
 
         final byte buf[] = new byte[8192];
         int read = 0;
-
-        if (pid[0] != -1) {
-          exitcode = Exec.waitFor(pid[0]);
-        }
 
         // Read stdout
         InputStream stdout = new FileInputStream(fd);

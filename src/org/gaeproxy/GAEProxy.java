@@ -221,11 +221,7 @@ public class GAEProxy extends PreferenceActivity implements
     try {
       final InputStream pythonZip = getAssets()
           .open("modules/python.mp3");
-      final InputStream extraZip = getAssets().open(
-          "modules/python-extras.mp3");
-
       unzip(pythonZip, "/data/data/org.gaeproxy/");
-      unzip(extraZip, data_path + "/");
     } catch (IOException e) {
       Log.e(TAG, "unable to install python");
     }

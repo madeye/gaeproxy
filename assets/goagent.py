@@ -586,8 +586,7 @@ class Http(object):
 
         if need_crlf:
             try:
-                #GAEProxy Patch
-                response = httplib.HTTPResponse(sock)
+                response = httplib.HTTPResponse(sock, buffering=False)
                 response.begin()
                 response.read()
             except Exception:
@@ -597,8 +596,7 @@ class Http(object):
         if return_sock:
             return sock
 
-        #GAEProxy Patch
-        response = httplib.HTTPResponse(sock)
+        response = httplib.HTTPResponse(sock, buffering=True)
         try:
             response.begin()
         except httplib.BadStatusLine:
@@ -635,8 +633,7 @@ class Http(object):
                     path = url
                     #crlf = self.crlf = 0
                     if scheme == 'https':
-                        #GAEProxy Patch
-                        sock = ssl.wrap_socket(sock)
+                        sock = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1)
                 if sock:
                     if scheme == 'https':
                         crlf = 0
@@ -828,8 +825,7 @@ def gae_hosts_updater(sleeptime, threads):
         try:
             with gevent.timeout.Timeout(3):
                 sock = socket.create_connection((ip, 443))
-                #GAEProxy Patch
-                ssl_sock = ssl.wrap_socket(sock)
+                ssl_sock = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1)
                 peercert = ssl_sock.getpeercert(True)
                 if peercert_keyword in peer_cert:
                     return ip
@@ -1118,8 +1114,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             __realsock = sock
             __realrfile = rfile
             try:
-                #GAEProxy Patch
-                sock = ssl.wrap_socket(__realsock, certfile=certfile, keyfile=keyfile, server_side=True)
+                sock = ssl.wrap_socket(__realsock, certfile=certfile, keyfile=keyfile, server_side=True,ssl_version=ssl.PROTOCOL_TLSv1)
             except Exception as e:
                 logging.exception('ssl.wrap_socket(__realsock=%r) failed: %s', __realsock, e)
                 sock = ssl.wrap_socket(__realsock, certfile=certfile, keyfile=keyfile, server_side=True, ssl_version=ssl.PROTOCOL_SSLv23)
@@ -1291,8 +1286,7 @@ def paas_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     app_payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
     sock = http.request('POST', fetchserver, app_payload, {'Content-Length':len(app_payload)}, crlf=0, return_sock=True)
 
-    # GAEProxy Patch
-    response = httplib.HTTPResponse(sock)
+    response = httplib.HTTPResponse(sock, buffering=True)
     response.begin()
     response.app_status = response.status
 
@@ -1343,8 +1337,17 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
             return rfile.close()
         raise
 
-    #GAEProxy Patch
     if 'setup' not in hls:
+        if not common.PROXY_ENABLE:
+            fetchhost = re.sub(r':\d+$', '', urlparse.urlparse(common.PAAS_FETCHSERVER).netloc)
+            logging.info('resolve common.PAAS_FETCHSERVER domain=%r to iplist', fetchhost)
+            with hls['setuplock']:
+                fethhost_iplist = socket.gethostbyname_ex(fetchhost)[-1]
+                if len(fethhost_iplist) == 0:
+                    logging.error('resolve %s domain return empty! please use ip list to replace domain list!', common.GAE_PROFILE)
+                    sys.exit(-1)
+                http.dns[fetchhost] = set(fethhost_iplist)
+                logging.info('resolve common.PAAS_FETCHSERVER domain to iplist=%r', fethhost_iplist)
         hls['setup'] = True
 
     if common.USERAGENT_ENABLE:
@@ -1396,7 +1399,9 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
                 urlfetch = php_urlfetch
             response = urlfetch(method, path, headers, payload, common.PAAS_FETCHSERVER, password=common.PAAS_PASSWORD)
             logging.info('%s:%s "%s %s HTTP/1.1" %s -' % (remote_addr, remote_port, method, path, response.status))
-        # GAEProxy Patch
+        except socket.error as e:
+            if e.reason[0] not in (11004, 10051, 10060, 'timed out', 10054):
+                raise
         except Exception as e:
             logging.exception('error: %s', e)
             raise
@@ -1457,8 +1462,7 @@ def socks5proxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()
         host = random.choice(hls['dns'][host])
     remote = socket.create_connection((host, port))
     if scheme == 'https':
-        #GAEProxy Patch
-        remote = ssl.wrap_socket(remote)
+        remote = ssl.wrap_socket(remote, ssl_version=ssl.PROTOCOL_TLSv1)
     password = common.SOCKS5_PASSWORD.strip()
     bitmask = ord(os.urandom(1))
     digest = hmac.new(password, chr(bitmask)).hexdigest()
@@ -1687,7 +1691,8 @@ def main():
     if os.path.islink(__file__):
         __file__ = getattr(os, 'readlink', lambda x:x)(__file__)
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    logging.basicConfig(level=logging.DEBUG if common.LISTEN_DEBUGINFO else logging.INFO, format='%(levelname)s - %(asctime)s %(message)s', datefmt='[%b %d %H:%M:%S]')
+    logging.basicConfig(level=logging.DEBUG if common.LISTEN_DEBUGINFO else
+        logging.ERROR, format='%(levelname)s - %(asctime)s %(message)s', datefmt='[%b %d %H:%M:%S]')
     CertUtil.check_ca()
     pre_start()
     sys.stdout.write(common.info())
@@ -1704,7 +1709,6 @@ def main():
         print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)   
         sys.exit(1)  
     # decouple from parent environment  
-    os.chdir("/")   
     os.setsid()   
     os.umask(0)   
     # do second fork  

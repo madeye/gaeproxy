@@ -2,12 +2,6 @@
 
 DIR=/data/data/org.gaeproxy
 
-PYTHONPATH=${1}/python-extras
-PYTHONPATH=${PYTHONPATH}:${DIR}/python/lib/python2.6/lib-dynload
-export PYTHONPATH
-export TEMP=${1}/python-extras
-export PYTHONHOME=${DIR}/python
-export LD_LIBRARY_PATH=${DIR}/python/lib
 case $2 in
 
  GAE)
