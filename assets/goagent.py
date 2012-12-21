@@ -266,6 +266,7 @@ class CertUtil(object):
         if commonname[0] == '.':
             sans = ['*'+commonname] + [x for x in sans if x != '*'+commonname]
         else:
+            #GAEProxy Patch
             index = commonname.find('.')
             extensive = commonname if index == -1 else '*' + commonname[index:]
             sans = [extensive] + [x for x in sans if x != extensive]
@@ -585,6 +586,7 @@ class Http(object):
 
         if need_crlf:
             try:
+                #GAEProxy Patch
                 response = httplib.HTTPResponse(sock)
                 response.begin()
                 response.read()
@@ -595,6 +597,7 @@ class Http(object):
         if return_sock:
             return sock
 
+        #GAEProxy Patch
         response = httplib.HTTPResponse(sock)
         try:
             response.begin()
@@ -632,6 +635,7 @@ class Http(object):
                     path = url
                     #crlf = self.crlf = 0
                     if scheme == 'https':
+                        #GAEProxy Patch
                         sock = ssl.wrap_socket(sock)
                 if sock:
                     if scheme == 'https':
@@ -824,6 +828,7 @@ def gae_hosts_updater(sleeptime, threads):
         try:
             with gevent.timeout.Timeout(3):
                 sock = socket.create_connection((ip, 443))
+                #GAEProxy Patch
                 ssl_sock = ssl.wrap_socket(sock)
                 peercert = ssl_sock.getpeercert(True)
                 if peercert_keyword in peer_cert:
@@ -1113,6 +1118,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             __realsock = sock
             __realrfile = rfile
             try:
+                #GAEProxy Patch
                 sock = ssl.wrap_socket(__realsock, certfile=certfile, keyfile=keyfile, server_side=True)
             except Exception as e:
                 logging.exception('ssl.wrap_socket(__realsock=%r) failed: %s', __realsock, e)
@@ -1305,6 +1311,8 @@ def paas_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
         response.fp = cStringIO.StringIO('connection aborted. too short headers data=%r' % data)
         return response
     response.msg = httplib.HTTPMessage(cStringIO.StringIO(zlib.decompress(data, -15)))
+    if 'transfer-encoding' in response.msg:
+        del response.msg['transfer-encoding']
     return response
 
 def php_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
@@ -1322,6 +1330,8 @@ def php_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     app_payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
     response = http.request('POST', fetchserver, app_payload, {'Content-Length':len(app_payload)}, crlf=0)
     response.app_status = response.status
+    if 'transfer-encoding' in response.msg:
+        del response.msg['transfer-encoding']
     return response
 
 def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
@@ -1447,6 +1457,7 @@ def socks5proxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()
         host = random.choice(hls['dns'][host])
     remote = socket.create_connection((host, port))
     if scheme == 'https':
+        #GAEProxy Patch
         remote = ssl.wrap_socket(remote)
     password = common.SOCKS5_PASSWORD.strip()
     bitmask = ord(os.urandom(1))
@@ -1675,9 +1686,8 @@ def main():
     global __file__
     if os.path.islink(__file__):
         __file__ = getattr(os, 'readlink', lambda x:x)(__file__)
-
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(asctime)s %(message)s', datefmt='[%b %d %H:%M:%S]')
+    logging.basicConfig(level=logging.DEBUG if common.LISTEN_DEBUGINFO else logging.INFO, format='%(levelname)s - %(asctime)s %(message)s', datefmt='[%b %d %H:%M:%S]')
     CertUtil.check_ca()
     pre_start()
     sys.stdout.write(common.info())
