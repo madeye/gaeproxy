@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.gaeproxy"
           android:installLocation="auto"
-          android:versionCode="148"
-          android:versionName="0.20.1">
+          android:versionCode="149"
+          android:versionName="0.20.2">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

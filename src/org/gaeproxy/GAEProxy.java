@@ -326,42 +326,6 @@ public class GAEProxy extends PreferenceActivity implements
 
         }
 
-        if (!(new File(Utils.getDataPath(GAEProxy.this)
-            + "/python-extras")).exists()) {
-          install();
-        }
-
-        if (!Utils.isInitialized()
-            && !GAEProxyService.isServiceStarted()) {
-
-          try {
-            URL aURL = new URL("http://myhosts.sinaapp.com/hosts");
-            HttpURLConnection conn = (HttpURLConnection) aURL
-                .openConnection();
-            conn.setConnectTimeout(3 * 1000);
-            conn.setReadTimeout(6 * 1000);
-            conn.connect();
-            InputStream input = new BufferedInputStream(
-                conn.getInputStream());
-            OutputStream output = new FileOutputStream(
-                "/data/data/org.gaeproxy/hosts");
-
-            byte data[] = new byte[1024];
-
-            int count = 0;
-
-            while ((count = input.read(data)) != -1) {
-              output.write(data, 0, count);
-            }
-
-            output.flush();
-            output.close();
-            input.close();
-          } catch (Exception e) {
-            // Nothing
-          }
-        }
-
         handler.sendEmptyMessage(MSG_INITIAL_FINISH);
       }
     }.start();
