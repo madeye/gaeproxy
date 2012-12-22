@@ -411,7 +411,6 @@ class Http(object):
         iplist = self.dns_resolve(host)
         for i in xrange(self.max_retry):
             ips = heapq.nsmallest(self.max_window, iplist, key=lambda x:self.connection_time.get('%s:%s'%(x,port),0))
-            print ips
             queue = gevent.queue.Queue()
             for ip in ips:
                 gevent.spawn(_create_connection, (ip, port), timeout, queue)
@@ -461,7 +460,6 @@ class Http(object):
         iplist = self.dns_resolve(host)
         for i in xrange(self.max_retry):
             ips = heapq.nsmallest(self.max_window, iplist, key=lambda x:self.ssl_connection_time.get('%s:%s'%(x,port),0))
-            print ips
             queue = gevent.queue.Queue()
             start_time = time.time()
             for ip in ips:
@@ -836,11 +834,9 @@ def gae_hosts_updater(sleeptime, threads):
     iplist = sum((socket.gethostbyname_ex(x)[-1] for x in common.CONFIG.get(common.GAE_PROFILE, 'hosts').split('|')), [])
     iprange = random.choice(list(set(x.rsplit('.', 1)[0] for x in iplist)))
     ips = ['%s.%d' % (iprange, i) for i in xrange(1, 256)]
-    print ips
     pool = gevent.pool.Pool(threads)
     greenlets = [pool.spawn(check_ssl_ip, ip, '.google.com') for ip in ips]
     iplist = [x.get() for x in greenlets if x.get()]
-    print iplist
 
 class RangeFetch(object):
     """Range Fetch Class"""
