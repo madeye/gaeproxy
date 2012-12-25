@@ -26,6 +26,21 @@ public class Utils {
     private final boolean asroot;
     public int exitcode = -1;
 
+    private int[] pid = new int[1];
+    private FileDescriptor pipe;
+
+    @Override
+    public void destroy() {
+      if (pid[0] != -1) {
+        Exec.hangupProcessGroup(pid[0]);
+        pid[0] = -1;
+      }
+      if (pipe != null) {
+        Exec.close(pipe);
+        pipe = null;
+      }
+    }
+
 
     /**
      * Creates a new scripts runner.
@@ -100,14 +115,13 @@ public class Utils {
 
     @Override
     public void run() {
-      FileDescriptor fd = null;
-      int pid[] = new int[1];
+
       pid[0] = -1;
       try {
         if (this.asroot) {
-          fd = createSubprocess(pid, root_shell);
+          pipe = createSubprocess(pid, root_shell);
         } else {
-          fd = createSubprocess(pid, getShell());
+          pipe = createSubprocess(pid, getShell());
         }
 
         if (pid[0] != -1) {
@@ -116,7 +130,7 @@ public class Utils {
 
         if (result == null) return;
 
-        if (fd == null) {
+        if (pipe == null) {
           Log.e(TAG, "Cannot open the pipe");
           return;
         }
@@ -125,7 +139,7 @@ public class Utils {
         int read = 0;
 
         // Read stdout
-        InputStream stdout = new FileInputStream(fd);
+        InputStream stdout = new FileInputStream(pipe);
         while (stdout.available() > 0) {
           read = stdout.read(buf);
           result.append(new String(buf, 0, read));
@@ -134,8 +148,8 @@ public class Utils {
       } catch (Exception ex) {
         Log.e(TAG, "Cannot execute the scripts.", ex);
       } finally {
-        if (fd != null) {
-          Exec.close(fd);
+        if (pipe != null) {
+          Exec.close(pipe);
         }
         if (pid[0] != -1) {
           Exec.hangupProcessGroup(pid[0]);
@@ -374,7 +388,7 @@ public class Utils {
 
   public static boolean runRootCommand(String command) {
 
-    return runRootCommand(command, 10 * 1000);
+    return runRootCommand(command, 20 * 1000);
 
   }
 
