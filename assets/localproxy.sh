@@ -19,7 +19,7 @@ password = $7
 path = /$6
 profile = google_hk
 crlf = 1
-window = 4
+autoswitch = 0
 
 [dns]
 enable = 1
@@ -44,6 +44,7 @@ password = 123456
 
 [google_cn]
 mode = http
+window = 2
 hosts = 203.208.46.131|203.208.46.132|203.208.46.133|203.208.46.134|203.208.46.135|203.208.46.136|203.208.46.137|203.208.46.138
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.appspot.com|.android.com|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
@@ -51,6 +52,7 @@ withgae = plus.google.com|plusone.google.com|reader.googleusercontent.com|music.
 
 [google_hk]
 mode = https
+window = 4
 hosts = $5
 sites = .googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = www.google.com/url|groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com|www.google.com.hk|webcache.googleusercontent.com
@@ -124,7 +126,7 @@ password = 123456
 path = /fetch.py
 profile = google_hk
 crlf = 0
-window = 4
+autoswitch = 0
 
 [paas]
 enable = 1
@@ -149,6 +151,7 @@ password = 123456
 
 [google_cn]
 mode = http
+window = 2
 hosts = 203.208.46.131|203.208.46.132|203.208.46.133|203.208.46.134|203.208.46.135|203.208.46.136|203.208.46.137|203.208.46.138
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.appspot.com|.android.com|.googlegroups.com
 forcehttps = groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com
@@ -156,6 +159,7 @@ withgae = plus.google.com|plusone.google.com|reader.googleusercontent.com|music.
 
 [google_hk]
 mode = https
+window = 4
 hosts = www.google.com
 sites = .google.com|.googleusercontent.com|.googleapis.com|.google-analytics.com|.googlecode.com|.google.com.hk|.googlegroups.com
 forcehttps = www.google.com/url|groups.google.com|code.google.com|mail.google.com|docs.google.com|profiles.google.com|developer.android.com|www.google.com.hk|webcache.googleusercontent.com
