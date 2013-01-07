@@ -22,7 +22,7 @@ crlf = 1
 autoswitch = 0
 
 [dns]
-enable = 1
+enable = 0
 listen = 127.0.0.1:8053
 remote = 8.8.8.8|8.8.4.4|199.91.73.222|178.79.131.110
 cachesize = 5000
@@ -136,7 +136,7 @@ isphp = 0
 fetchserver = $6
 
 [dns]
-enable = 1
+enable = 0
 listen = 127.0.0.1:8053
 remote = 8.8.8.8|8.8.4.4|199.91.73.222|178.79.131.110
 cachesize = 5000

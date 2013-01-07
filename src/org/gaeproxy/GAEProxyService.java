@@ -50,7 +50,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -58,6 +57,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.RemoteViews;
 import com.google.analytics.tracking.android.EasyTracker;
 import org.apache.commons.codec.binary.Base64;
@@ -114,12 +114,13 @@ public class GAEProxyService extends Service {
 
   private static final String TAG = "GAEProxyService";
   private static final String DEFAULT_HOST = "74.125.128.18";
-  private final static int DNS_PORT = 8053;
+
+  private static final String DEFAULT_DNS = "50.17.31.189";
+  private String dnsHost = null;
+  private DNSServer dnsServer = null;
+  private int dnsPort = 8053;
 
   public static volatile boolean statusLock = false;
-
-  private Process httpProcess = null;
-  private DataOutputStream httpOS = null;
 
   private String proxyType = "GAE";
   private String appId;
@@ -286,8 +287,6 @@ public class GAEProxyService extends Service {
 
   public void handleCommand(Intent intent) {
 
-    Log.d(TAG, "Service Start");
-
     if (intent == null) {
       stopSelf();
       return;
@@ -438,11 +437,29 @@ public class GAEProxyService extends Service {
       }
     }
 
+    dnsHost = parseHost("myhosts.sinaapp.com", false);
+    if (dnsHost == null || dnsHost.equals("")
+        || isInBlackList(appHost)) {
+      dnsHost = DEFAULT_DNS;
+    }
+
     try {
+      String[] hosts = dnsHost.split("\\|");
+      dnsHost = hosts[hosts.length - 1];
       appMask = appHost.split("\\|");
     } catch (Exception ex) {
       return false;
     }
+
+    // DNS Proxy Setup
+    // with AsyncHttpClient
+    if ("PaaS".equals(proxyType)) {
+      Pair<String, String> orgHost = new Pair<String, String>(appId, appMask[0]);
+      dnsServer = new DNSServer(this, dnsHost, orgHost);
+    } else if ("GAE".equals(proxyType)) {
+      dnsServer = new DNSServer(this, dnsHost, null);
+    }
+    dnsPort = dnsServer.getServPort();
 
     // Random mirror for load balance
     // only affect when appid equals proxyofmax
@@ -454,6 +471,10 @@ public class GAEProxyService extends Service {
     }
 
     if (!preConnection()) return false;
+
+    Thread dnsThread = new Thread(dnsServer);
+    dnsThread.setDaemon(true);
+    dnsThread.start();
 
     connect();
 
@@ -564,16 +585,10 @@ public class GAEProxyService extends Service {
         Notification.FLAG_AUTO_CANCEL);
 
     try {
-      if (httpOS != null) {
-        httpOS.close();
-        httpOS = null;
-      }
-      if (httpProcess != null) {
-        httpProcess.destroy();
-        httpProcess = null;
-      }
+      if (dnsServer != null)
+        dnsServer.close();
     } catch (Exception e) {
-      Log.e(TAG, "HTTP Server close unexpected");
+      Log.e(TAG, "DNS Server close unexpected");
     }
 
     new Thread() {
@@ -733,12 +748,18 @@ public class GAEProxyService extends Service {
     init_sb.append(Utils.getIptables()).append(" -t nat -F OUTPUT\n");
 
     if (hasRedirectSupport) {
-      init_sb.append(Utils.getIptables()).append(" -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to ").append(DNS_PORT).append("\n");
+      init_sb.append(Utils.getIptables())
+          .append(" -t nat -A OUTPUT -p udp --dport 53 -j REDIRECT --to ").append(dnsPort)
+          .append("\n");
     } else {
-      init_sb.append(Utils.getIptables()).append(" -t nat -A OUTPUT -p udp --dport 53 -j DNAT --to-destination 127.0.0.1:").append(DNS_PORT).append("\n");
+      init_sb.append(Utils.getIptables())
+          .append(" -t nat -A OUTPUT -p udp --dport 53 -j DNAT --to-destination 127.0.0.1:")
+          .append(dnsPort).append("\n");
     }
 
     String cmd_bypass = Utils.getIptables() + CMD_IPTABLES_RETURN;
+
+    init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
 
     for (String mask : appMask) {
       init_sb.append(cmd_bypass.replace("0.0.0.0", mask));

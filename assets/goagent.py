@@ -11,11 +11,11 @@
 #      Yonsm          <YonsmGuo@gmail.com>
 #      Ming Bai       <mbbill@gmail.com>
 #      Bin Yu         <yubinlove1991@gmail.com>
-#      Wang Wei Qiang <wwqgtxx@gmail.com>
 
 __version__ = '2.1.11'
 __config__  = 'proxy.ini'
 __bufsize__ = 1024*1024
+__ispy27__ = __import__('sys').version[:3] == '2.7'
 
 import sys
 import os
@@ -183,6 +183,49 @@ import urllib2
 import heapq
 import threading
 
+class DNSCacheUtil(object):
+    '''DNSCache module, integrated with GAEProxy'''
+
+    cache = {"127.0.0.1": 'localhost'}
+
+    @staticmethod
+    def getHost(address):
+
+        p = "(?:\d{1,3}\.){3}\d{1,3}"
+
+        if re.match(p, address) is None:
+            return
+
+        if address in DNSCacheUtil.cache:
+            return DNSCacheUtil.cache[address]
+
+        host = None
+
+        sock = None
+        address_family = socket.AF_INET
+        while address not in DNSCacheUtil.cache:
+            try:
+                sock = socket.socket(family=address_family, type=socket.SOCK_STREAM)
+                sock.settimeout(2)
+                sock.connect(("127.0.0.1", 9090))
+                sock.sendall(address + "\r\n")
+                host = sock.recv(512)
+                if not host.startswith("null"):
+                    DNSCacheUtil.cache[address] = host
+                break
+            except socket.error as e:
+                if e[0] in (10060, 'timed out'):
+                    continue
+            except Exception, e:
+                logging.error('reverse dns query exception: %s', e)
+                break
+            finally:
+                if sock:
+                    sock.close()
+
+        return host
+
+
 class CertUtil(object):
     """CertUtil module, based on mitmproxy"""
 
@@ -267,10 +310,7 @@ class CertUtil(object):
         if commonname[0] == '.':
             sans = ['*'+commonname] + [x for x in sans if x != '*'+commonname]
         else:
-            #GAEProxy Patch
-            index = commonname.find('.')
-            extensive = commonname if index == -1 else '*' + commonname[index:]
-            sans = [extensive] + [x for x in sans if x != extensive]
+            sans = [commonname] + [x for x in sans if x != commonname]
         cert.add_extensions([OpenSSL.crypto.X509Extension(b'subjectAltName', True, ', '.join('DNS: %s' % x for x in sans))])
         cert.sign(key, 'sha1')
 
@@ -302,16 +342,27 @@ class CertUtil(object):
     @staticmethod
     def import_ca(certfile):
         dirname, basename = os.path.split(certfile)
+        commonname = os.path.splitext(certfile)[0]
+        if OpenSSL:
+            try:
+                with open(certfile, 'rb') as fp:
+                    x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, fp.read())
+                    commonname = (v for k,v in x509.get_subject().get_components() if k=='O').next()
+            except Exception as e:
+                pass
+
+        cmd = ''
         if sys.platform.startswith('win'):
             cmd = 'cd /d "%s" && certmgr.exe -add %s -c -s -r localMachine Root >NUL' % (dirname, basename)
         elif sys.platform == 'cygwin':
             cmd = 'cmd /c "pushd %s && certmgr.exe -add %s -c -s -r localMachine Root"' % (dirname, basename)
         elif sys.platform == 'darwin':
-            cmd = 'sudo security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "%s"' % certfile
+            cmd = 'security find-certificate -a -c "%s" | grep "%s" || security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "%s"' % (commonname, commonname, certfile)
         elif sys.platform.startswith('linux'):
-            cmd = 'sudo cp "%s" /usr/local/share/ca-certificates/goagent.crt && sudo update-ca-certificates' % certfile
-        else:
-            cmd = ''
+            pemfile = "/etc/ssl/certs/%s.pem" % commonname
+            new_certfile = "/usr/local/share/ca-certificates/%s.crt" % commonname
+            if not os.path.exists(pemfile):
+                cmd = 'cp "%s" "%s" && update-ca-certificates' % (certfile, new_certfile)
         return os.system(cmd)
 
     @staticmethod
@@ -327,8 +378,8 @@ class CertUtil(object):
             [os.remove(os.path.join('certs', x)) for x in os.listdir('certs')]
             CertUtil.dump_ca('CA.key', 'CA.crt')
         #Check CA imported
-        if os.name =='nt' and CertUtil.import_ca(capath) != 0:
-            logging.warning('GoAgent install trusted root CA certificate failed, Please run goagent by administrator/root.')
+        if CertUtil.import_ca(capath) != 0:
+            logging.warning('GoAgent install certificate failed, Please run proxy.py by administrator/root/sudo')
         #Check Certs Dir
         certdir = os.path.join(os.path.dirname(__file__), 'certs')
         if not os.path.exists(certdir):
@@ -507,7 +558,7 @@ class Http(object):
                 request_data += 'Proxy-authorization: Basic %s\r\n' % base64.b64encode('%s:%s' % (username, password)).strip()
             request_data += '\r\n'
             sock.sendall(request_data)
-            response = httplib.HTTPResponse(sock, buffering=False)
+            response = httplib.HTTPResponse(sock)
             response.begin()
             if response.status >= 400:
                 logging.error('Http.create_connection_withproxy return http error code %s', response.status)
@@ -608,7 +659,7 @@ class Http(object):
 
         if need_crlf:
             try:
-                response = httplib.HTTPResponse(sock, buffering=False)
+                response = httplib.HTTPResponse(sock)
                 response.begin()
                 response.read()
             except Exception:
@@ -618,7 +669,7 @@ class Http(object):
         if return_sock:
             return sock
 
-        response = httplib.HTTPResponse(sock, buffering=True)
+        response = httplib.HTTPResponse(sock, buffering=True) if __ispy27__ else httplib.HTTPResponse(sock)
         try:
             response.begin()
         except httplib.BadStatusLine:
@@ -680,29 +731,28 @@ class Common(object):
         # GAEProxy Patch
         self.CONFIG.read('/data/data/org.gaeproxy/proxy.ini')
 
-        self.LISTEN_IP            = self.CONFIG.get('listen', 'ip') if self.CONFIG.has_option('listen', 'ip') else '127.0.0.1'
-        self.LISTEN_PORT          = self.CONFIG.getint('listen', 'port') if self.CONFIG.has_option('listen', 'port') else 8087
-        self.LISTEN_VISIBLE       = self.CONFIG.getint('listen', 'visible') if self.CONFIG.has_option('listen', 'visible') else 1
+        self.LISTEN_IP            = self.CONFIG.get('listen', 'ip')
+        self.LISTEN_PORT          = self.CONFIG.getint('listen', 'port')
+        self.LISTEN_VISIBLE       = self.CONFIG.getint('listen', 'visible')
         self.LISTEN_DEBUGINFO     = self.CONFIG.getint('listen', 'debuginfo') if self.CONFIG.has_option('listen', 'debuginfo') else 0
 
         self.GAE_APPIDS           = re.findall('[\w\-]+', self.CONFIG.get('gae', 'appid').replace('.appspot.com', ''))
-        self.GAE_PASSWORD         = self.CONFIG.get('gae', 'password').strip() if self.CONFIG.has_option('gae', 'path') else ''.strip()
-        self.GAE_PATH             = self.CONFIG.get('gae', 'path') if self.CONFIG.has_option('gae', 'path') else '/2'
-        self.GAE_PROFILE          = self.CONFIG.get('gae', 'profile') if self.CONFIG.has_option('gae', 'profile') else 'google_cn'
-        self.GAE_CRLF             = self.CONFIG.getint('gae', 'crlf') if self.CONFIG.has_option('gae', 'crlf') else 1
-        self.GAE_AUTOSWITCH        = self.CONFIG.getint('gae', 'autoswitch') if self.CONFIG.has_option('gae', 'autoswitch') else 1
+        self.GAE_PASSWORD         = self.CONFIG.get('gae', 'password').strip()
+        self.GAE_PATH             = self.CONFIG.get('gae', 'path')
+        self.GAE_PROFILE          = self.CONFIG.get('gae', 'profile')
+        self.GAE_CRLF             = self.CONFIG.getint('gae', 'crlf')
 
-        self.PAAS_ENABLE           = self.CONFIG.getint('paas', 'enable') if self.CONFIG.has_option('paas', 'enable') else 0
-        self.PAAS_LISTEN           = self.CONFIG.get('paas', 'listen') if self.CONFIG.has_option('paas', 'listen') else '127.0.0.1:8088'
+        self.PAAS_ENABLE           = self.CONFIG.getint('paas', 'enable')
+        self.PAAS_LISTEN           = self.CONFIG.get('paas', 'listen')
         self.PAAS_PASSWORD         = self.CONFIG.get('paas', 'password') if self.CONFIG.has_option('paas', 'password') else ''
-        self.PAAS_FETCHSERVER      = self.CONFIG.get('paas', 'fetchserver') if self.CONFIG.has_option('paas', 'fetchserver') else ''
+        self.PAAS_FETCHSERVER      = self.CONFIG.get('paas', 'fetchserver')
 
         if self.CONFIG.has_section('dns'):
-            self.DNS_ENABLE = self.CONFIG.getint('dns', 'enable') if self.CONFIG.has_option('dns', 'enable') else 0
-            self.DNS_LISTEN = self.CONFIG.get('dns', 'listen') if self.CONFIG.has_option('dns', 'listen') else '127.0.0.1:53'
-            self.DNS_REMOTE = self.CONFIG.get('dns', 'remote') if self.CONFIG.has_option('dns', 'remote') else '8.8.8.8'
-            self.DNS_CACHESIZE = self.CONFIG.getint('dns', 'cachesize') if self.CONFIG.has_option('dns', 'cachesize') else 5000
-            self.DNS_TIMEOUT   = self.CONFIG.getint('dns', 'timeout') if self.CONFIG.has_option('dns', 'timeout') else 2
+            self.DNS_ENABLE = self.CONFIG.getint('dns', 'enable')
+            self.DNS_LISTEN = self.CONFIG.get('dns', 'listen')
+            self.DNS_REMOTE = self.CONFIG.get('dns', 'remote')
+            self.DNS_CACHESIZE = self.CONFIG.getint('dns', 'cachesize')
+            self.DNS_TIMEOUT   = self.CONFIG.getint('dns', 'timeout')
         else:
             self.DNS_ENABLE = 0
 
@@ -993,7 +1043,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             if common.GAE_PROFILE == 'google_cn':
                 with hls['setuplock']:
                     if common.GAE_PROFILE == 'google_cn':
-                        hosts = ('www.google.co.jp', 'www.google.com.tw')
+                        hosts = ('www.google.cn', 'www.g.cn')
                         iplist = []
                         for host in hosts:
                             try:
@@ -1011,13 +1061,13 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
                                 try:
                                     socket.create_connection((host, 443), timeout=2).close()
                                 except socket.error:
-                                    if common.GAE_AUTOSWITCH == 1:
-                                        need_switch = True
+                                    # GAEProxy Patch
                                     break
                             if need_switch:
                                 common.GAE_PROFILE = 'google_hk'
                                 common.GOOGLE_MODE = 'https'
                                 common.GAE_FETCHSERVER = '%s://%s.appspot.com%s?' % (common.GOOGLE_MODE, common.GAE_APPIDS[0], common.GAE_PATH)
+                                common.GOOGLE_WINDOW = common.CONFIG.getint('google_hk', 'window')
                                 common.GOOGLE_HOSTS = tuple(set(x for x in common.CONFIG.get(common.GAE_PROFILE, 'hosts').split('|') if x))
                                 common.GOOGLE_WITHGAE = set(common.CONFIG.get('google_hk', 'withgae').split('|'))
             if any(not re.match(r'\d+\.\d+\.\d+\.\d+', x) for x in common.GOOGLE_HOSTS):
@@ -1071,12 +1121,12 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
         """direct forward CONNECT request"""
         host, _, port = path.rpartition(':')
         # GAEProxy Patch
-        domain = DNSServer.reverse_cache.get(host)
+        domain = DNSCacheUtil.getHost(host)
         if domain:
             host = domain
         port = int(port)
         if host.endswith(common.GOOGLE_SITES) and host not in common.GOOGLE_WITHGAE:
-            logging.info('%s:%s "FWD %s %s:%d HTTP/1.1" - -' % (remote_addr, remote_port, method, host, port))
+            logging.info('%s:%s "%s %s:%d HTTP/1.1" - -' % (remote_addr, remote_port, method, host, port))
             http_headers = ''.join('%s: %s\r\n' % (k, v) for k, v in headers.iteritems())
             sock.send('HTTP/1.1 200 OK\r\n\r\n')
             if not common.PROXY_ENABLE:
@@ -1161,11 +1211,11 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             payload = rfile.read(content_length) if content_length else None
             response = http.request(method, path, payload, headers, crlf=common.GAE_CRLF)
             if not response:
-                logging.warning('FWD http.request "%s %s") return %r', method, path, response)
+                logging.warning('http.request "%s %s") return %r', method, path, response)
                 return
             if response.status in (400, 405):
                 common.GAE_CRLF = 0
-            logging.info('%s:%s "FWD %s %s HTTP/1.1" %s %s' % (remote_addr, remote_port, method, path, response.status, response.msg.get('Content-Length', '-')))
+            logging.info('%s:%s "%s %s HTTP/1.1" %s %s' % (remote_addr, remote_port, method, path, response.status, response.msg.get('Content-Length', '-')))
             wfile = sock.makefile('wb', 0)
             wfile.write('HTTP/1.1 %s\r\n%s\r\n' % (response.status, ''.join('%s: %s\r\n' % (k.title(), v) for k, v in response.getheaders() if k != 'transfer-encoding')))
             wfile.write(response.read())
@@ -1174,7 +1224,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
             if e[0] not in (10053, errno.EPIPE):
                 raise
             elif e[0] in (10054, 10063):
-                logging.warn('FWD http.request "%s %s" failed:%s, try addto `withgae`', method, path, e)
+                logging.warn('http.request "%s %s" failed:%s, try addto `withgae`', method, path, e)
                 common.GOOGLE_WITHGAE.add(host)
         except Exception as e:
             logging.warn('gaeproxy_handler direct(%s) Error', host)
@@ -1246,7 +1296,7 @@ def gaeproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()}):
                 response.close()
                 return
 
-            logging.info('%s:%s "GAE %s %s HTTP/1.1" %s %s' % (remote_addr, remote_port, method, path, response.status, response.getheader('Content-Length', '-')))
+            logging.info('%s:%s "%s %s HTTP/1.1" %s %s' % (remote_addr, remote_port, method, path, response.status, response.getheader('Content-Length', '-')))
 
             if response.status == 206:
                 fetchservers = [re.sub(r'//\w+\.appspot\.com', '//%s.appspot.com' % x, common.GAE_FETCHSERVER) for x in common.GAE_APPIDS]
@@ -1330,7 +1380,7 @@ def paasproxy_handler(sock, address, hls={'setuplock':gevent.coros.Semaphore()})
     if method == 'CONNECT':
         host, _, port = path.rpartition(':')
         # GAEProxy Patch
-        domain = DNSServer.reverse_cache.get(host)
+        domain = DNSCacheUtil.getHost(host)
         if domain:
             host = domain
         port = int(port)
@@ -1624,9 +1674,6 @@ class DNSServer(gevent.server.DatagramServer):
                     break
 
 def pre_start():
-    if common.GAE_APPIDS[0] == 'goagent' and not common.CRLF_ENABLE:
-        logging.critical('please edit %s to add your appid to [gae] !', __config__)
-        sys.exit(-1)
     if ctypes and os.name == 'nt':
         ctypes.windll.kernel32.SetConsoleTitleW(u'GoAgent v%s' % __version__)
         if not common.LOVE_TIMESTAMP.strip():
@@ -1654,6 +1701,9 @@ def pre_start():
             lineno = [sys._getframe().f_lineno-1, sys._getframe().f_lineno+2]
             #ctypes.windll.user32.MessageBoxW(None, u'某些安全软件可能和本软件存在冲突.\n可以删除proxy.py第%r行或者暂时退出安全软件来继续运行' % lineno, u'建议', 0)
             #sys.exit(0)
+    if common.GAE_APPIDS[0] == 'goagent' and not common.CRLF_ENABLE:
+        logging.critical('please edit %s to add your appid to [gae] !', __config__)
+        sys.exit(-1)
 
 def main():
     global __file__

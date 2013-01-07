@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.gaeproxy</groupId>
     <artifactId>gaeproxy</artifactId>
-    <version>0.20.4</version>
+    <version>0.20.5</version>
     <packaging>apk</packaging>
     <name>GAEProxy</name>
 
@@ -57,6 +57,18 @@
             <groupId>dnsjava</groupId>
             <artifactId>dnsjava</artifactId>
             <version>2.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.j256.ormlite</groupId>
+            <artifactId>ormlite-core</artifactId>
+            <version>4.41</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.j256.ormlite</groupId>
+            <artifactId>ormlite-android</artifactId>
+            <version>4.41</version>
         </dependency>
 
     </dependencies>
@@ -113,8 +125,10 @@
                             <keypass>${sign.keypass}</keypass>
                             <verbose>true</verbose>
                             <arguments>
-                                <argument>-sigalg</argument><argument>MD5withRSA</argument>
-                                <argument>-digestalg</argument><argument>SHA1</argument>
+                                <argument>-sigalg</argument>
+                                <argument>MD5withRSA</argument>
+                                <argument>-digestalg</argument>
+                                <argument>SHA1</argument>
                             </arguments>
                         </configuration>
                     </execution>
