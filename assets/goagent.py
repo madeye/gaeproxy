@@ -203,6 +203,7 @@ class DNSCacheUtil(object):
 
         sock = None
         address_family = socket.AF_INET
+        retry = 0
         while address not in DNSCacheUtil.cache:
             try:
                 sock = socket.socket(family=address_family, type=socket.SOCK_STREAM)
@@ -210,9 +211,17 @@ class DNSCacheUtil(object):
                 sock.connect(("127.0.0.1", 9090))
                 sock.sendall(address + "\r\n")
                 host = sock.recv(512)
-                if not host.startswith("null"):
+                if host is not None and not host.startswith("null"):
+                    host = host.strip()
                     DNSCacheUtil.cache[address] = host
-                break
+                    break
+                else:
+                    if retry > 3:
+                        host = None
+                        break
+                    else:
+                        retry = retry + 1
+                        continue
             except socket.error as e:
                 if e[0] in (10060, 'timed out'):
                     continue

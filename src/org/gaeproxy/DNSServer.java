@@ -364,7 +364,7 @@ public class DNSServer implements Runnable {
     try {
       Dao<DNSResponse, String> dnsCacheDao = helper.getDNSCacheDao();
       List<DNSResponse> list = dnsCacheDao.queryForEq("address", address);
-      if (list == null) return null;
+      if (list == null || list.isEmpty()) return null;
       Collections.sort(list);
       return list.get(list.size() - 1).getRequest();
     } catch (Exception e) {
@@ -516,11 +516,11 @@ public class DNSServer implements Runnable {
           String addr = in.readLine();
           String domain = reverseQueryFromCache(addr);
           if (domain == null) {
-            out.println("null");
+            out.print("null");
             Log.d(TAG, "reverse query: " + addr + " null");
           } else {
             Log.d(TAG, "reverse query: " + addr + " " + domain);
-            out.println(domain);
+            out.print(domain);
           }
           out.flush();
           out.close();
