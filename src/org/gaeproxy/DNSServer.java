@@ -395,27 +395,6 @@ public class DNSServer implements Runnable {
 
     client.get(url, host, handler);
 
-//    String url = "https://gaednsproxy2.appspot.com/";
-//    String host = "gaednsproxy2.appspot.com";
-//    url = url.replace(host, appHost);
-//
-//    Random random = new Random(System.currentTimeMillis());
-//    int n = random.nextInt(2);
-//    if (n == 1) {
-//      url = "https://gaednsproxy3.appspot.com/";
-//      host = "gaednsproxy3.appspot.com";
-//      url = url.replace(host, appHost);
-//    }
-
-    // Log.d(TAG, "DNS Relay: " + encode_domain);
-
-    // RFC 2616: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-
-//    RequestParams params = new RequestParams();
-//    params.put("d", encode_domain);
-//
-//    client.post(url, params, host, handler);
-
   }
 
   @Override
@@ -453,12 +432,6 @@ public class DNSServer implements Runnable {
           sendDns(createDNSResponse(udpreq, parseIPString(addr)), dnsq,
               datagramSocket);
           Log.d(TAG, "DNS cache hit: " + questDomain);
-        } else if (questDomain.toLowerCase().contains("appspot.com")) {
-          byte[] ips = parseIPString(appHost);
-          byte[] answer = createDNSResponse(udpreq, ips);
-          addToCache(questDomain, answer);
-          sendDns(answer, dnsq, datagramSocket);
-          Log.d(TAG, "Custom DNS resolver: " + questDomain);
         } else {
           synchronized (domains) {
             if (domains.contains(questDomain))
