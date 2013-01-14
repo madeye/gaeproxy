@@ -1,6 +1,7 @@
 language: java
 before_install:
-  - sudo apt-get install gcc-4.7-multilib
+  - sudo apt-get update
+  - sudo apt-get install ia32-libs
   - wget http://dl.google.com/android/android-sdk_r21.0.1-linux.tgz
   - tar -zxf android-sdk_r21.0.1-linux.tgz
   - export ANDROID_HOME=`pwd`/android-sdk-linux
