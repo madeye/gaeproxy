@@ -1,5 +1,6 @@
 language: java
 before_install:
+  - sudo apt-get install lib1g-dev lib32z1-dev bison flex lib32ncurses5-dev libx11-dev gperf g++-multilib
   - wget http://dl.google.com/android/android-sdk_r21.0.1-linux.tgz
   - tar -zxf android-sdk_r21.0.1-linux.tgz
   - export ANDROID_HOME=`pwd`/android-sdk-linux
