@@ -671,6 +671,7 @@ public class GAEProxy extends PreferenceActivity implements
             + "chmod 755 /data/data/org.gaeproxy/redsocks\n"
             + "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
             + "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
+            + "chmod 755 /data/data/org.gaeproxy/busybox\n"
             + "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 
         install();

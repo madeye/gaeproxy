@@ -4,6 +4,9 @@ DIR=/data/data/org.gaeproxy
 
 PATH=$DIR:$PATH
 
+$DIR/busybox killall -9 python-cl
+$DIR/busybox killall -9 redsocks
+
 case $1 in
  start)
 
@@ -40,15 +43,11 @@ redsocks {
 stop)
   kill -9 `cat $DIR/redsocks.pid`
   kill -9 `cat $DIR/python.pid`
-  kill -9 `cat $DIR/stunnel.pid`
+
   rm -f $DIR/redsocks.conf
   rm -f $DIR/redsocks.pid
   rm -f $DIR/python.pid
-  rm -f $DIR/stunnel.pid
-  
-  killall -9 python-cl
-  killall -9 redsocks
-  killall -9 stunnel
+
   
   ;;
 esac
