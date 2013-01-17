@@ -70,9 +70,6 @@ import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -140,7 +137,9 @@ public class GAEProxy extends PreferenceActivity implements
       InputStream in = null;
       OutputStream out = null;
       try {
-        in = assetManager.open(files[i]);
+        in = assetManager.open(path
+            + (path.isEmpty() ? "" : "/")
+            + files[i]);
         out = new FileOutputStream("/data/data/org.gaeproxy/"
             + files[i]);
         copyFile(in, out);
@@ -216,15 +215,16 @@ public class GAEProxy extends PreferenceActivity implements
     mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK
         | PowerManager.ON_AFTER_RELEASE, "GAEProxy");
 
-    String data_path = Utils.getDataPath(this);
+    File tmp = new File("/data/data/org.gaeproxy/python.mp3");
 
-    try {
-      final InputStream pythonZip = getAssets()
-          .open("modules/python.mp3");
-      unzip(pythonZip, "/data/data/org.gaeproxy/");
-    } catch (IOException e) {
-      Log.e(TAG, "unable to install python");
-    }
+    copyAssets("modules");
+    String[] argc = {"7z", "x",
+        tmp.getAbsolutePath(),
+        "/data/data/org.gaeproxy"
+    };
+    LZMA.extract(argc);
+
+    tmp.delete();
     if (mWakeLock.isHeld())
       mWakeLock.release();
 

@@ -30,3 +30,17 @@ LOCAL_SRC_FILES:= \
 LOCAL_LDLIBS := -ldl -llog
 
 include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+lzma_SOURCES := \
+	7zStream.c 7zFile.c Ppmd7Dec.c Ppmd7.c Bcj2.c \
+	Bra86.c Bra.c Lzma2Dec.c LzmaDec.c 7zIn.c 7zDec.c \
+	7zCrcOpt.c 7zCrc.c 7zBuf2.c 7zBuf.c 7zAlloc.c \
+	Util/7z/7zMain.c
+
+LOCAL_MODULE := lzma
+LOCAL_SRC_FILES := $(addprefix lzma/, $(lzma_SOURCES)) lzma.cpp
+LOCAL_CFLAGS := -O2 -g -I$(LOCAL_PATH)/lzma -D_7ZIP_PPMD_SUPPPORT
+
+include $(BUILD_SHARED_LIBRARY)
