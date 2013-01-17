@@ -68,6 +68,8 @@ import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import org.gaeproxy.db.DatabaseHelper;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
@@ -636,6 +638,15 @@ public class GAEProxy extends PreferenceActivity implements
       stopService(new Intent(this, GAEProxyService.class));
     } catch (Exception e) {
       // Nothing
+    }
+
+    // Flush DNS
+    try {
+      OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
+      DatabaseHelper helper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+      helper.getDNSCacheDao().executeRaw("delete from dnsresponse");
+    } catch (Exception ignored) {
+      Log.e(TAG, "Unexpected exception", ignored);
     }
 
     new Thread() {
