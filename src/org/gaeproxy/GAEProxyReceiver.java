@@ -75,8 +75,8 @@ public class GAEProxyReceiver extends BroadcastReceiver {
       try {
         Log.d(TAG, "Location: " + countryCode);
         if (countryCode.toLowerCase().equals("cn")) {
-          String command = "setprop gsm.sim.operator.numeric 31026\n"
-              + "setprop gsm.operator.numeric 31026\n"
+          String command = "setprop gsm.sim.operator.numeric 310026\n"
+              + "setprop gsm.operator.numeric 310026\n"
               + "setprop gsm.sim.operator.iso-country us\n"
               + "setprop gsm.operator.iso-country us\n"
               + "chmod 777 /data/data/com.android.vending/shared_prefs\n"
