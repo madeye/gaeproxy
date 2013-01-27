@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.gaeproxy</groupId>
     <artifactId>gaeproxy</artifactId>
-    <version>0.21.0</version>
+    <version>0.21.1</version>
     <packaging>apk</packaging>
     <name>GAEProxy</name>
 
@@ -69,12 +69,6 @@
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-android</artifactId>
             <version>4.41</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.jponge</groupId>
-            <artifactId>lzma-java</artifactId>
-            <version>1.2</version>
         </dependency>
 
     </dependencies>

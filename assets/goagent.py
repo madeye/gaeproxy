@@ -1785,7 +1785,7 @@ def main():
     if common.PAAS_ENABLE:
         host, port = common.PAAS_LISTEN.split(':')
         server = gevent.server.StreamServer((host, int(port)), PAASProxyHandler)
-        gevent.spawn(server.serve_forever)
+        server.serve_forever()
     else:
         server = gevent.server.StreamServer((common.LISTEN_IP, common.LISTEN_PORT), GAEProxyHandler)
         server.serve_forever()
