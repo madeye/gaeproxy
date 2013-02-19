@@ -19,28 +19,29 @@ password = $7
 path = /$6
 profile = google_hk
 crlf = 1
-autoswitch = 0
+validate = 0
 
-[dns]
+[pac]
 enable = 0
-listen = 127.0.0.1:8053
-remote = 8.8.8.8|8.8.4.4|199.91.73.222|178.79.131.110
-cachesize = 5000
-timeout = 5
+ip = 127.0.0.1
+port = 8086
+file = goagent.pac
+gfwlist = http://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt
 
 [paas]
 enable = 0
 password = 123456
 listen = 127.0.0.1:8088
-isphp = 0
 fetchserver = http://demophus.app.com/
+validate = 0
 
 [proxy]
 enable = 0
+autodetect = 1
 host = 10.64.1.63
 port = 8080
-username = username
-password = 123456
+username = 
+password = 
 
 [google_cn]
 mode = http
@@ -77,18 +78,18 @@ enable = 0
 dns = 8.8.4.4
 sites = .youtube.com|.ytimg.com
 
+[dns]
+enable = 0
+listen = 127.0.0.1:8053
+remote = 8.8.8.8|8.8.4.4|199.91.73.222|178.79.131.110
+cachesize = 5000
+timeout = 5
+
 [socks5]
 enable = 0
-password = 123456
+password = 
 listen = 127.0.0.1:8089
-fetchserver = https://phus/
-
-[pac]
-enable = 0
-ip = 127.0.0.1
-port = 8086
-file = goagent.pac
-gfwlist = http://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt
+fetchserver = https://.me:23/
 
 [useragent]
 enable = 0
@@ -126,7 +127,14 @@ password = 123456
 path = /fetch.py
 profile = google_hk
 crlf = 0
-autoswitch = 0
+validate = 0
+
+[pac]
+enable = 0
+ip = 127.0.0.1
+port = 8086
+file = goagent.pac
+gfwlist = http://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt
 
 [paas]
 enable = 1
@@ -134,20 +142,15 @@ password = $7
 listen = 127.0.0.1:$4
 isphp = 0
 fetchserver = $6
-
-[dns]
-enable = 0
-listen = 127.0.0.1:8053
-remote = 8.8.8.8|8.8.4.4|199.91.73.222|178.79.131.110
-cachesize = 5000
-timeout = 5
+validate = 0
 
 [proxy]
 enable = 0
+autodetect = 0
 host = 10.64.1.63
 port = 8080
-username = username
-password = 123456
+username = 
+password = 
 
 [google_cn]
 mode = http
@@ -184,18 +187,18 @@ enable = 0
 dns = 8.8.4.4
 sites = .youtube.com|.ytimg.com
 
+[dns]
+enable = 0
+listen = 127.0.0.1:8053
+remote = 8.8.8.8|8.8.4.4|199.91.73.222|178.79.131.110
+cachesize = 5000
+timeout = 5
+
 [socks5]
 enable = 0
-password = 123456
+password =
 listen = 127.0.0.1:8089
 fetchserver = https://phus/
-
-[pac]
-enable = 0
-ip = 127.0.0.1
-port = 8086
-file = goagent.pac
-gfwlist = http://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt
 
 [useragent]
 enable = 0
