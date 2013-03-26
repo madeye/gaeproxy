@@ -225,7 +225,7 @@ public class GAEProxyService extends Service {
         return false;
       }
       appId = uri.getHost();
-      appPath = url + (url.endsWith("/") || url.endsWith("php") ? "" : "/");
+      appPath = url;
       return true;
     }
     if (url == null)
