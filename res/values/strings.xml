@@ -55,8 +55,7 @@
     <string name="bypass_apps">Bypass Mode</string>
     <string name="bypass_apps_summary">Enable this option to bypass selected apps</string>
     <string name="proxyed_help">Select apps to use with GAEProxy:</string>
-    <string name="crash_alert">An unexpected exit detected, context has been
-        recovered
+    <string name="crash_alert">An unexpected exit detected, context has been reset.
     </string>
     <string name="copy_rights">GAEProxy is an open source project
         published under

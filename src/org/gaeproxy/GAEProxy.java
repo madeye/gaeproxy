@@ -69,6 +69,8 @@ import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import org.gaeproxy.db.DatabaseHelper;
 
 import java.io.*;
@@ -93,8 +95,7 @@ public class GAEProxy extends PreferenceActivity implements
       Editor ed = settings.edit();
       switch (msg.what) {
         case MSG_CRASH_RECOVER:
-          Toast.makeText(GAEProxy.this, R.string.crash_alert,
-              Toast.LENGTH_LONG).show();
+          Crouton.makeText(GAEProxy.this, R.string.crash_alert, Style.ALERT).show();
           ed.putBoolean("isRunning", false);
           break;
         case MSG_INITIAL_FINISH:
@@ -367,6 +368,8 @@ public class GAEProxy extends PreferenceActivity implements
     }
 
     adView.destroy();
+
+    Crouton.cancelAllCroutons();
 
     super.onDestroy();
   }

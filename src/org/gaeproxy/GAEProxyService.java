@@ -69,7 +69,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.xbill.DNS.*;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
