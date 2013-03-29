@@ -2148,7 +2148,7 @@ def main():
     if common.LIGHT_ENABLE:
         host, port = common.LIGHT_LISTEN.split(':')
         server = gevent.server.StreamServer((host, int(port)), LightProxyHandler)
-        gevent.spawn(server.serve_forever)
+        server.serve_forever()
     elif common.PAAS_ENABLE:
         host, port = common.PAAS_LISTEN.split(':')
         server = gevent.server.StreamServer((host, int(port)), PAASProxyHandler)

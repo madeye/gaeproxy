@@ -85,11 +85,11 @@ remote = 8.8.8.8|8.8.4.4|199.91.73.222|178.79.131.110
 cachesize = 5000
 timeout = 5
 
-[socks5]
+[light]
 enable = 0
 password = 
 listen = 127.0.0.1:8089
-fetchserver = https://.me:23/
+server = https://.me:23/
 
 [useragent]
 enable = 0
@@ -194,11 +194,11 @@ remote = 8.8.8.8|8.8.4.4|199.91.73.222|178.79.131.110
 cachesize = 5000
 timeout = 5
 
-[socks5]
+[light]
 enable = 0
-password =
+password = 
 listen = 127.0.0.1:8089
-fetchserver = https://phus/
+server = https://.me:23/
 
 [useragent]
 enable = 0
