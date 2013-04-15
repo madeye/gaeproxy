@@ -73,9 +73,9 @@
                 android:title="@string/bypass_apps" >
         </CheckBoxPreference>
         <Preference
-                android:key="proxyedApps"
-                android:summary="@string/proxyed_apps_summary"
-                android:title="@string/proxyed_apps">
+                android:key="proxiedApps"
+                android:summary="@string/proxied_apps_summary"
+                android:title="@string/proxied_apps">
         </Preference>
 
         <CheckBoxPreference

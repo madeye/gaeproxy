@@ -19,13 +19,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
   // name of the database file for your application -- change to something
   // appropriate for your app
-  private static final String DATABASE_NAME = "dnscache.db";
+  private static final String DATABASE_NAME = "gaeproxy.db";
   // any time you make changes to your database objects, you may have to
   // increase the database version
   private static final int DATABASE_VERSION = 4;
 
   // the DAO object we use to access the SimpleData table
-  private Dao<DNSResponse, String> dnsCacheDao = null;
+  private Dao<DNSResponse, String> mDnsCacheDao = null;
+  private Dao<App, String> mProxiedCacheDao = null;
 
   public DatabaseHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,7 +38,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
   @Override
   public void close() {
     super.close();
-    dnsCacheDao = null;
+    mDnsCacheDao = null;
+    mProxiedCacheDao = null;
   }
 
   /**
@@ -45,11 +47,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
    * will create it or just give the cached value.
    */
   public Dao<DNSResponse, String> getDNSCacheDao() throws SQLException {
-    if (dnsCacheDao == null) {
-      dnsCacheDao = getDao(DNSResponse.class);
-      dnsCacheDao.setObjectCache(false);
+    if (mDnsCacheDao == null) {
+      mDnsCacheDao = getDao(DNSResponse.class);
+      mDnsCacheDao.setObjectCache(false);
     }
-    return dnsCacheDao;
+    return mDnsCacheDao;
+  }
+
+  /**
+   * Returns the Database Access Object (DAO) for our SimpleData class. It
+   * will create it or just give the cached value.
+   */
+  public Dao<App, String> getProxiedAppDao() throws SQLException {
+    if (mProxiedCacheDao == null) {
+      mProxiedCacheDao = getDao(App.class);
+      mProxiedCacheDao.setObjectCache(false);
+    }
+    return mProxiedCacheDao;
   }
 
   /**
@@ -62,6 +76,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     try {
       Log.i(DatabaseHelper.class.getName(), "onCreate");
       TableUtils.createTable(connectionSource, DNSResponse.class);
+      TableUtils.createTable(connectionSource, App.class);
     } catch (SQLException e) {
       Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
       throw new RuntimeException(e);
@@ -81,6 +96,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
           Log.i(DatabaseHelper.class.getName(), "onUpgrade");
           TableUtils.dropTable(connectionSource, DNSResponse.class, true);
+          TableUtils.dropTable(connectionSource, App.class, true);
           // after we drop the old databases, we create the new ones
           onCreate(db, connectionSource);
         } catch (SQLException e) {

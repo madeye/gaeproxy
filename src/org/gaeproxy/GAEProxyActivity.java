@@ -63,7 +63,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
@@ -71,37 +70,35 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import org.gaeproxy.db.App;
 import org.gaeproxy.db.DatabaseHelper;
 
 import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.Map;
 
-public class GAEProxy extends PreferenceActivity implements
+public class GAEProxyActivity extends PreferenceActivity implements
     OnSharedPreferenceChangeListener {
 
-  private static final String TAG = "GAEProxy";
-
   public static final String PREFS_NAME = "GAEProxy";
-
+  private static final String TAG = "GAEProxy";
   private static final int MSG_CRASH_RECOVER = 1;
   private static final int MSG_INITIAL_FINISH = 2;
-
+  private static ProgressDialog sProgressDialog = null;
   final Handler handler = new Handler() {
     @Override
     public void handleMessage(Message msg) {
       SharedPreferences settings = PreferenceManager
-          .getDefaultSharedPreferences(GAEProxy.this);
+          .getDefaultSharedPreferences(GAEProxyActivity.this);
       Editor ed = settings.edit();
       switch (msg.what) {
         case MSG_CRASH_RECOVER:
-          Crouton.makeText(GAEProxy.this, R.string.crash_alert, Style.ALERT).show();
+          Crouton.makeText(GAEProxyActivity.this, R.string.crash_alert, Style.ALERT).show();
           ed.putBoolean("isRunning", false);
           break;
         case MSG_INITIAL_FINISH:
-          if (pd != null) {
-            pd.dismiss();
-            pd = null;
+          if (sProgressDialog != null) {
+            sProgressDialog.dismiss();
+            sProgressDialog = null;
           }
           break;
       }
@@ -109,9 +106,6 @@ public class GAEProxy extends PreferenceActivity implements
       super.handleMessage(msg);
     }
   };
-
-  private static ProgressDialog pd = null;
-
   private CheckBoxPreference isAutoConnectCheck;
   private CheckBoxPreference isGlobalProxyCheck;
   private EditTextPreference proxyText;
@@ -121,11 +115,10 @@ public class GAEProxy extends PreferenceActivity implements
   private CheckBoxPreference isHTTPSProxyCheck;
   private CheckBoxPreference isGFWListCheck;
   private CheckBoxPreference isRunningCheck;
-  private AdView adView;
-  private Preference proxyedApps;
+  private Preference proxiedApps;
   private CheckBoxPreference isBypassAppsCheck;
-
   private Preference browser;
+  private AdView adView;
 
   private void copyAssets(String path) {
 
@@ -185,7 +178,7 @@ public class GAEProxy extends PreferenceActivity implements
     proxyText.setEnabled(false);
     portText.setEnabled(false);
     sitekeyText.setEnabled(false);
-    proxyedApps.setEnabled(false);
+    proxiedApps.setEnabled(false);
     isGFWListCheck.setEnabled(false);
     isBypassAppsCheck.setEnabled(false);
 
@@ -203,7 +196,7 @@ public class GAEProxy extends PreferenceActivity implements
     isGFWListCheck.setEnabled(true);
     isHTTPSProxyCheck.setEnabled(true);
     if (!isGlobalProxyCheck.isChecked()) {
-      proxyedApps.setEnabled(true);
+      proxiedApps.setEnabled(true);
       isBypassAppsCheck.setEnabled(true);
     }
 
@@ -236,7 +229,7 @@ public class GAEProxy extends PreferenceActivity implements
 
   private boolean isTextEmpty(String s, String msg) {
     if (s == null || s.length() <= 0) {
-      showAToast(msg);
+      showADialog(msg);
       return true;
     }
     return false;
@@ -253,7 +246,7 @@ public class GAEProxy extends PreferenceActivity implements
     addPreferencesFromResource(R.xml.gae_proxy_preference);
 
     // Create the adView
-    adView = new AdView(GAEProxy.this, AdSize.SMART_BANNER, "a14d8be8a284afc");
+    adView = new AdView(GAEProxyActivity.this, AdSize.SMART_BANNER, "a14d8be8a284afc");
     // Lookup your LinearLayout assuming it’s been given
     // the attribute android:id="@+id/mainLayout"
     FrameLayout layout = (FrameLayout) findViewById(R.id.ad);
@@ -267,7 +260,7 @@ public class GAEProxy extends PreferenceActivity implements
     proxyText = (EditTextPreference) findPreference("proxy");
     portText = (EditTextPreference) findPreference("port");
     sitekeyText = (EditTextPreference) findPreference("sitekey");
-    proxyedApps = findPreference("proxyedApps");
+    proxiedApps = findPreference("proxiedApps");
     browser = findPreference("browser");
 
     isRunningCheck = (CheckBoxPreference) findPreference("isRunning");
@@ -279,8 +272,8 @@ public class GAEProxy extends PreferenceActivity implements
 
     proxyTypeList = (ListPreference) findPreference("proxyType");
 
-    if (pd == null)
-      pd = ProgressDialog.show(this, "",
+    if (sProgressDialog == null)
+      sProgressDialog = ProgressDialog.show(this, "",
           getString(R.string.initializing), true, true);
 
     final SharedPreferences settings = PreferenceManager
@@ -291,6 +284,11 @@ public class GAEProxy extends PreferenceActivity implements
       public void run() {
 
         Utils.isRoot();
+
+        Map<String, App> apps = App.getProxiedApps(getApplicationContext());
+        if (apps != null) {
+          App.updateProxiedApps(getApplicationContext(), apps.keySet());
+        }
 
         String versionName;
         try {
@@ -334,14 +332,8 @@ public class GAEProxy extends PreferenceActivity implements
     }.start();
   }
 
-  // 点击Menu时，系统调用当前Activity的onCreateOptionsMenu方法，并传一个实现了一个Menu接口的menu对象供你使用
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    /*
-       * add()方法的四个参数，依次是： 1、组别，如果不分组的话就写Menu.NONE,
-       * 2、Id，这个很重要，Android根据这个Id来确定不同的菜单 3、顺序，那个菜单现在在前面由这个参数的大小决定
-       * 4、文本，菜单的显示文本
-       */
     menu.add(Menu.NONE, Menu.FIRST + 1, 1, getString(R.string.recovery))
         .setIcon(android.R.drawable.ic_menu_delete);
     menu.add(Menu.NONE, Menu.FIRST + 2, 2, getString(R.string.about))
@@ -362,9 +354,9 @@ public class GAEProxy extends PreferenceActivity implements
     editor.putBoolean("isConnected", GAEProxyService.isServiceStarted());
     editor.commit();
 
-    if (pd != null) {
-      pd.dismiss();
-      pd = null;
+    if (sProgressDialog != null) {
+      sProgressDialog.dismiss();
+      sProgressDialog = null;
     }
 
     adView.destroy();
@@ -387,7 +379,6 @@ public class GAEProxy extends PreferenceActivity implements
     return super.onKeyDown(keyCode, event);
   }
 
-  // 菜单项被选择事件
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
@@ -402,7 +393,7 @@ public class GAEProxy extends PreferenceActivity implements
         } catch (NameNotFoundException e) {
           versionName = "";
         }
-        showAToast(getString(R.string.about) + " (" + versionName + ")\n\n"
+        showADialog(getString(R.string.about) + " (" + versionName + ")\n\n"
             + getString(R.string.copy_rights));
         break;
     }
@@ -426,9 +417,9 @@ public class GAEProxy extends PreferenceActivity implements
         .getDefaultSharedPreferences(this);
 
     if (preference.getKey() != null
-        && preference.getKey().equals("proxyedApps")) {
-      Intent intent = new Intent(this, AppManager.class);
-      startActivity(intent);
+        && preference.getKey().equals("proxiedApps")) {
+      Intent intent = new Intent(this, ProxiedAppActivity.class);
+        startActivity(intent);
     } else if (preference.getKey() != null
         && preference.getKey().equals("browser")) {
       Intent intent = new Intent(this,
@@ -452,10 +443,10 @@ public class GAEProxy extends PreferenceActivity implements
         .getDefaultSharedPreferences(this);
 
     if (settings.getBoolean("isGlobalProxy", false)) {
-      proxyedApps.setEnabled(false);
+      proxiedApps.setEnabled(false);
       isBypassAppsCheck.setEnabled(false);
     } else {
-      proxyedApps.setEnabled(true);
+      proxiedApps.setEnabled(true);
       isBypassAppsCheck.setEnabled(true);
     }
 
@@ -521,14 +512,14 @@ public class GAEProxy extends PreferenceActivity implements
     if (key.equals("isConnecting")) {
       if (settings.getBoolean("isConnecting", false)) {
         Log.d(TAG, "Connecting start");
-        if (pd == null)
-          pd = ProgressDialog.show(this, "",
+        if (sProgressDialog == null)
+          sProgressDialog = ProgressDialog.show(this, "",
               getString(R.string.connecting), true, true);
       } else {
         Log.d(TAG, "Connecting finish");
-        if (pd != null) {
-          pd.dismiss();
-          pd = null;
+        if (sProgressDialog != null) {
+          sProgressDialog.dismiss();
+          sProgressDialog = null;
         }
       }
     }
@@ -563,10 +554,10 @@ public class GAEProxy extends PreferenceActivity implements
 
     if (key.equals("isGlobalProxy")) {
       if (settings.getBoolean("isGlobalProxy", false)) {
-        proxyedApps.setEnabled(false);
+        proxiedApps.setEnabled(false);
         isBypassAppsCheck.setEnabled(false);
       } else {
-        proxyedApps.setEnabled(true);
+        proxiedApps.setEnabled(true);
         isBypassAppsCheck.setEnabled(true);
       }
     }
@@ -623,16 +614,16 @@ public class GAEProxy extends PreferenceActivity implements
 
   private void recovery() {
 
-    if (pd == null)
-      pd = ProgressDialog.show(this, "", getString(R.string.recovering),
+    if (sProgressDialog == null)
+      sProgressDialog = ProgressDialog.show(this, "", getString(R.string.recovering),
           true, true);
 
     final Handler h = new Handler() {
       @Override
       public void handleMessage(Message msg) {
-        if (pd != null) {
-          pd.dismiss();
-          pd = null;
+        if (sProgressDialog != null) {
+          sProgressDialog.dismiss();
+          sProgressDialog = null;
         }
       }
     };
@@ -698,8 +689,6 @@ public class GAEProxy extends PreferenceActivity implements
 
   /**
    * Called when connect button is clicked.
-   *
-   * @throws Exception
    */
   public boolean serviceStart() {
 
@@ -748,11 +737,11 @@ public class GAEProxy extends PreferenceActivity implements
     try {
       int port = Integer.valueOf(portText);
       if (port <= 1024) {
-        this.showAToast(getString(R.string.port_alert));
+        this.showADialog(getString(R.string.port_alert));
         return false;
       }
     } catch (Exception e) {
-      this.showAToast(getString(R.string.port_alert));
+      this.showADialog(getString(R.string.port_alert));
       return false;
     }
 
@@ -767,7 +756,7 @@ public class GAEProxy extends PreferenceActivity implements
     return true;
   }
 
-  private void showAToast(String msg) {
+  private void showADialog(String msg) {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setMessage(msg)
         .setCancelable(false)
@@ -780,36 +769,6 @@ public class GAEProxy extends PreferenceActivity implements
             });
     AlertDialog alert = builder.create();
     alert.show();
-  }
-
-  public void unzip(InputStream zip, String path) {
-    dirChecker(path);
-    try {
-      ZipInputStream zin = new ZipInputStream(zip);
-      ZipEntry ze = null;
-      while ((ze = zin.getNextEntry()) != null) {
-        if (ze.getName().contains("__MACOSX"))
-          continue;
-        // Log.v("Decompress", "Unzipping " + ze.getName());
-        if (ze.isDirectory()) {
-          dirChecker(path + ze.getName());
-        } else {
-          FileOutputStream fout = new FileOutputStream(path
-              + ze.getName());
-          byte data[] = new byte[10 * 1024];
-          int count;
-          while ((count = zin.read(data)) != -1) {
-            fout.write(data, 0, count);
-          }
-          zin.closeEntry();
-          fout.close();
-        }
-
-      }
-      zin.close();
-    } catch (Exception e) {
-      Log.e("Decompress", "unzip", e);
-    }
   }
 
 }

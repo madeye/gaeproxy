@@ -45,11 +45,11 @@
     <string name="sdcard_alert">请确认SD卡已插入</string>
     <string name="recovery">重置</string>
     <string name="unzip">解压缩中...</string>
-    <string name="proxyed_apps">分应用代理</string>
-    <string name="proxyed_apps_summary">为应用单独设置代理，需要 ROOT 权限以及 IPTABLES 的支持</string>
+    <string name="proxied_apps">分应用代理</string>
+    <string name="proxied_apps_summary">为应用单独设置代理，需要 ROOT 权限以及 IPTABLES 的支持</string>
     <string name="bypass_apps">白名单模式</string>
     <string name="bypass_apps_summary">选择的应用将不通过代理</string>
-    <string name="proxyed_help">选择使用GAE代理的应用:</string>
+    <string name="proxied_help">选择使用GAE代理的应用:</string>
     <string name="crash_alert">检测到一次非正常退出，状态已重置</string>
     <string name="copy_rights">GAE代理是一款开源软件，依照GPLv3协议发布。\n\n如果您有任何问题，请前往项目网站进行反馈。
 		\n\n(gaeproxy.googlecode.com)</string>

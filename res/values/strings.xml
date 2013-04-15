@@ -49,12 +49,12 @@
     <string name="sdcard_alert">Please make sure you have a SD CARD!</string>
     <string name="recovery">Reset</string>
     <string name="unzip">Unzipping...</string>
-    <string name="proxyed_apps">Individual Proxy</string>
-    <string name="proxyed_apps_summary">Set individual proxy for apps (needs ROOT permission and IPTABLES support)
+    <string name="proxied_apps">Individual Proxy</string>
+    <string name="proxied_apps_summary">Set individual proxy for apps (needs ROOT permission and IPTABLES support)
     </string>
     <string name="bypass_apps">Bypass Mode</string>
     <string name="bypass_apps_summary">Enable this option to bypass selected apps</string>
-    <string name="proxyed_help">Select apps to use with GAEProxy:</string>
+    <string name="proxied_help">Select apps to use with GAEProxy:</string>
     <string name="crash_alert">An unexpected exit detected, context has been reset.
     </string>
     <string name="copy_rights">GAEProxy is an open source project

@@ -60,12 +60,14 @@ import android.util.Log;
 import android.util.Pair;
 import android.widget.RemoteViews;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
+import org.gaeproxy.db.App;
 import org.xbill.DNS.*;
 
 import java.io.BufferedReader;
@@ -76,13 +78,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.HashSet;
+import java.util.Map;
 
 public class GAEProxyService extends Service {
 
-  private Notification notification;
-  private NotificationManager notificationManager;
-  private PendingIntent pendIntent;
-  private PowerManager.WakeLock mWakeLock;
+  NotificationManager notificationManager;
+  Notification notification;
+  PendingIntent pendIntent;
+  PowerManager.WakeLock mWakeLock;
 
   public static final String BASE = "/data/data/org.gaeproxy/";
   private static final int MSG_CONNECT_START = 0;
@@ -137,7 +140,7 @@ public class GAEProxyService extends Service {
   private boolean isGFWList = false;
   private boolean isBypassApps = false;
 
-  private ProxyedApp apps[];
+  private Map<String, App> mProxiedApps;
 
   private static final Class<?>[] mStartForegroundSignature = new Class[]{
       int.class, Notification.class};
@@ -450,6 +453,12 @@ public class GAEProxyService extends Service {
       return false;
     }
 
+    if (!isGlobalProxy) {
+      if (mProxiedApps == null) {
+        mProxiedApps = App.getProxiedApps(this);
+      }
+    }
+
     // DNS Proxy Setup
     // with AsyncHttpClient
     if ("PaaS".equals(proxyType)) {
@@ -538,11 +547,11 @@ public class GAEProxyService extends Service {
     EasyTracker.getTracker().trackEvent("service", "start",
         getVersionName(), 0L);
 
-    settings = PreferenceManager.getDefaultSharedPreferences(this);
-    notificationManager = (NotificationManager) this
-        .getSystemService(NOTIFICATION_SERVICE);
+    notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-    Intent intent = new Intent(this, GAEProxy.class);
+    settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+    Intent intent = new Intent(this, GAEProxyActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     pendIntent = PendingIntent.getActivity(this, 0, intent, 0);
     notification = new Notification();
@@ -784,27 +793,27 @@ public class GAEProxyService extends Service {
     }
     if (!isGlobalProxy) {
       // for proxy specified apps
-      if (apps == null || apps.length <= 0)
-        apps = AppManager.getProxyedApps(this);
 
-      HashSet<Integer> uidSet = new HashSet<Integer>();
-      for (ProxyedApp app : apps) {
-        if (app.isProxyed()) {
-          uidSet.add(app.getUid());
+      if (mProxiedApps != null) {
+        HashSet<Integer> uidSet = new HashSet<Integer>();
+        for (App app : mProxiedApps.values()) {
+          if (app.isProxied()) {
+            uidSet.add(app.getUid());
+          }
         }
-      }
-      for (int uid : uidSet) {
-        if (!isBypassApps) {
-          http_sb.append((hasRedirectSupport ? Utils.getIptables()
-              + CMD_IPTABLES_REDIRECT_ADD_HTTP : Utils.getIptables()
-              + CMD_IPTABLES_DNAT_ADD_HTTP).replace("-t nat",
-              "-t nat -m owner --uid-owner " + uid));
-          https_sb.append((hasRedirectSupport ? Utils.getIptables()
-              + CMD_IPTABLES_REDIRECT_ADD_HTTPS : Utils.getIptables()
-              + CMD_IPTABLES_DNAT_ADD_HTTPS).replace("-t nat",
-              "-t nat -m owner --uid-owner " + uid));
-        } else {
-          init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner " + uid));
+        for (int uid : uidSet) {
+          if (!isBypassApps) {
+            http_sb.append((hasRedirectSupport ? Utils.getIptables()
+                + CMD_IPTABLES_REDIRECT_ADD_HTTP : Utils.getIptables()
+                + CMD_IPTABLES_DNAT_ADD_HTTP).replace("-t nat",
+                "-t nat -m owner --uid-owner " + uid));
+            https_sb.append((hasRedirectSupport ? Utils.getIptables()
+                + CMD_IPTABLES_REDIRECT_ADD_HTTPS : Utils.getIptables()
+                + CMD_IPTABLES_DNAT_ADD_HTTPS).replace("-t nat",
+                "-t nat -m owner --uid-owner " + uid));
+          } else {
+            init_sb.append(cmd_bypass.replace("-d 0.0.0.0", "-m owner --uid-owner " + uid));
+          }
         }
       }
     }
