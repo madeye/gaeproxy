@@ -455,6 +455,10 @@ public class GAEProxyService extends Service {
 
     if (!isGlobalProxy) {
       if (mProxiedApps == null) {
+        Map<String, App> apps = App.getProxiedApps(getApplicationContext());
+        if (apps != null) {
+          App.updateProxiedApps(getApplicationContext(), apps.keySet());
+        }
         mProxiedApps = App.getProxiedApps(this);
       }
     }

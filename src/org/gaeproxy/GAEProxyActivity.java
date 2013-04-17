@@ -285,11 +285,6 @@ public class GAEProxyActivity extends PreferenceActivity implements
 
         Utils.isRoot();
 
-        Map<String, App> apps = App.getProxiedApps(getApplicationContext());
-        if (apps != null) {
-          App.updateProxiedApps(getApplicationContext(), apps.keySet());
-        }
-
         String versionName;
         try {
           versionName = getPackageManager().getPackageInfo(

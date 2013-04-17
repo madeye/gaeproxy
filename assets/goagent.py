@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding:utf-8
-# Based on GAppProxy 2.0.0 by Du XiaoGang <dugang@188.com>
+# Based on GAppProxy 2.0.0 by Du XiaoGang <dugang.2008@gmail.com>
 # Based on WallProxy 0.4.0 by Hust Moon <www.ehust@gmail.com>
 # Contributor:
 #      Phus Lu        <phus.lu@gmail.com>
@@ -15,7 +15,7 @@
 #      Harmony Meow   <harmony.meow@gmail.com>
 #      logostream     <logostream@gmail.com>
 
-__version__ = '2.1.14'
+__version__ = '2.1.16'
 
 import sys
 import os
@@ -36,7 +36,7 @@ try:
     import gevent.server
     import gevent.monkey
     gevent.monkey.patch_all(dns=gevent.version_info[0] >= 1)
-except ImportError:
+except (ImportError, SystemError):
     import platform
     sys.stderr.write('WARNING: python-gevent not installed. Please ')
     if sys.platform.startswith('linux'):
@@ -120,6 +120,7 @@ import errno
 import time
 import struct
 import zlib
+import functools
 import re
 import traceback
 import random
@@ -247,7 +248,7 @@ class Logging(type(sys)):
             self.debug = self.dummy
 
     def log(self, level, fmt, *args, **kwargs):
-        self.__write('%s - - [%s] %s\n' % (level, time.ctime()[4:-5], fmt % args))
+        self.__write('%s - [%s] %s\n' % (level, time.ctime()[4:-5], fmt % args))
 
     def dummy(self, *args, **kwargs):
         pass
@@ -286,6 +287,8 @@ class CertUtil(object):
     """CertUtil module, based on mitmproxy"""
 
     ca_vendor = 'GoAgent'
+    ca_keyfile = 'CA.crt'
+    ca_certdir = 'certs'
     ca_lock = threading.Lock()
 
     @staticmethod
@@ -316,19 +319,18 @@ class CertUtil(object):
         return key, ca
 
     @staticmethod
-    def dump_ca(keyfile='CA.key', certfile='CA.crt'):
+    def dump_ca():
         key, ca = CertUtil.create_ca()
-        with open(keyfile, 'wb') as fp:
-            fp.write(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_PEM, key))
-        with open(certfile, 'wb') as fp:
+        with open(CertUtil.ca_keyfile, 'wb') as fp:
             fp.write(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_PEM, ca))
+            fp.write(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_PEM, key))
 
     @staticmethod
-    def _get_cert(commonname, certdir='certs', ca_keyfile='CA.key', ca_certfile='CA.crt', sans=[]):
-        with open(ca_keyfile, 'rb') as fp:
-            key = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, fp.read())
-        with open(ca_certfile, 'rb') as fp:
-            ca = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, fp.read())
+    def _get_cert(commonname, sans=[]):
+        with open(CertUtil.ca_keyfile, 'rb') as fp:
+            content = fp.read()
+            key = OpenSSL.crypto.load_privatekey(OpenSSL.crypto.FILETYPE_PEM, content)
+            ca = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, content)
 
         pkey = OpenSSL.crypto.PKey()
         pkey.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
@@ -369,30 +371,26 @@ class CertUtil(object):
         cert.add_extensions([OpenSSL.crypto.X509Extension(b'subjectAltName', True, ', '.join('DNS: %s' % x for x in sans))])
         cert.sign(key, 'sha1')
 
-        keyfile = os.path.join(certdir, commonname + '.key')
-        with open(keyfile, 'wb') as fp:
-            fp.write(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_PEM, pkey))
-        certfile = os.path.join(certdir, commonname + '.crt')
+        certfile = os.path.join(CertUtil.ca_certdir, commonname + '.crt')
         with open(certfile, 'wb') as fp:
             fp.write(OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_PEM, cert))
-
-        return keyfile, certfile
+            fp.write(OpenSSL.crypto.dump_privatekey(OpenSSL.crypto.FILETYPE_PEM, pkey))
+        return certfile
 
     @staticmethod
-    def get_cert(commonname, certdir='certs', ca_keyfile='CA.key', ca_certfile='CA.crt', sans=[]):
-        if len(commonname) >= 32 and commonname.count('.') >= 2:
-            commonname = re.sub(r'^[^\.]+', '', commonname)
-        keyfile = os.path.join(certdir, commonname + '.key')
-        certfile = os.path.join(certdir, commonname + '.crt')
+    def get_cert(commonname, sans=[]):
+        if commonname.count('.') >= 2 and len(commonname.split('.')[-2]) > 4:
+            commonname = '.'+commonname.partition('.')[-1]
+        certfile = os.path.join(CertUtil.ca_certdir, commonname + '.crt')
         if os.path.exists(certfile):
-            return keyfile, certfile
+            return certfile
         elif OpenSSL is None:
-            return ca_keyfile, ca_certfile
+            return CertUtil.ca_keyfile
         else:
             with CertUtil.ca_lock:
                 if os.path.exists(certfile):
-                    return keyfile, certfile
-                return CertUtil._get_cert(commonname, certdir, ca_keyfile, ca_certfile, sans)
+                    return certfile
+                return CertUtil._get_cert(commonname, sans)
 
     @staticmethod
     def import_ca(certfile):
@@ -405,11 +403,25 @@ class CertUtil(object):
                     commonname = (v for k, v in x509.get_subject().get_components() if k == 'O').next()
             except Exception as e:
                 logging.error('load_certificate(certfile=%r) failed:%s', certfile, e)
-        cmd = ''
         if sys.platform.startswith('win'):
-            cmd = 'cd /d "%s" && .\certmgr.exe -add %s -c -s -r localMachine Root >NUL' % (dirname, basename)
+            with open(certfile, 'rb') as fp:
+                certdata = fp.read()
+                if certdata.startswith('-----'):
+                    begin = '-----BEGIN CERTIFICATE-----'
+                    end = '-----END CERTIFICATE-----'
+                    certdata = base64.b64decode(''.join(certdata[certdata.find(begin)+len(begin):certdata.find(end)].strip().splitlines()))
+                crypt32_handle = ctypes.windll.kernel32.LoadLibraryW(u'crypt32.dll')
+                crypt32 = ctypes.WinDLL(None, handle=crypt32_handle)
+                store_handle = crypt32.CertOpenStore(10, 0, 0, 0x4000 | 0x20000, u'ROOT')
+                if not store_handle:
+                    return -1
+                ret = crypt32.CertAddEncodedCertificateToStore(store_handle, 0x1, certdata, len(certdata), 4, None)
+                crypt32.CertCloseStore(store_handle, 0)
+                del crypt32
+                ctypes.windll.kernel32.FreeLibrary(crypt32_handle)
+                return 0 if ret else -1
         elif sys.platform == 'darwin':
-            cmd = 'security find-certificate -a -c "%s" | grep "%s" >/dev/null || security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "%s"' % (commonname, commonname, certfile)
+            return os.system('security find-certificate -a -c "%s" | grep "%s" >/dev/null || security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "%s"' % (commonname, commonname, certfile))
         elif sys.platform.startswith('linux'):
             import platform
             platform_distname = platform.dist()[0]
@@ -417,27 +429,36 @@ class CertUtil(object):
                 pemfile = "/etc/ssl/certs/%s.pem" % commonname
                 new_certfile = "/usr/local/share/ca-certificates/%s.crt" % commonname
                 if not os.path.exists(pemfile):
-                    cmd = 'cp "%s" "%s" && update-ca-certificates' % (certfile, new_certfile)
-        return os.system(cmd)
+                    return os.system('cp "%s" "%s" && update-ca-certificates' % (certfile, new_certfile))
+            elif any(os.path.isfile('%s/certutil' % x) for x in os.environ['PATH'].split(os.pathsep)):
+                return os.system('certutil -L -d sql:$HOME/.pki/nssdb | grep "%s" || certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "%s" -i "%s"' % (commonname, commonname, certfile))
+            else:
+                logging.warning('please install *libnss3-tools* package to import GoAgent root ca')
+        return 0
 
     @staticmethod
     def check_ca():
         #Check CA exists
-        capath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'CA.crt')
-        certdir = os.path.join(os.path.dirname(__file__), 'certs')
+        capath = os.path.join(os.path.dirname(os.path.abspath(__file__)), CertUtil.ca_keyfile)
+        certdir = os.path.join(os.path.dirname(__file__), CertUtil.ca_certdir)
         if not os.path.exists(capath):
             if not OpenSSL:
                 logging.critical('CA.key is not exist and OpenSSL is disabled, ABORT!')
                 sys.exit(-1)
-            if os.name == 'nt':
-                os.system('certmgr.exe -del -n "%s CA" -c -s -r localMachine Root' % CertUtil.ca_vendor)
             if os.path.exists(certdir):
                 if os.path.isdir(certdir):
-                    any(os.remove(x) for x in (glob.glob(certdir+'/*.crt')+glob.glob(certdir+'/*.key')))
+                    any(os.remove(x) for x in glob.glob(certdir+'/*.crt'))
                 else:
                     os.remove(certdir)
-                os.mkdir(certdir)
-            CertUtil.dump_ca('CA.key', 'CA.crt')
+                    os.mkdir(certdir)
+            CertUtil.dump_ca(CertUtil.ca_keyfile)
+        if glob.glob('%s/*.key' % CertUtil.ca_certdir):
+            for filename in glob.glob('%s/*.key' % CertUtil.ca_certdir):
+                try:
+                    os.remove(filename)
+                    os.remove(os.path.splitext(filename)[0]+'.crt')
+                except EnvironmentError:
+                    pass
         #Check CA imported
         if CertUtil.import_ca(capath) != 0:
             logging.warning('install root certificate failed, Please run as administrator/root/sudo')
@@ -469,7 +490,8 @@ class DNSUtil(object):
                     # for ipv6
                     '1.1.1.1', '255.255.255.255',
                     # for google+
-                    '74.125.127.102', '74.125.155.102', '74.125.39.113', '209.85.229.138',
+                    '74.125.127.102', '74.125.155.102', '74.125.39.102', '74.125.39.113',
+                    '209.85.229.138',
                     # other ip list
                     '128.121.126.139', '159.106.121.75', '169.132.13.103', '192.67.198.6',
                     '202.106.1.2', '202.181.7.85', '203.161.230.171', '203.98.7.65',
@@ -557,8 +579,11 @@ class HTTP(object):
 
     MessageClass = dict
     protocol_version = 'HTTP/1.1'
-    skip_headers = frozenset(['Vary', 'Via', 'X-Forwarded-For', 'Proxy-Authorization', 'Proxy-Connection', 'Upgrade', 'X-Chrome-Variations'])
     ssl_validate = False
+    skip_headers = frozenset(['Vary', 'Via', 'X-Forwarded-For', 'Proxy-Authorization', 'Proxy-Connection', 'Upgrade', 'X-Chrome-Variations', 'Connection', 'Cache-Control'])
+    abbv_headers = {'Accept': ('A', lambda x: '*/*' in x),
+                    'Accept-Language': ('AL', lambda x: x.startswith('zh-CN')),
+                    'Accept-Encoding': ('AE', lambda x: x.startswith('gzip,')), }
 
     def __init__(self, max_window=4, max_timeout=16, max_retry=4, proxy='', ssl_validate=False):
         self.max_window = max_window
@@ -580,7 +605,7 @@ class HTTP(object):
             else:
                 iplist = DNSUtil.remote_resolve(dnsserver, host, timeout=2)
             if ipv4_only:
-                iplist = [ip for ip in iplist if re.match(r'\d+.\d+.\d+.\d+', ip)]
+                iplist = [ip for ip in iplist if re.match(r'\d+\.\d+\.\d+\.\d+', ip)]
             self.dns[host] = iplist = list(set(iplist))
         return iplist
 
@@ -648,7 +673,8 @@ class HTTP(object):
             get_connection_time = self.tcp_connection_time.get
         for i in xrange(self.max_retry):
             window = min((self.max_window+1)//2 + i, len(addresses))
-            addrs = sorted(addresses, key=get_connection_time)[:window] + random.sample(addresses, window)
+            addresses.sort(key=get_connection_time)
+            addrs = addresses[:window] + random.sample(addresses, window)
             queue = gevent.queue.Queue()
             for addr in addrs:
                 gevent.spawn(_create_connection, addr, timeout, queue)
@@ -722,10 +748,10 @@ class HTTP(object):
         host, port = address
         result = None
         addresses = [(x, port) for x in self.dns_resolve(host)]
-        get_connection_time = self.ssl_connection_time.get
         for i in xrange(self.max_retry):
             window = min((self.max_window+1)//2 + i, len(addresses))
-            addrs = sorted(addresses, key=get_connection_time)[:window] + random.sample(addresses, window)
+            addresses.sort(key=self.ssl_connection_time.get)
+            addrs = addresses[:window] + random.sample(addresses, window)
             queue = gevent.queue.Queue()
             for addr in addrs:
                 gevent.spawn(_create_ssl_connection, addr, timeout, queue)
@@ -809,6 +835,29 @@ class HTTP(object):
             if remote:
                 remote.close()
 
+    def green_forward_socket(self, local, remote, timeout=60, tick=2, bufsize=8192, maxping=None, maxpong=None, pongcallback=None, bitmask=None):
+        def io_copy(dest, source):
+            try:
+                dest.settimeout(timeout)
+                source.settimeout(timeout)
+                while 1:
+                    data = source.recv(bufsize)
+                    if not data:
+                        break
+                    if bitmask:
+                        data = ''.join(chr(ord(x) ^ bitmask) for x in data)
+                    dest.sendall(data)
+            except socket.error as e:
+                if e[0] not in ('timed out', 10053, 10054, errno.EBADF, errno.EPIPE, 10057, 10060):
+                    raise
+            finally:
+                if local:
+                    local.close()
+                if remote:
+                    remote.close()
+        gevent.spawn(io_copy, remote.dup(), local.dup())
+        io_copy(local, remote)
+
     def parse_request(self, rfile, bufsize=1048576):
         line = rfile.readline(bufsize)
         if not line:
@@ -879,7 +928,8 @@ class HTTP(object):
 
     def request(self, method, url, payload=None, headers={}, fullurl=False, bufsize=1048576, crlf=None, return_sock=None):
         scheme, netloc, path, params, query, fragment = urlparse.urlparse(url)
-        if not re.search(r':\d+$', netloc):
+        if netloc.rfind(':') <= netloc.rfind(']'):
+            # no port number
             host = netloc
             port = 443 if scheme == 'https' else 80
         else:
@@ -1042,6 +1092,7 @@ class Common(object):
         info = ''
         info += '------------------------------------------------------\n'
         info += 'GoAgent Version    : %s (python/%s gevent/%s pyopenssl/%s)\n' % (__version__, sys.version[:5], gevent.__version__, getattr(OpenSSL, '__version__', 'Disabled'))
+        info += 'Uvent Version      : %s (pyuv/%s libuv/%s)\n' % (__import__('uvent').__version__, __import__('pyuv').__version__, __import__('pyuv').LIBUV_VERSION) if all(x in sys.modules for x in ('pyuv', 'uvent')) else ''
         info += 'Listen Address     : %s:%d\n' % (self.LISTEN_IP, self.LISTEN_PORT)
         info += 'Local Proxy        : %s:%s\n' % (self.PROXY_HOST, self.PROXY_PORT) if self.PROXY_ENABLE else ''
         info += 'Debug INFO         : %s\n' % self.LISTEN_DEBUGINFO if self.LISTEN_DEBUGINFO else ''
@@ -1071,6 +1122,41 @@ http = HTTP(max_window=common.GOOGLE_WINDOW, ssl_validate=common.GAE_VALIDATE or
 http.dns.update(common.HOSTS)
 
 
+def message_html(self, title, banner, detail=''):
+    MESSAGE_TEMPLATE = '''
+    <html><head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>{{ title }}</title>
+    <style><!--
+    body {font-family: arial,sans-serif}
+    div.nav {margin-top: 1ex}
+    div.nav A {font-size: 10pt; font-family: arial,sans-serif}
+    span.nav {font-size: 10pt; font-family: arial,sans-serif; font-weight: bold}
+    div.nav A,span.big {font-size: 12pt; color: #0000cc}
+    div.nav A {font-size: 10pt; color: black}
+    A.l:link {color: #6f6f6f}
+    A.u:link {color: green}
+    //--></style>
+    </head>
+    <body text=#000000 bgcolor=#ffffff>
+    <table border=0 cellpadding=2 cellspacing=0 width=100%>
+    <tr><td bgcolor=#3366cc><font face=arial,sans-serif color=#ffffff><b>Message</b></td></tr>
+    <tr><td> </td></tr></table>
+    <blockquote>
+    <H1>{{ banner }}</H1>
+    {{ detail }}
+    <p>
+    </blockquote>
+    <table width=100% cellpadding=0 cellspacing=0><tr><td bgcolor=#3366cc><img alt="" width=1 height=4></td></tr></table>
+    </body></html>
+    '''
+    kwargs = dict(title=title, banner=banner, detail=detail)
+    template = MESSAGE_TEMPLATE
+    for keyword, value in kwargs.items():
+        template = template.replace('{{ %s }}' % keyword, value)
+    return template
+
+
 def gae_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     # deflate = lambda x:zlib.compress(x)[2:-4]
     if payload:
@@ -1080,8 +1166,20 @@ def gae_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
                 payload = zpayload
                 headers['Content-Encoding'] = 'deflate'
         headers['Content-Length'] = str(len(payload))
+    # GAE donot allow set `Host` header
+    headers.pop('Host', None)
+    metadata = 'G-Method:%s\nG-Url:%s\n%s' % (method, url, ''.join('G-%s:%s\n' % (k, v) for k, v in kwargs.iteritems() if v))
     skip_headers = http.skip_headers
-    metadata = 'G-Method:%s\nG-Url:%s\n%s%s' % (method, url, ''.join('G-%s:%s\n' % (k, v) for k, v in kwargs.iteritems() if v), ''.join('%s:%s\n' % (k, v) for k, v in headers.iteritems() if k not in skip_headers))
+    abbv_headers = http.abbv_headers
+    g_abbv = []
+    for keyword in [x for x in headers if x not in skip_headers]:
+        value = headers[keyword]
+        if keyword in abbv_headers and abbv_headers[keyword][1](value):
+            g_abbv.append(abbv_headers[keyword][0])
+        else:
+            metadata += '%s:%s\n' % (keyword, value)
+    if g_abbv:
+        metadata += 'G-Abbv:%s\n' % ','.join(g_abbv)
     metadata = zlib.compress(metadata)[2:-4]
     gae_payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
     need_crlf = 0 if fetchserver.startswith('https') else common.GAE_CRLF
@@ -1103,7 +1201,7 @@ def gae_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
         response.status = 502
         response.fp = BytesIO('connection aborted. too short headers data=%r' % data)
         return response
-    response.msg = httplib.HTTPMessage(BytesIO(zlib.decompress(data, -15)))
+    response.msg = httplib.HTTPMessage(BytesIO(zlib.decompress(data, -zlib.MAX_WBITS)))
     return response
 
 
@@ -1211,6 +1309,8 @@ class RangeFetch(object):
                         response = self.urlfetch(self.method, self.url, headers, self.payload, fetchserver, password=self.password)
                 except gevent.queue.Empty:
                     continue
+                except socket.error:
+                    logging.warning("Response SSLError in __fetchlet")
                 if not response:
                     logging.warning('RangeFetch %s return %r', headers['Range'], response)
                     range_queue.put((start, end, None))
@@ -1268,6 +1368,7 @@ class GAEProxyHandler(object):
     firstrun = None
     firstrun_lock = gevent.coros.Semaphore()
     urlfetch = staticmethod(gae_urlfetch)
+    normcookie = functools.partial(re.compile(', ([^ =]+(?:=|$))').sub, '\\r\\nSet-Cookie: \\1')
 
     def __init__(self, sock, address):
         self.sock = sock
@@ -1286,40 +1387,6 @@ class GAEProxyHandler(object):
             logging.exception('%r Exception: %s', self, e)
         finally:
             self.finish()
-
-    def _message_html(self, title, banner, detail=''):
-        MESSAGE_TEMPLATE = '''
-        <html><head>
-        <meta http-equiv="content-type" content="text/html;charset=utf-8">
-        <title>{{title}}</title>
-        <style><!--
-        body {font-family: arial,sans-serif}
-        div.nav {margin-top: 1ex}
-        div.nav A {font-size: 10pt; font-family: arial,sans-serif}
-        span.nav {font-size: 10pt; font-family: arial,sans-serif; font-weight: bold}
-        div.nav A,span.big {font-size: 12pt; color: #0000cc}
-        div.nav A {font-size: 10pt; color: black}
-        A.l:link {color: #6f6f6f}
-        A.u:link {color: green}
-        //--></style>
-        </head>
-        <body text=#000000 bgcolor=#ffffff>
-        <table border=0 cellpadding=2 cellspacing=0 width=100%>
-        <tr><td bgcolor=#3366cc><font face=arial,sans-serif color=#ffffff><b>Message</b></td></tr>
-        <tr><td>&nbsp;</td></tr></table>
-        <blockquote>
-        <H1>{{banner}}</H1>
-        {{detail}}
-        <p>
-        </blockquote>
-        <table width=100% cellpadding=0 cellspacing=0><tr><td bgcolor=#3366cc><img alt="" width=1 height=4></td></tr></table>
-        </body></html>
-        '''
-        kwargs = dict(title=title, banner=banner, detail=detail)
-        template = MESSAGE_TEMPLATE
-        for keyword, value in kwargs.items():
-            template = template.replace('{{%s}}' % keyword, value)
-        return template
 
     def _update_google_iplist(self):
         if any(not re.match(r'\d+\.\d+\.\d+\.\d+', x) for x in common.GOOGLE_HOSTS):
@@ -1467,7 +1534,7 @@ class GAEProxyHandler(object):
                 return
             if response.status in (400, 405):
                 common.GAE_CRLF = 0
-            logging.info('%s:%s "%s %s HTTP/1.1" %s %s', self.remote_addr, self.remote_port, self.method, self.path, response.status, response.msg.get('Content-Length', '-'))
+            logging.info('%s:%s "FWD %s %s HTTP/1.1" %s %s', self.remote_addr, self.remote_port, self.method, self.path, response.status, response.msg.get('Content-Length', '-'))
             wfile = self.sock.makefile('wb', 0)
             wfile.write('HTTP/1.1 %s\r\n%s\r\n' % (response.status, ''.join('%s: %s\r\n' % (k.title(), v) for k, v in response.getheaders() if k != 'transfer-encoding')))
             wfile.write(response.read())
@@ -1528,8 +1595,8 @@ class GAEProxyHandler(object):
                         common.GAE_FETCHSERVER = '%s://%s.appspot.com%s?' % (common.GOOGLE_MODE, common.GAE_APPIDS[0], common.GAE_PATH)
 
             if response is None:
-                message_html = self._message_html('502 URLFetch failed', 'Local URLFetch %r failed' % self.path, str(errors))
-                self.sock.sendall('HTTP/1.0 502\r\nContent-Type: text/html\r\n\r\n' + message_html)
+                html = message_html('502 URLFetch failed', 'Local URLFetch %r failed' % self.path, str(errors))
+                self.sock.sendall('HTTP/1.0 502\r\nContent-Type: text/html\r\n\r\n' + html)
                 return
 
             # gateway error, switch to https mode
@@ -1549,13 +1616,13 @@ class GAEProxyHandler(object):
             wfile = self.sock.makefile('wb', 0)
 
             if response.app_status != 200:
-                logging.info('%s:%s "%s %s HTTP/1.1" %s -', self.remote_addr, self.remote_port, self.method, self.path, response.status)
+                logging.info('%s:%s "GAE %s %s HTTP/1.1" %s -', self.remote_addr, self.remote_port, self.method, self.path, response.status)
                 wfile.write('HTTP/1.1 %s\r\n%s\r\n' % (response.status, ''.join('%s: %s\r\n' % (k.title(), v) for k, v in response.getheaders() if k != 'transfer-encoding')))
                 wfile.write(response.read())
                 response.close()
                 return
 
-            logging.info('%s:%s "%s %s HTTP/1.1" %s %s', self.remote_addr, self.remote_port, self.method, self.path, response.status, response.getheader('Content-Length', '-'))
+            logging.info('%s:%s "GAE %s %s HTTP/1.1" %s %s', self.remote_addr, self.remote_port, self.method, self.path, response.status, response.getheader('Content-Length', '-'))
 
             if response.status == 206:
                 fetchservers = [re.sub(r'//\w+\.appspot\.com', '//%s.appspot.com' % x, common.GAE_FETCHSERVER) for x in common.GAE_APPIDS]
@@ -1563,7 +1630,7 @@ class GAEProxyHandler(object):
                 return rangefetch.fetch()
 
             if 'Set-Cookie' in response.msg:
-                response.msg['Set-Cookie'] = re.sub(', ([^ =]+(?:=|$))', '\\r\\nSet-Cookie: \\1', response.msg['Set-Cookie'])
+                response.msg['Set-Cookie'] = self.normcookie(response.msg['Set-Cookie'])
             wfile.write('HTTP/1.1 %s\r\n%s\r\n' % (response.status, ''.join('%s: %s\r\n' % (k.title(), v) for k, v in response.getheaders() if k != 'transfer-encoding')))
 
             while 1:
@@ -1593,21 +1660,22 @@ class GAEProxyHandler(object):
         if domain:
             host = domain
         port = int(port)
-        logging.info('%s:%s "%s %s:%d HTTP/1.1" - -', self.remote_addr, self.remote_port, self.method, host, port)
+        logging.info('%s:%s "FWD %s %s:%d HTTP/1.1" - -', self.remote_addr, self.remote_port, self.method, host, port)
         #http_headers = ''.join('%s: %s\r\n' % (k, v) for k, v in self.headers.iteritems())
-        self.sock.send('HTTP/1.1 200 OK\r\n\r\n')
         if not common.PROXY_ENABLE:
             if host not in http.dns:
                 http.dns[host] = common.GOOGLE_HOSTS
+            self.sock.send('HTTP/1.1 200 OK\r\n\r\n')
             data = self.sock.recv(1024)
             for i in xrange(5):
                 try:
                     timeout = 5
                     remote = http.create_connection((host, port), timeout)
-                    if remote is not None:
+                    if remote is not None and data:
                         remote.sendall(data)
                         break
-                    else:
+                    elif i == 0:
+                        # only print first create_connection error
                         logging.error('http.create_connection((host=%r, port=%r), %r) timeout', host, port, timeout)
                 except socket.error as e:
                     if e[0] == 9:
@@ -1616,13 +1684,14 @@ class GAEProxyHandler(object):
                     else:
                         raise
             if hasattr(remote, 'fileno'):
-                http.forward_socket(self.sock, remote, bufsize=self.bufsize, pongcallback=None)
+                http.forward_socket(self.sock, remote, bufsize=self.bufsize)
         else:
             hostip = random.choice(common.GOOGLE_HOSTS)
             remote = http.create_connection_withproxy((hostip, int(port)), proxy=common.proxy)
             if not remote:
                 logging.error('GAEProxyHandler proxy connect remote (%r, %r) failed', host, port)
                 return
+            self.sock.send('HTTP/1.1 200 OK\r\n\r\n')
             http.forward_socket(self.sock, remote, bufsize=self.bufsize)
 
     def handle_connect_urlfetch(self):
@@ -1633,13 +1702,13 @@ class GAEProxyHandler(object):
         if domain:
             host = domain
         port = int(port)
-        keyfile, certfile = CertUtil.get_cert(host)
-        logging.info('%s:%s "%s %s:%d HTTP/1.1" - -', self.remote_addr, self.remote_port, self.method, host, port)
+        certfile = CertUtil.get_cert(host)
+        logging.info('%s:%s "GAE %s %s:%d HTTP/1.1" - -', self.remote_addr, self.remote_port, self.method, host, port)
         self.__realsock = None
         self.__realrfile = None
         self.sock.sendall('HTTP/1.1 200 OK\r\n\r\n')
         try:
-            ssl_sock = ssl.wrap_socket(self.sock, certfile=certfile, keyfile=keyfile, server_side=True, ssl_version=ssl.PROTOCOL_SSLv23)
+            ssl_sock = ssl.wrap_socket(self.sock, certfile=certfile, keyfile=certfile, server_side=True, ssl_version=ssl.PROTOCOL_SSLv23)
         except Exception as e:
             if e[0] not in (10053, 10054):
                 logging.error('ssl.wrap_socket(self.sock=%r) failed: %s', self.sock, e)
@@ -1759,11 +1828,11 @@ class PAASProxyHandler(GAEProxyHandler):
                     errors.append(e)
 
             if response is None:
-                message_html = self._message_html('502 PAAS URLFetch failed', 'Local PAAS URLFetch %r failed' % self.path, str(errors))
-                self.sock.sendall('HTTP/1.0 502\r\nContent-Type: text/html\r\n\r\n' + message_html)
+                html = message_html('502 PAAS URLFetch failed', 'Local PAAS URLFetch %r failed' % self.path, str(errors))
+                self.sock.sendall('HTTP/1.0 502\r\nContent-Type: text/html\r\n\r\n' + html)
                 return
 
-            logging.info('%s:%s "%s %s HTTP/1.1" %s -', self.remote_addr, self.remote_port, self.method, self.path, response.status)
+            logging.info('%s:%s "PAAS %s %s HTTP/1.1" %s -', self.remote_addr, self.remote_port, self.method, self.path, response.status)
             if response.app_status in (400, 405):
                 http.crlf = 0
 
@@ -1789,92 +1858,158 @@ class PAASProxyHandler(GAEProxyHandler):
 
 
 class LightProxyHandler(object):
+    """a wsgi handler class for PAAS"""
 
-    MessageClass = dict
-    bufsize = 1024 * 1024
-    firstrun = None
-    firstrun_lock = gevent.coros.Semaphore()
+    normcookie = __import__('functools').partial(re.compile(', ([^ =]+(?:=|$))').sub, '\\r\\nSet-Cookie: \\1')
 
-    def __init__(self, sock, address):
-        self.sock = sock
-        self.remote_addr, self.remote_port = self.address = address
+    def __init__(self, *args, **kwargs):
+        self.urlfetch = paas_urlfetch
+        self.firstrun = None
+        self.firstrun_lock = gevent.coros.Semaphore()
 
-        if not self.__class__.firstrun:
-            with self.__class__.firstrun_lock:
-                if not self.__class__.firstrun:
+    def __call__(self, environ, start_response):
+        if not self.firstrun:
+            with self.firstrun_lock:
+                if not self.firstrun:
                     try:
-                        self.__class__.firstrun = self.first_run()
+                        self.firstrun = self.first_run()
                     except Exception as e:
                         logging.error('%r first_run raise Exception: %s', self, e)
         try:
-            self.handle()
+            return self.application(environ, start_response)
         except Exception as e:
             logging.exception('%r Exception: %s', self, e)
         finally:
-            self.finish()
+            return ['']
 
     def first_run(self):
-        """LightProxyHandler first_run, init domain/iplist map"""
+        if not common.PROXY_ENABLE:
+            fetchhost = re.sub(r':\d+$', '', urlparse.urlparse(common.PAAS_FETCHSERVER).netloc)
+            logging.info('resolve common.PAAS_FETCHSERVER domain=%r to iplist', fetchhost)
+            fethhost_iplist = http.dns_resolve(fetchhost)
+            if len(fethhost_iplist) == 0:
+                logging.error('resolve %s domain return empty! please use ip list to replace domain list!', common.GAE_PROFILE)
+                sys.exit(-1)
+            http.dns[fetchhost] = list(set(fethhost_iplist))
+            logging.info('resolve common.PAAS_FETCHSERVER domain to iplist=%r', fethhost_iplist)
         return True
 
-    def parse_request(self, bufsize=1048576):
-        line = self.rfile.readline(bufsize)
-        if not line:
-            raise socket.error(10053, 'empty line')
-        method, path = line.split()[:2]
-        headers = self.MessageClass()
-        while 1:
-            line = self.rfile.readline(bufsize)
-            if not line or line == '\r\n':
-                break
-            keyword, _, value = line.partition(':')
-            keyword = keyword.title()
-            value = value.strip()
-            headers[keyword] = value
-        return method, path, 'HTTP/1.1', headers
-
-    def handle(self):
-        self.rfile = self.sock.makefile('rb', 0)
+    def application(self, environ, start_response):
         try:
-            self.method, self.path, self.version, self.headers = self.parse_request(self.bufsize)
-            getattr(self, 'handle_%s' % self.method.lower(), self.handle_method)()
+            getattr(self, 'handle_%s' % environ['REQUEST_METHOD'].lower(), self.handle_method)(environ, start_response)
         except socket.error as e:
             if e[0] not in (10053, 10054, errno.EPIPE):
                 raise
 
-    def handle_method(self):
-        """Direct http forward"""
+    def handle_method(self, environ, start_response):
         try:
-            logging.info('%s:%s "%s %s HTTP/1.1" - -', self.remote_addr, self.remote_port, self.method, self.path)
-            content_length = int(self.headers.get('Content-Length', 0))
-            payload = self.rfile.read(content_length) if content_length else None
-            server_ip, _, server_port = common.LIGHT_SERVER.rpartition(':')
-            server_sock = socket.create_connection((server_ip, int(server_port)))
-            server_ssl_sock = ssl.wrap_socket(server_sock)
-            data = '%s %s HTTP/1.1\r\n%s\r\n' % (self.method, self.path, ''.join('%s: %s\r\n' % (k.title(), v) for k, v in self.headers.iteritems()))
-            server_ssl_sock.sendall(data)
-            if payload:
-                server_ssl_sock.sendall(payload)
-            if self.method == 'CONNECT':
-                http.forward_socket(self.sock, server_sock)
-            else:
-                http.forward_socket(self.sock, server_ssl_sock)
+            remote_addr = environ['REMOTE_ADDR']
+            remote_port = environ.get('REMOTE_PORT', 0)
+            method = environ['REQUEST_METHOD']
+            path = environ['PATH_INFO'] + '?' + environ['QUERY_STRING']
+            headers = dict((x[5:].replace('_', '-').title(), environ[x]) for x in environ if x.startswith('HTTP_'))
+            host = environ.get('HTTP_HOST', '')
+            wsgi_input = environ['wsgi.input']
+            payload = ''
+            if 'CONTENT_LENGTH' in environ:
+                try:
+                    payload = wsgi_input.read(int(environ['CONTENT_LENGTH']))
+                except (EOFError, socket.error) as e:
+                    logging.error('handle_method read payload failed:%s', e)
+                    return
+            response = None
+            errors = []
+            for i in xrange(common.FETCHMAX_LOCAL):
+                try:
+                    kwargs = {}
+                    if common.PAAS_PASSWORD:
+                        kwargs['password'] = common.PAAS_PASSWORD
+                    if common.PAAS_VALIDATE:
+                        kwargs['validate'] = 1
+                    if common.CONFIG.has_option('hosts', host):
+                        kwargs['hostip'] = random.choice(http.dns_resolve(host))
+                    response = self.urlfetch(method, path, headers, payload, common.PAAS_FETCHSERVER, **kwargs)
+                    if response:
+                        break
+                except Exception as e:
+                    errors.append(e)
+
+            if response is None:
+                html = message_html('502 PAAS URLFetch failed', 'PAAS URLFetch %r failed' % path, str(errors))
+                start_response('502', [('Content-Type', 'text/html')])
+                yield html
+                raise StopIteration
+
+            logging.info('%s:%s "PAAS %s %s HTTP/1.1" %s -', remote_addr, remote_port, method, path, response.status)
+            if response.app_status in (400, 405):
+                http.crlf = 0
+
+            if 'Set-Cookie' in response.msg:
+                response.msg['Set-Cookie'] = self.normcookie(response.msg['Set-Cookie'])
+            response_headers = [(k.title(), v) for k, v in response.getheaders() if k != 'transfer-encoding']
+            start_response(str(response.status), response_headers)
+
+            while 1:
+                data = response.read(32768)
+                if not data:
+                    break
+                yield data
+            response.close()
+
         except socket.error as e:
+            # Connection closed before proxy return
             if e[0] not in (10053, errno.EPIPE):
                 raise
-        except Exception as e:
-            logging.warn('LightProxyHandler "%s %s" failed:%s', self.method, self.headers.get('Host', ''), e)
-            raise
 
-    def finish(self):
+    def handle_connect(self, environ, start_response):
+        return self.handle_connect_urlfetch(environ, start_response)
+
+    def handle_connect_urlfetch(self, environ, start_response):
+        """deploy fake cert to client"""
+        remote_addr = environ['REMOTE_ADDR']
+        remote_port = environ.get('REMOTE_PORT', 0)
+        method = environ['REQUEST_METHOD']
+        path = environ['PATH_INFO'] + '?' + environ['QUERY_STRING']
+        headers = dict((x[5:].replace('_', '-').title(), environ[x]) for x in environ if x.startswith('HTTP_'))
+        host = environ.get('HTTP_HOST', '')
+        wsgi_input = environ['wsgi.input']
+
+        host, _, port = path.rpartition(':')
+        port = int(port)
+        certfile = CertUtil.get_cert(host)
+        logging.info('%s:%s "PAAS %s %s:%d HTTP/1.1" - -', remote_addr, remote_port, method, host, port)
+
+        sock = wsgi_input.rfile._sock
+        sock.sendall('HTTP/1.1 200 OK\r\n\r\n')
         try:
-            self.rfile.close()
-        except:
-            pass
+            ssl_sock = ssl.wrap_socket(sock, certfile=certfile, keyfile=certfile, server_side=True, ssl_version=ssl.PROTOCOL_SSLv23)
+        except Exception as e:
+            if e[0] not in (10053, 10054):
+                logging.error('ssl.wrap_socket(self.sock=%r) failed: %s', self.sock, e)
+            return ['']
+        self.sock = ssl_sock
+        self.rfile = self.sock.makefile('rb', self.bufsize)
         try:
-            self.sock.close()
-        except:
-            pass
+            self.method, self.path, self.version, self.headers = http.parse_request(self.rfile)
+        except socket.error as e:
+            if e[0] not in (10053, 10054, errno.EPIPE):
+                raise
+        if self.path[0] == '/' and host:
+            self.path = 'https://%s%s' % (self.headers['Host'], self.path)
+        try:
+            self.handle_method()
+        except socket.error as e:
+            if e[0] not in (10053, 10060, errno.EPIPE):
+                raise
+        finally:
+            if self.__realsock:
+                try:
+                    self.__realsock.shutdown(socket.SHUT_WR)
+                except socket.error:
+                    pass
+                self.__realsock.close()
+            if self.__realrfile:
+                self.__realrfile.close()
 
 
 class Autoproxy2Pac(object):
@@ -1929,7 +2064,8 @@ class Autoproxy2Pac(object):
                     # Process separator placeholders
                     jsRegexp = re.sub(r"\\\^", r"(?:[^\w\-.%\u0080-\uFFFF]|$)", jsRegexp)
                     # Process extended anchor at expression start
-                    jsRegexp = re.sub(r"^\\\|\\\|", r"^[\w\-]+:\/+(?!\/)(?:[^\/]+\.)?", jsRegexp, 1)
+                    #jsRegexp = re.sub(r"^\\\|\\\|", r"^[\w\-]+:\/+(?!\/)(?:[^\/]+\.)?", jsRegexp, 1)
+                    jsRegexp = re.sub(r"^\\\|\\\|", r"^https?:\/\/(?:\w+\.)?", jsRegexp, 1)
                     # Process anchor at expression start
                     jsRegexp = re.sub(r"^\\\|", "^", jsRegexp, 1)
                     # Process anchor at expression end
@@ -1961,7 +2097,16 @@ class Autoproxy2Pac(object):
         content = '\r\n'.join(lines)
         function = 'function FindProxyForURLByAutoProxy(url, host) {\r\n%s\r\nreturn "%s";\r\n}' % (jsrule, self.default)
         content = re.sub('(?is)function\\s*FindProxyForURLByAutoProxy\\s*\\(url, host\\)\\s*{.+\r\n}', function, content)
+        content = re.sub(r'''goagent\s*=\s*['"]PROXY [\.\w:]+['"]''', 'goagent = \'PROXY %s\'' % self.proxy, content)
         return content
+
+    @staticmethod
+    def get_listen_ip():
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.connect(('8.8.8.8', 53))
+        listen_ip = sock.getsockname()[0]
+        sock.close()
+        return listen_ip
 
     @classmethod
     def update_filename(cls, filename, url, proxy, default='DIRECT'):
@@ -1981,9 +2126,12 @@ class PACServerHandler(GAEProxyHandler):
     firstrun_lock = gevent.coros.Semaphore()
 
     def first_run(self):
-        if time.time() - os.path.getmtime(self.pacfile) > 12 * 60 * 60:
+        if time.time() - os.path.getmtime(self.pacfile) > 24 * 60 * 60:
             default = '%s:%s' % (common.PROXY_HOST, common.PROXY_PORT) if common.PROXY_ENABLE else 'DIRECT'
-            gevent.spawn_later(1, Autoproxy2Pac.update_filename, self.pacfile, common.PAC_GFWLIST, '%s:%s' % (common.LISTEN_IP, common.LISTEN_PORT), default)
+            listen_ip = common.LISTEN_IP
+            if listen_ip in ('', '0.0.0.0', '::'):
+                listen_ip = Autoproxy2Pac.get_listen_ip()
+            gevent.spawn_later(1, Autoproxy2Pac.update_filename, self.pacfile, common.PAC_GFWLIST, '%s:%s' % (listen_ip, common.LISTEN_PORT), default)
         return True
 
     def handle_get(self):
@@ -2090,6 +2238,12 @@ def pre_start():
         if gevent.version_info[0] == 0:
             logging.critical('GoAgent DNSServer needs python-gevent 1.0, Please disable DNS Server or upgarde gevent version.')
             sys.exit()
+    if not OpenSSL:
+        logging.warning('python-openssl not found, please install it!')
+    if 'uvent.loop' in sys.modules and gevent.__version__ != '1.0fake':
+        if isinstance(gevent.get_hub().loop, __import__('uvent').loop.UVLoop):
+            logging.info('Uvent enabled, patch forward_socket')
+            http.forward_socket = http.green_forward_socket
 
 
 def main():
