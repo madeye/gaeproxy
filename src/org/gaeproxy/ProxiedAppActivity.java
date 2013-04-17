@@ -8,12 +8,12 @@ import android.app.ProgressDialog;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -24,8 +24,30 @@ import org.gaeproxy.db.App;
 
 import java.util.*;
 
-public class ProxiedAppActivity extends Activity implements OnCheckedChangeListener,
-    OnClickListener {
+public class ProxiedAppActivity extends Activity implements OnCheckedChangeListener {
+
+  private class UpdateDatabaseTask extends AsyncTask<Void, Void, Void> {
+
+    private void saveAppSettings() {
+      if (mAppList == null) return;
+
+      Set<App> proxiedApps = new HashSet<App>();
+      for (App app : mAppList) {
+        if (app.isProxied()) {
+          proxiedApps.add(app);
+        }
+      }
+
+      App.forceToUpdateProxiedApps(getApplicationContext(), proxiedApps);
+
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+      saveAppSettings();
+      return null;
+    }
+  }
 
   private static final int MSG_LOAD_START = 1;
   private static final int MSG_LOAD_FINISH = 2;
@@ -188,9 +210,6 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
           entry.text = (TextView) convertView
               .findViewById(R.id.itemtext);
 
-          entry.text.setOnClickListener(ProxiedAppActivity.this);
-          entry.text.setOnClickListener(ProxiedAppActivity.this);
-
           convertView.setTag(entry);
 
           entry.box.setOnCheckedChangeListener(ProxiedAppActivity.this);
@@ -230,17 +249,7 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
     final App app = (App) buttonView.getTag();
     if (app != null) {
       app.setProxied(isChecked);
-    }
-  }
-
-  @Override
-  public void onClick(View v) {
-    CheckBox cbox = (CheckBox) v.getTag();
-
-    final App app = (App) cbox.getTag();
-    if (app != null) {
-      app.setProxied(!app.isProxied());
-      cbox.setChecked(app.isProxied());
+      new UpdateDatabaseTask().execute();
     }
   }
 
@@ -264,7 +273,6 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
   @Override
   protected void onPause() {
     super.onPause();
-    saveAppSettings();
   }
 
   /*
@@ -276,20 +284,6 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
   protected void onStop() {
     super.onStop();
     // Log.d(getClass().getName(),"Exiting Preferences");
-  }
-
-  public void saveAppSettings() {
-    if (mAppList == null) return;
-
-    Set<App> proxiedApps = new HashSet<App>();
-    for (App app : mAppList) {
-      if (app.isProxied()) {
-        proxiedApps.add(app);
-      }
-    }
-
-    App.forceToUpdateProxiedApps(this, proxiedApps);
-
   }
 
   private static class ListEntry {
