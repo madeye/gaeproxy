@@ -27,7 +27,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DateSorter;
-import android.widget.*;
+import android.widget.AbsListView;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import org.gaeproxy.R;
 import org.gaeproxy.zirco.model.items.HistoryItem;
 
@@ -59,12 +63,12 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
   /**
    * Constructor.
    *
-   * @param context   The current context.
-   * @param cursor    The data cursor.
+   * @param context The current context.
+   * @param cursor The data cursor.
    * @param dateIndex The date index ?
    */
-  public HistoryExpandableListAdapter(Context context, Cursor cursor,
-                                      int dateIndex, int faviconSize) {
+  public HistoryExpandableListAdapter(Context context, Cursor cursor, int dateIndex,
+      int faviconSize) {
     mContext = context;
     mCursor = cursor;
     mDateIndex = dateIndex;
@@ -73,8 +77,7 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
     mDateSorter = new DateSorter(mContext);
     mIdIndex = cursor.getColumnIndexOrThrow(BaseColumns._ID);
 
-    mInflater = (LayoutInflater) mContext
-        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     buildMap();
   }
@@ -101,8 +104,7 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
           if (index == DateSorter.DAY_COUNT - 1) {
             // We are already in the last bin, so it will
             // include all the remaining items
-            array[index] = mCursor.getCount()
-                - mCursor.getPosition();
+            array[index] = mCursor.getCount() - mCursor.getPosition();
             break;
           }
           dateIndex = index;
@@ -119,13 +121,10 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
   public Object getChild(int groupPosition, int childPosition) {
     moveCursorToChildPosition(groupPosition, childPosition);
 
-    String title = mCursor
-        .getString(Browser.HISTORY_PROJECTION_TITLE_INDEX);
-    if (title.length() > 11)
-      title = title.substring(0, 10) + "...";
+    String title = mCursor.getString(Browser.HISTORY_PROJECTION_TITLE_INDEX);
+    if (title.length() > 11) title = title.substring(0, 10) + "...";
 
-    return new HistoryItem(
-        mCursor.getLong(Browser.HISTORY_PROJECTION_ID_INDEX), title,
+    return new HistoryItem(mCursor.getLong(Browser.HISTORY_PROJECTION_ID_INDEX), title,
         mCursor.getString(Browser.HISTORY_PROJECTION_URL_INDEX),
         mCursor.getBlob(Browser.HISTORY_PROJECTION_FAVICON_INDEX));
   }
@@ -144,12 +143,11 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
   }
 
   @Override
-  public View getChildView(int groupPosition, int childPosition,
-                           boolean isLastChild, View convertView, ViewGroup parent) {
+  public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+      View convertView, ViewGroup parent) {
     View view = getCustomChildView();
 
-    TextView titleView = (TextView) view
-        .findViewById(R.id.HistoryRow_Title);
+    TextView titleView = (TextView) view.findViewById(R.id.HistoryRow_Title);
 
     HistoryItem item = (HistoryItem) getChild(groupPosition, childPosition);
     titleView.setText(item.getTitle());
@@ -157,14 +155,12 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
     TextView urlView = (TextView) view.findViewById(R.id.HistoryRow_Url);
     urlView.setText(item.getUrl());
 
-    ImageView faviconView = (ImageView) view
-        .findViewById(R.id.HistoryRow_Thumbnail);
+    ImageView faviconView = (ImageView) view.findViewById(R.id.HistoryRow_Thumbnail);
     Bitmap favicon = item.getFavicon();
     if (favicon != null) {
       BitmapDrawable icon = new BitmapDrawable(favicon);
 
-      Bitmap bm = Bitmap.createBitmap(mFaviconSize, mFaviconSize,
-          Bitmap.Config.ARGB_4444);
+      Bitmap bm = Bitmap.createBitmap(mFaviconSize, mFaviconSize, Bitmap.Config.ARGB_4444);
       Canvas canvas = new Canvas(bm);
 
       icon.setBounds(0, 0, mFaviconSize, mFaviconSize);
@@ -185,8 +181,7 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
    * @return The created view.
    */
   private View getCustomChildView() {
-    LinearLayout view = (LinearLayout) mInflater.inflate(
-        R.layout.history_row, null, false);
+    LinearLayout view = (LinearLayout) mInflater.inflate(R.layout.history_row, null, false);
 
     return view;
   }
@@ -198,17 +193,15 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
    */
   private TextView getGenericView() {
     // Layout parameters for the ExpandableListView
-    AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-        ViewGroup.LayoutParams.FILL_PARENT, (int) (45 * mContext
-        .getResources().getDisplayMetrics().density));
+    AbsListView.LayoutParams lp = new AbsListView.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+        (int) (45 * mContext.getResources().getDisplayMetrics().density));
 
     TextView textView = new TextView(mContext);
     textView.setLayoutParams(lp);
     // Center the text vertically
     textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
     // Set the text starting position
-    textView.setPadding((int) (35 * mContext.getResources()
-        .getDisplayMetrics().density), 0, 0, 0);
+    textView.setPadding((int) (35 * mContext.getResources().getDisplayMetrics().density), 0, 0, 0);
     return textView;
   }
 
@@ -219,20 +212,15 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
 
     switch (binIndex) {
       case 0:
-        return mContext.getResources().getString(
-            R.string.HistoryListActivity_Today);
+        return mContext.getResources().getString(R.string.HistoryListActivity_Today);
       case 1:
-        return mContext.getResources().getString(
-            R.string.HistoryListActivity_Yesterday);
+        return mContext.getResources().getString(R.string.HistoryListActivity_Yesterday);
       case 2:
-        return mContext.getResources().getString(
-            R.string.HistoryListActivity_LastSevenDays);
+        return mContext.getResources().getString(R.string.HistoryListActivity_LastSevenDays);
       case 3:
-        return mContext.getResources().getString(
-            R.string.HistoryListActivity_LastMonth);
+        return mContext.getResources().getString(R.string.HistoryListActivity_LastMonth);
       default:
-        return mContext.getResources().getString(
-            R.string.HistoryListActivity_Older);
+        return mContext.getResources().getString(R.string.HistoryListActivity_Older);
     }
   }
 
@@ -247,8 +235,8 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
   }
 
   @Override
-  public View getGroupView(int groupPosition, boolean isExpanded,
-                           View convertView, ViewGroup parent) {
+  public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+      ViewGroup parent) {
     TextView textView = getGenericView();
     textView.setText(getGroup(groupPosition).toString());
     return textView;
@@ -313,8 +301,7 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
    * @param childPosition The child position.
    * @return True if the move has succeeded.
    */
-  private boolean moveCursorToChildPosition(int groupPosition,
-                                            int childPosition) {
+  private boolean moveCursorToChildPosition(int groupPosition, int childPosition) {
     if (mCursor.isClosed()) {
       return false;
     }
@@ -351,5 +338,4 @@ public class HistoryExpandableListAdapter extends BaseExpandableListAdapter {
     * ExpandableListView.getPackedPositionChild( packedPosition); return
     * moveCursorToChildPosition(groupPosition, childPosition); }
     */
-
 }

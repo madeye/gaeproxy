@@ -73,12 +73,12 @@ public class RegexValidator implements Serializable {
    * Construct a validator for a single regular expression with the specified
    * case sensitivity.
    *
-   * @param regex         The regular expression this validator will validate against
+   * @param regex The regular expression this validator will validate against
    * @param caseSensitive when <code>true</code> matching is <i>case sensitive</i>,
-   *                      otherwise matching is <i>case in-sensitive</i>
+   * otherwise matching is <i>case in-sensitive</i>
    */
   public RegexValidator(String regex, boolean caseSensitive) {
-    this(new String[]{regex}, caseSensitive);
+    this(new String[] { regex }, caseSensitive);
   }
 
   /**
@@ -86,7 +86,7 @@ public class RegexValidator implements Serializable {
    * set of regular expressions.
    *
    * @param regexs The set of regular expressions this validator will validate
-   *               against
+   * against
    */
   public RegexValidator(String[] regexs) {
     this(regexs, true);
@@ -96,22 +96,20 @@ public class RegexValidator implements Serializable {
    * Construct a validator that matches any one of the set of regular
    * expressions with the specified case sensitivity.
    *
-   * @param regexs        The set of regular expressions this validator will validate
-   *                      against
+   * @param regexs The set of regular expressions this validator will validate
+   * against
    * @param caseSensitive when <code>true</code> matching is <i>case sensitive</i>,
-   *                      otherwise matching is <i>case in-sensitive</i>
+   * otherwise matching is <i>case in-sensitive</i>
    */
   public RegexValidator(String[] regexs, boolean caseSensitive) {
     if (regexs == null || regexs.length == 0) {
-      throw new IllegalArgumentException(
-          "Regular expressions are missing");
+      throw new IllegalArgumentException("Regular expressions are missing");
     }
     patterns = new Pattern[regexs.length];
     int flags = (caseSensitive ? 0 : Pattern.CASE_INSENSITIVE);
     for (int i = 0; i < regexs.length; i++) {
       if (regexs[i] == null || regexs[i].length() == 0) {
-        throw new IllegalArgumentException("Regular expression[" + i
-            + "] is missing");
+        throw new IllegalArgumentException("Regular expression[" + i + "] is missing");
       }
       patterns[i] = Pattern.compile(regexs[i], flags);
     }
@@ -212,5 +210,4 @@ public class RegexValidator implements Serializable {
     }
     return null;
   }
-
 }

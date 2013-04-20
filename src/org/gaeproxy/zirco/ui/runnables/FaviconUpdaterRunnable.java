@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import org.gaeproxy.zirco.providers.BookmarksProviderWrapper;
 
-/**
- * Runnable to update database favicon.
- */
+/** Runnable to update database favicon. */
 public class FaviconUpdaterRunnable implements Runnable {
 
   private Activity mActivity;
@@ -17,13 +15,12 @@ public class FaviconUpdaterRunnable implements Runnable {
   /**
    * Constructor.
    *
-   * @param activity    The parent activity.
-   * @param url         The page url.
+   * @param activity The parent activity.
+   * @param url The page url.
    * @param originalUrl The page original url.
-   * @param favicon     The favicon.
+   * @param favicon The favicon.
    */
-  public FaviconUpdaterRunnable(Activity activity, String url,
-                                String originalUrl, Bitmap favicon) {
+  public FaviconUpdaterRunnable(Activity activity, String url, String originalUrl, Bitmap favicon) {
     mActivity = activity;
     mUrl = url;
     mOriginalUrl = originalUrl;
@@ -32,8 +29,6 @@ public class FaviconUpdaterRunnable implements Runnable {
 
   @Override
   public void run() {
-    BookmarksProviderWrapper.updateFavicon(mActivity, mUrl, mOriginalUrl,
-        mFavIcon);
+    BookmarksProviderWrapper.updateFavicon(mActivity, mUrl, mOriginalUrl, mFavIcon);
   }
-
 }

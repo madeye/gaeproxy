@@ -5,10 +5,11 @@ import java.io.OutputStream;
 
 class HexEncoder {
 
-  protected final byte[] encodingTable = {(byte) '0', (byte) '1',
-      (byte) '2', (byte) '3', (byte) '4', (byte) '5', (byte) '6',
-      (byte) '7', (byte) '8', (byte) '9', (byte) 'a', (byte) 'b',
-      (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f'};
+  protected final byte[] encodingTable = {
+      (byte) '0', (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5', (byte) '6',
+      (byte) '7', (byte) '8', (byte) '9', (byte) 'a', (byte) 'b', (byte) 'c', (byte) 'd',
+      (byte) 'e', (byte) 'f'
+  };
 
   /*
     * set up the decoding table.
@@ -25,8 +26,7 @@ class HexEncoder {
    *
    * @return the number of bytes produced.
    */
-  public int decode(byte[] data, int off, int length, OutputStream out)
-      throws IOException {
+  public int decode(byte[] data, int off, int length, OutputStream out) throws IOException {
     byte b1, b2;
     int outLen = 0;
 
@@ -109,8 +109,7 @@ class HexEncoder {
    *
    * @return the number of bytes produced.
    */
-  public int encode(byte[] data, int off, int length, OutputStream out)
-      throws IOException {
+  public int encode(byte[] data, int off, int length, OutputStream out) throws IOException {
     for (int i = off; i < (off + length); i++) {
       int v = data[i] & 0xff;
 

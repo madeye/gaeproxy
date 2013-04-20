@@ -5,10 +5,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
-
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -17,9 +19,7 @@ import java.util.ArrayList;
 
 public class Utils {
 
-  /**
-   * Internal thread used to execute scripts (as root or not).
-   */
+  /** Internal thread used to execute scripts (as root or not). */
   private static final class ScriptRunner extends Thread {
     private final String scripts;
     private final StringBuilder result;
@@ -41,16 +41,14 @@ public class Utils {
       }
     }
 
-
     /**
      * Creates a new scripts runner.
      *
      * @param scripts scripts to run
-     * @param res     response output
-     * @param asroot  if true, executes the scripts as root
+     * @param res response output
+     * @param asroot if true, executes the scripts as root
      */
-    public ScriptRunner(String scripts, StringBuilder res,
-                        boolean asroot) {
+    public ScriptRunner(String scripts, StringBuilder res, boolean asroot) {
       this.scripts = scripts;
       this.result = res;
       this.asroot = asroot;
@@ -61,8 +59,8 @@ public class Utils {
       String arg0 = argList.get(0);
       String[] args = argList.toArray(new String[1]);
 
-      return Exec.createSubprocess(result != null ? 1 : 0, arg0, args, null,
-          scripts + "\nexit\n", processId);
+      return Exec.createSubprocess(result != null ? 1 : 0, arg0, args, null, scripts + "\nexit\n",
+          processId);
     }
 
     private ArrayList<String> parse(String cmd) {
@@ -144,7 +142,6 @@ public class Utils {
           read = stdout.read(buf);
           result.append(new String(buf, 0, read));
         }
-
       } catch (Exception ex) {
         Log.e(TAG, "Cannot execute the scripts.", ex);
       } finally {
@@ -196,13 +193,11 @@ public class Utils {
     boolean version = false;
 
     StringBuilder sb = new StringBuilder();
-    String command = iptables + " --version\n" + iptables
-        + " -L -t nat -n\n" + "exit\n";
+    String command = iptables + " --version\n" + iptables + " -L -t nat -n\n" + "exit\n";
 
     int exitcode = runScript(command, sb, 10 * 1000, true);
 
-    if (exitcode == TIME_OUT)
-      return;
+    if (exitcode == TIME_OUT) return;
 
     lines = sb.toString();
 
@@ -215,27 +210,40 @@ public class Utils {
 
     if (!compatible || !version) {
       iptables = ALTERNATIVE_IPTABLES;
-      if (!new File(iptables).exists())
-        iptables = "iptables";
+      if (!new File(iptables).exists()) iptables = "iptables";
+    }
+  }
+
+  public static Bitmap drawableToBitmap (Drawable drawable) {
+    if (drawable instanceof BitmapDrawable) {
+      return ((BitmapDrawable)drawable).getBitmap();
     }
 
+    int width = drawable.getIntrinsicWidth();
+    width = width > 0 ? width : 1;
+    int height = drawable.getIntrinsicHeight();
+    height = height > 0 ? height : 1;
+
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
+    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+    drawable.draw(canvas);
+
+    return bitmap;
   }
 
   public static Drawable getAppIcon(Context c, int uid) {
     PackageManager pm = c.getPackageManager();
-    Drawable appIcon = c.getResources().getDrawable(
-        R.drawable.sym_def_app_icon);
+    Drawable appIcon = c.getResources().getDrawable(R.drawable.sym_def_app_icon);
     String[] packages = pm.getPackagesForUid(uid);
 
     if (packages != null) {
       if (packages.length == 1) {
         try {
-          ApplicationInfo appInfo = pm.getApplicationInfo(
-              packages[0], 0);
+          ApplicationInfo appInfo = pm.getApplicationInfo(packages[0], 0);
           appIcon = pm.getApplicationIcon(appInfo);
         } catch (NameNotFoundException e) {
-          Log.e(c.getPackageName(),
-              "No package found matching with the uid " + uid);
+          Log.e(c.getPackageName(), "No package found matching with the uid " + uid);
         }
       }
     } else {
@@ -249,10 +257,8 @@ public class Utils {
 
     if (data_path == null) {
 
-      if (Environment.MEDIA_MOUNTED.equals(Environment
-          .getExternalStorageState())) {
-        data_path = Environment.getExternalStorageDirectory()
-            .getAbsolutePath();
+      if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+        data_path = Environment.getExternalStorageDirectory().getAbsolutePath();
       } else {
         data_path = ctx.getFilesDir().getAbsolutePath();
       }
@@ -264,22 +270,19 @@ public class Utils {
   }
 
   public static boolean getHasRedirectSupport() {
-    if (hasRedirectSupport == -1)
-      initHasRedirectSupported();
+    if (hasRedirectSupport == -1) initHasRedirectSupported();
     return hasRedirectSupport == 1;
   }
 
   public static String getIptables() {
-    if (iptables == null)
-      checkIptables();
+    if (iptables == null) checkIptables();
     return iptables;
   }
 
   private static String getShell() {
     if (shell == null) {
       shell = DEFAULT_SHELL;
-      if (!new File(shell).exists())
-        shell = "sh";
+      if (!new File(shell).exists()) shell = "sh";
     }
     return shell;
   }
@@ -288,27 +291,24 @@ public class Utils {
     Signature sig = null;
     try {
       Signature[] sigs;
-      sigs = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(),
-          PackageManager.GET_SIGNATURES).signatures;
-      if (sigs != null && sigs.length > 0)
-        sig = sigs[0];
+      sigs = ctx.getPackageManager()
+          .getPackageInfo(ctx.getPackageName(), PackageManager.GET_SIGNATURES).signatures;
+      if (sigs != null && sigs.length > 0) sig = sigs[0];
     } catch (Exception ignore) {
       // Nothing
     }
-    if (sig == null)
-      return null;
+    if (sig == null) return null;
     String data = sig.toCharsString();
     return Obfuscator.obfuscate(data);
   }
 
   public static void initHasRedirectSupported() {
 
-    if (!Utils.isRoot())
-      return;
+    if (!Utils.isRoot()) return;
 
     StringBuilder sb = new StringBuilder();
-    String command = Utils.getIptables()
-        + " -t nat -A OUTPUT -p udp --dport 54 -j REDIRECT --to 8154";
+    String command =
+        Utils.getIptables() + " -t nat -A OUTPUT -p udp --dport 54 -j REDIRECT --to 8154";
 
     int exitcode = runScript(command, sb, 10 * 1000, true);
 
@@ -319,8 +319,7 @@ public class Utils {
     // flush the check command
     Utils.runRootCommand(command.replace("-A", "-D"));
 
-    if (exitcode == TIME_OUT)
-      return;
+    if (exitcode == TIME_OUT) return;
 
     if (lines.contains("No chain/target/match")) {
       hasRedirectSupport = 0;
@@ -328,19 +327,17 @@ public class Utils {
   }
 
   public static boolean isInitialized() {
-    if (initialized)
+    if (initialized) {
       return true;
-    else {
+    } else {
       initialized = true;
       return false;
     }
-
   }
 
   public static boolean isRoot() {
 
-    if (isRoot != -1)
-      return isRoot == 1;
+    if (isRoot != -1) return isRoot == 1;
 
     // switch between binaries
     if (new File(DEFAULT_ROOT).exists()) {
@@ -374,7 +371,6 @@ public class Utils {
   public static boolean runCommand(String command) {
 
     return runCommand(command, 10 * 1000);
-
   }
 
   public static boolean runCommand(String command, int timeout) {
@@ -389,13 +385,11 @@ public class Utils {
   public static boolean runRootCommand(String command) {
 
     return runRootCommand(command, 20 * 1000);
-
   }
 
   public static boolean runRootCommand(String command, int timeout) {
 
-    if (!isRoot())
-      return false;
+    if (!isRoot()) return false;
 
     Log.d(TAG, command);
 
@@ -404,8 +398,8 @@ public class Utils {
     return true;
   }
 
-  private synchronized static int runScript(String script, StringBuilder res,
-                                            long timeout, boolean asroot) {
+  private synchronized static int runScript(String script, StringBuilder res, long timeout,
+      boolean asroot) {
     final ScriptRunner runner = new ScriptRunner(script, res, asroot);
     runner.start();
     try {

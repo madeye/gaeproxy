@@ -1,14 +1,11 @@
 package org.emergent.android.weave.client;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 public class WeaveAccountInfo {
 
   public static WeaveAccountInfo createWeaveAccountInfo(String authtoken) {
@@ -24,15 +21,13 @@ public class WeaveAccountInfo {
     }
   }
 
-  public static WeaveAccountInfo createWeaveAccountInfo(String serverUri,
-                                                        String username, String password, char[] encsecret)
-      throws URISyntaxException {
-    return createWeaveAccountInfo(new URI(serverUri), username, password,
-        encsecret);
+  public static WeaveAccountInfo createWeaveAccountInfo(String serverUri, String username,
+      String password, char[] encsecret) throws URISyntaxException {
+    return createWeaveAccountInfo(new URI(serverUri), username, password, encsecret);
   }
 
-  public static WeaveAccountInfo createWeaveAccountInfo(URI serverUri,
-                                                        String username, String password, char[] encsecret) {
+  public static WeaveAccountInfo createWeaveAccountInfo(URI serverUri, String username,
+      String password, char[] encsecret) {
     return new WeaveAccountInfo(serverUri, username, password, encsecret);
   }
 
@@ -44,16 +39,11 @@ public class WeaveAccountInfo {
 
   private final char[] m_secret;
 
-  private WeaveAccountInfo(URI server, String username, String password,
-                           char[] secret) {
-    if (server == null)
-      throw new NullPointerException("server was null");
-    if (username == null)
-      throw new NullPointerException("username was null");
-    if (password == null)
-      throw new NullPointerException("password was null");
-    if (secret == null)
-      throw new NullPointerException("secret was null");
+  private WeaveAccountInfo(URI server, String username, String password, char[] secret) {
+    if (server == null) throw new NullPointerException("server was null");
+    if (username == null) throw new NullPointerException("username was null");
+    if (password == null) throw new NullPointerException("password was null");
+    if (secret == null) throw new NullPointerException("secret was null");
     m_server = server;
     m_username = username;
     m_password = password;

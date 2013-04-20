@@ -15,14 +15,9 @@
 
 package org.gaeproxy.zirco.ui.activities;
 
-/**
- * Interface defining a tool bar container.
- */
+/** Interface defining a tool bar container. */
 public interface IToolbarsContainer {
 
-  /**
-   * Hide the tool bars of this item.
-   */
+  /** Hide the tool bars of this item. */
   void hideToolbars();
-
 }

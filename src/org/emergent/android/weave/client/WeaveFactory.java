@@ -18,9 +18,7 @@ package org.emergent.android.weave.client;
 
 import java.net.URI;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 public class WeaveFactory {
 
   private WeaveTransport m_transport;
@@ -32,14 +30,12 @@ public class WeaveFactory {
     m_useConnectionPool = WeaveConstants.CONNECTION_POOL_ENABLED_DEFAULT;
   }
 
-  public UserWeave createUserWeave(URI server, String username,
-                                   String password) {
+  public UserWeave createUserWeave(URI server, String username, String password) {
     return new UserWeave(getWeaveTransport(), server, username, password);
   }
 
   protected WeaveTransport createWeaveTransport() {
-    return new WeaveTransport(isConnectionPoolEnabled(),
-        isInvalidCertsAccepted());
+    return new WeaveTransport(isConnectionPoolEnabled(), isInvalidCertsAccepted());
   }
 
   protected synchronized WeaveTransport getWeaveTransport() {

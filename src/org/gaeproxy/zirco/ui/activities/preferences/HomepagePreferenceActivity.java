@@ -21,11 +21,8 @@ import android.preference.PreferenceManager;
 import org.gaeproxy.R;
 import org.gaeproxy.zirco.utils.Constants;
 
-/**
- * Home page preference chooser activity.
- */
-public class HomepagePreferenceActivity extends
-    BaseSpinnerCustomPreferenceActivity {
+/** Home page preference chooser activity. */
+public class HomepagePreferenceActivity extends BaseSpinnerCustomPreferenceActivity {
 
   @Override
   protected int getSpinnerPromptId() {
@@ -44,10 +41,8 @@ public class HomepagePreferenceActivity extends
 
   @Override
   protected void onOk() {
-    Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
-        .edit();
-    editor.putString(Constants.PREFERENCES_GENERAL_HOME_PAGE,
-        mCustomEditText.getText().toString());
+    Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+    editor.putString(Constants.PREFERENCES_GENERAL_HOME_PAGE, mCustomEditText.getText().toString());
     editor.commit();
   }
 
@@ -65,10 +60,8 @@ public class HomepagePreferenceActivity extends
       case 2: {
         mCustomEditText.setEnabled(true);
 
-        if ((mCustomEditText.getText().toString()
-            .equals(Constants.URL_ABOUT_START))
-            || (mCustomEditText.getText().toString()
-            .equals(Constants.URL_ABOUT_BLANK))) {
+        if ((mCustomEditText.getText().toString().equals(Constants.URL_ABOUT_START))
+            || (mCustomEditText.getText().toString().equals(Constants.URL_ABOUT_BLANK))) {
           mCustomEditText.setText(null);
         }
         break;
@@ -82,9 +75,8 @@ public class HomepagePreferenceActivity extends
 
   @Override
   protected void setSpinnerValueFromPreferences() {
-    String currentHomepage = PreferenceManager.getDefaultSharedPreferences(
-        this).getString(Constants.PREFERENCES_GENERAL_HOME_PAGE,
-        Constants.URL_ABOUT_START);
+    String currentHomepage = PreferenceManager.getDefaultSharedPreferences(this)
+        .getString(Constants.PREFERENCES_GENERAL_HOME_PAGE, Constants.URL_ABOUT_START);
 
     if (currentHomepage.equals(Constants.URL_ABOUT_START)) {
       mSpinner.setSelection(0);
@@ -100,5 +92,4 @@ public class HomepagePreferenceActivity extends
       mCustomEditText.setText(currentHomepage);
     }
   }
-
 }

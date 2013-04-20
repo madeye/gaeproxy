@@ -16,17 +16,14 @@
 
 package org.emergent.android.weave.client;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.Date;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.Date;
-
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 public class WeaveResponse {
 
   private final WeaveTransport.WeaveResponseHeaders m_responseHeaders;

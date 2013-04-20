@@ -21,9 +21,6 @@ package com.loopj.android.http;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import org.apache.http.client.CookieStore;
-import org.apache.http.cookie.Cookie;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -32,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
 
 /**
  * A persistent cookie store which implements the Apache HttpClient
@@ -51,9 +50,7 @@ public class PersistentCookieStore implements CookieStore {
   private final ConcurrentHashMap<String, Cookie> cookies;
   private final SharedPreferences cookiePrefs;
 
-  /**
-   * Construct a persistent cookie store.
-   */
+  /** Construct a persistent cookie store. */
   public PersistentCookieStore(Context context) {
     cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, 0);
     cookies = new ConcurrentHashMap<String, Cookie>();
@@ -143,7 +140,6 @@ public class PersistentCookieStore implements CookieStore {
     return new ArrayList<Cookie>(cookies.values());
   }
 
-
   //
   // Cookie serialization/deserialization
   //
@@ -192,7 +188,8 @@ public class PersistentCookieStore implements CookieStore {
     int len = s.length();
     byte[] data = new byte[len / 2];
     for (int i = 0; i < len; i += 2) {
-      data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
+      data[i / 2] =
+          (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
     }
     return data;
   }

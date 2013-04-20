@@ -20,9 +20,7 @@ import android.os.Message;
 import android.util.Log;
 import org.gaeproxy.zirco.ui.activities.IToolbarsContainer;
 
-/**
- * A runnable to hide tool bars after the given delay.
- */
+/** A runnable to hide tool bars after the given delay. */
 public class HideToolbarsRunnable implements Runnable {
 
   private static final String TAG = "HideToolbarsRunnable";
@@ -45,7 +43,7 @@ public class HideToolbarsRunnable implements Runnable {
    * Constructor.
    *
    * @param parent The parent tool bar container.
-   * @param delay  The delay before hiding, in milliseconds.
+   * @param delay The delay before hiding, in milliseconds.
    */
   public HideToolbarsRunnable(IToolbarsContainer parent, int delay) {
     mParent = parent;
@@ -60,7 +58,6 @@ public class HideToolbarsRunnable implements Runnable {
       Thread.sleep(mDelay);
 
       mHandler.sendEmptyMessage(0);
-
     } catch (InterruptedException e) {
       Log.w(TAG, "Exception in thread: " + e.getMessage());
 
@@ -68,11 +65,8 @@ public class HideToolbarsRunnable implements Runnable {
     }
   }
 
-  /**
-   * Disable this runnable.
-   */
+  /** Disable this runnable. */
   public void setDisabled() {
     mDisabled = true;
   }
-
 }

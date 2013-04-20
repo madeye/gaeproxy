@@ -1,7 +1,6 @@
 package org.gaeproxy;
 
 import android.util.Log;
-
 import java.io.IOException;
 import java.net.Socket;
 
@@ -21,7 +20,7 @@ public class InnerSocketBuilder {
    *
    * @param proxyHost 代理服务器地址
    * @param proxyPort 代理服务器端口
-   * @param target    目标服务器
+   * @param target 目标服务器
    */
   public InnerSocketBuilder(String proxyHost, int proxyPort, String target) {
     this.proxyHost = proxyHost;
@@ -40,7 +39,6 @@ public class InnerSocketBuilder {
       innerSocket.setKeepAlive(true);
       innerSocket.setSoTimeout(60 * 1000);
       isConnected = true;
-
     } catch (IOException e) {
       Log.e(TAG, "建立隧道失败：" + e.getLocalizedMessage());
     }
@@ -53,5 +51,4 @@ public class InnerSocketBuilder {
   public boolean isConnected() {
     return this.isConnected;
   }
-
 }

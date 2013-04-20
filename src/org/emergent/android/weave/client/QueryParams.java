@@ -18,9 +18,7 @@ package org.emergent.android.weave.client;
 
 import java.util.Date;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 public class QueryParams {
 
   private Date m_older;
@@ -73,14 +71,9 @@ public class QueryParams {
   public String toQueryString() {
     StringBuffer retval = new StringBuffer();
     retval.append("?full=").append(m_full ? "1" : "0");
-    if (m_sort != null)
-      retval.append("&sort=").append(m_sort);
-    if (m_older != null)
-      retval.append("&older=").append(
-          WeaveUtil.toModifiedTimeString(m_older));
-    if (m_newer != null)
-      retval.append("&newer=").append(
-          WeaveUtil.toModifiedTimeString(m_newer));
+    if (m_sort != null) retval.append("&sort=").append(m_sort);
+    if (m_older != null) retval.append("&older=").append(WeaveUtil.toModifiedTimeString(m_older));
+    if (m_newer != null) retval.append("&newer=").append(WeaveUtil.toModifiedTimeString(m_newer));
     return retval.toString();
   }
 

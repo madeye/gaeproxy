@@ -4,22 +4,16 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 class Dbg {
 
   @SuppressWarnings("serial")
   public static class DebugLogRecord extends LogRecord {
 
-    /**
-     * @serial Class that issued logging call
-     */
+    /** @serial Class that issued logging call */
     private String sourceClassName;
 
-    /**
-     * @serial Method that issued logging call
-     */
+    /** @serial Method that issued logging call */
     private String sourceMethodName;
 
     private transient boolean needToInferCaller = true;
@@ -28,9 +22,7 @@ class Dbg {
       super(level, msg);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getSourceClassName() {
       if (sourceClassName == null) {
@@ -39,9 +31,7 @@ class Dbg {
       return sourceClassName;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getSourceMethodName() {
       if (needToInferCaller) {
@@ -79,18 +69,14 @@ class Dbg {
       // OK as we are only committed to making a "best effort" here.
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setSourceClassName(String sourceClassName) {
       this.sourceClassName = sourceClassName;
       needToInferCaller = false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setSourceMethodName(String sourceMethodName) {
       this.sourceMethodName = sourceMethodName;
@@ -122,8 +108,7 @@ class Dbg {
 
   private static final Level LEVEL_W = LEVEL_ANDROID_WARN;
 
-  private static final Logger sm_logger = Logger
-      .getLogger(WeaveConstants.LOGGER_NAME_FULL);
+  private static final Logger sm_logger = Logger.getLogger(WeaveConstants.LOGGER_NAME_FULL);
 
   public static void d(String fmt, Object... args) {
     logf(LEVEL_D, fmt, args);
@@ -138,8 +123,7 @@ class Dbg {
   }
 
   private static void log(Level level, Throwable e) {
-    if (!sm_logger.isLoggable(level))
-      return;
+    if (!sm_logger.isLoggable(level)) return;
     LogRecord lr = new DebugLogRecord(level, "Something was thrown!");
     lr.setThrown(e);
     lr.setLoggerName(sm_logger.getName());
@@ -147,17 +131,14 @@ class Dbg {
   }
 
   private static void logf(Level level, String msg, Object... params) {
-    if (!sm_logger.isLoggable(level))
-      return;
+    if (!sm_logger.isLoggable(level)) return;
     LogRecord lr = new DebugLogRecord(level, String.format(msg, params));
     lr.setLoggerName(sm_logger.getName());
     sm_logger.log(lr);
   }
 
-  private static void logf(Level level, Throwable e, String msg,
-                           Object... params) {
-    if (!sm_logger.isLoggable(level))
-      return;
+  private static void logf(Level level, Throwable e, String msg, Object... params) {
+    if (!sm_logger.isLoggable(level)) return;
     LogRecord lr = new DebugLogRecord(level, String.format(msg, params));
     lr.setThrown(e);
     lr.setLoggerName(sm_logger.getName());

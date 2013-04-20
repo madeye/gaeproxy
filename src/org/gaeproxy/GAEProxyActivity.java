@@ -52,7 +52,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
-import android.preference.*;
+import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.telephony.TelephonyManager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -70,14 +76,15 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import org.gaeproxy.db.App;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import org.gaeproxy.db.DatabaseHelper;
 
-import java.io.*;
-import java.util.Map;
-
-public class GAEProxyActivity extends PreferenceActivity implements
-    OnSharedPreferenceChangeListener {
+public class GAEProxyActivity extends PreferenceActivity
+    implements OnSharedPreferenceChangeListener {
 
   public static final String PREFS_NAME = "GAEProxy";
   private static final String TAG = "GAEProxy";
@@ -87,8 +94,8 @@ public class GAEProxyActivity extends PreferenceActivity implements
   final Handler handler = new Handler() {
     @Override
     public void handleMessage(Message msg) {
-      SharedPreferences settings = PreferenceManager
-          .getDefaultSharedPreferences(GAEProxyActivity.this);
+      SharedPreferences settings =
+          PreferenceManager.getDefaultSharedPreferences(GAEProxyActivity.this);
       Editor ed = settings.edit();
       switch (msg.what) {
         case MSG_CRASH_RECOVER:
@@ -133,11 +140,8 @@ public class GAEProxyActivity extends PreferenceActivity implements
       InputStream in = null;
       OutputStream out = null;
       try {
-        in = assetManager.open(path
-            + (path.isEmpty() ? "" : "/")
-            + files[i]);
-        out = new FileOutputStream("/data/data/org.gaeproxy/"
-            + files[i]);
+        in = assetManager.open(path + (path.isEmpty() ? "" : "/") + files[i]);
+        out = new FileOutputStream("/data/data/org.gaeproxy/" + files[i]);
         copyFile(in, out);
         in.close();
         in = null;
@@ -163,7 +167,6 @@ public class GAEProxyActivity extends PreferenceActivity implements
     Utils.runRootCommand(Utils.getIptables() + " -t nat -F OUTPUT");
 
     Utils.runCommand(GAEProxyService.BASE + "proxy.sh stop");
-
   }
 
   private void dirChecker(String dir) {
@@ -208,21 +211,19 @@ public class GAEProxyActivity extends PreferenceActivity implements
 
     PowerManager.WakeLock mWakeLock;
     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-    mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK
-        | PowerManager.ON_AFTER_RELEASE, "GAEProxy");
+    mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
+        "GAEProxy");
 
     File tmp = new File("/data/data/org.gaeproxy/python.mp3");
 
     copyAssets("modules");
-    String[] argc = {"7z", "x",
-        tmp.getAbsolutePath(),
-        "/data/data/org.gaeproxy"
+    String[] argc = {
+        "7z", "x", tmp.getAbsolutePath(), "/data/data/org.gaeproxy"
     };
     LZMA.extract(argc);
 
     tmp.delete();
-    if (mWakeLock.isHeld())
-      mWakeLock.release();
+    if (mWakeLock.isHeld()) mWakeLock.release();
 
     return true;
   }
@@ -235,9 +236,7 @@ public class GAEProxyActivity extends PreferenceActivity implements
     return false;
   }
 
-  /**
-   * Called when the activity is first created.
-   */
+  /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -272,12 +271,11 @@ public class GAEProxyActivity extends PreferenceActivity implements
 
     proxyTypeList = (ListPreference) findPreference("proxyType");
 
-    if (sProgressDialog == null)
-      sProgressDialog = ProgressDialog.show(this, "",
-          getString(R.string.initializing), true, true);
+    if (sProgressDialog == null) {
+      sProgressDialog = ProgressDialog.show(this, "", getString(R.string.initializing), true, true);
+    }
 
-    final SharedPreferences settings = PreferenceManager
-        .getDefaultSharedPreferences(this);
+    final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
     new Thread() {
       @Override
@@ -287,8 +285,7 @@ public class GAEProxyActivity extends PreferenceActivity implements
 
         String versionName;
         try {
-          versionName = getPackageManager().getPackageInfo(
-              getPackageName(), 0).versionName;
+          versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
           versionName = "NONE";
         }
@@ -300,15 +297,12 @@ public class GAEProxyActivity extends PreferenceActivity implements
           edit.commit();
 
           File f = new File("/data/data/org.gaeproxy/certs");
-          if (f.exists() && f.isFile())
-            f.delete();
-          if (!f.exists())
-            f.mkdir();
+          if (f.exists() && f.isFile()) f.delete();
+          if (!f.exists()) f.mkdir();
 
           File hosts = new File("/data/data/org.gaeproxy/hosts");
 
-          if (hosts.exists())
-            hosts.delete();
+          if (hosts.exists()) hosts.delete();
 
           copyAssets("");
 
@@ -319,7 +313,6 @@ public class GAEProxyActivity extends PreferenceActivity implements
               + "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 
           install();
-
         }
 
         handler.sendEmptyMessage(MSG_INITIAL_FINISH);
@@ -335,12 +328,9 @@ public class GAEProxyActivity extends PreferenceActivity implements
         .setIcon(android.R.drawable.ic_menu_info_details);
     // return true才会起作用
     return true;
-
   }
 
-  /**
-   * Called when the activity is closed.
-   */
+  /** Called when the activity is closed. */
   @Override
   public void onDestroy() {
     SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
@@ -383,13 +373,12 @@ public class GAEProxyActivity extends PreferenceActivity implements
       case Menu.FIRST + 2:
         String versionName = "";
         try {
-          versionName = getPackageManager().getPackageInfo(
-              getPackageName(), 0).versionName;
+          versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
           versionName = "";
         }
-        showADialog(getString(R.string.about) + " (" + versionName + ")\n\n"
-            + getString(R.string.copy_rights));
+        showADialog(getString(R.string.about) + " (" + versionName + ")\n\n" + getString(
+            R.string.copy_rights));
         break;
     }
 
@@ -401,27 +390,20 @@ public class GAEProxyActivity extends PreferenceActivity implements
     super.onPause();
 
     // Unregister the listener whenever a key changes
-    getPreferenceScreen().getSharedPreferences()
-        .unregisterOnSharedPreferenceChangeListener(this);
+    getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
   }
 
   @Override
-  public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-                                       Preference preference) {
-    SharedPreferences settings = PreferenceManager
-        .getDefaultSharedPreferences(this);
+  public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-    if (preference.getKey() != null
-        && preference.getKey().equals("proxiedApps")) {
+    if (preference.getKey() != null && preference.getKey().equals("proxiedApps")) {
       Intent intent = new Intent(this, ProxiedAppActivity.class);
-        startActivity(intent);
-    } else if (preference.getKey() != null
-        && preference.getKey().equals("browser")) {
-      Intent intent = new Intent(this,
-          org.gaeproxy.zirco.ui.activities.MainActivity.class);
       startActivity(intent);
-    } else if (preference.getKey() != null
-        && preference.getKey().equals("isRunning")) {
+    } else if (preference.getKey() != null && preference.getKey().equals("browser")) {
+      Intent intent = new Intent(this, org.gaeproxy.zirco.ui.activities.MainActivity.class);
+      startActivity(intent);
+    } else if (preference.getKey() != null && preference.getKey().equals("isRunning")) {
       if (!serviceStart()) {
         Editor edit = settings.edit();
         edit.putBoolean("isRunning", false);
@@ -434,8 +416,7 @@ public class GAEProxyActivity extends PreferenceActivity implements
   @Override
   protected void onResume() {
     super.onResume();
-    SharedPreferences settings = PreferenceManager
-        .getDefaultSharedPreferences(this);
+    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
     if (settings.getBoolean("isGlobalProxy", false)) {
       proxiedApps.setEnabled(false);
@@ -478,38 +459,38 @@ public class GAEProxyActivity extends PreferenceActivity implements
 
     // Setup the initial values
 
-    if (!settings.getString("proxyType", "").equals(""))
+    if (!settings.getString("proxyType", "").equals("")) {
       proxyTypeList.setSummary(settings.getString("proxyType", ""));
+    }
 
-    if (!settings.getString("sitekey", "").equals(""))
+    if (!settings.getString("sitekey", "").equals("")) {
       sitekeyText.setSummary(settings.getString("sitekey", ""));
+    }
 
-    if (!settings.getString("port", "").equals(""))
-      portText.setSummary(settings.getString("port",
-          getString(R.string.port_summary)));
+    if (!settings.getString("port", "").equals("")) {
+      portText.setSummary(settings.getString("port", getString(R.string.port_summary)));
+    }
 
-    if (!settings.getString("proxy", "").equals(""))
-      proxyText.setSummary(settings.getString("proxy",
-          getString(R.string.proxy_summary)));
+    if (!settings.getString("proxy", "").equals("")) {
+      proxyText.setSummary(settings.getString("proxy", getString(R.string.proxy_summary)));
+    }
 
     // Set up a listener whenever a key changes
-    getPreferenceScreen().getSharedPreferences()
-        .registerOnSharedPreferenceChangeListener(this);
+    getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
   }
 
   @Override
-  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                        String key) {
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     // Let's do something a preference value changes
-    SharedPreferences settings = PreferenceManager
-        .getDefaultSharedPreferences(this);
+    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
     if (key.equals("isConnecting")) {
       if (settings.getBoolean("isConnecting", false)) {
         Log.d(TAG, "Connecting start");
-        if (sProgressDialog == null)
-          sProgressDialog = ProgressDialog.show(this, "",
-              getString(R.string.connecting), true, true);
+        if (sProgressDialog == null) {
+          sProgressDialog =
+              ProgressDialog.show(this, "", getString(R.string.connecting), true, true);
+        }
       } else {
         Log.d(TAG, "Connecting finish");
         if (sProgressDialog != null) {
@@ -569,19 +550,21 @@ public class GAEProxyActivity extends PreferenceActivity implements
       }
     }
 
-    if (key.equals("proxyType"))
+    if (key.equals("proxyType")) {
       proxyTypeList.setSummary(settings.getString("proxyType", ""));
-    else if (key.equals("port"))
-      if (settings.getString("port", "").equals(""))
+    } else if (key.equals("port")) {
+      if (settings.getString("port", "").equals("")) {
         portText.setSummary(getString(R.string.port_summary));
-      else
+      } else {
         portText.setSummary(settings.getString("port", ""));
-    else if (key.equals("sitekey"))
-      if (settings.getString("sitekey", "").equals(""))
+      }
+    } else if (key.equals("sitekey")) {
+      if (settings.getString("sitekey", "").equals("")) {
         sitekeyText.setSummary(getString(R.string.sitekey_summary));
-      else
+      } else {
         sitekeyText.setSummary(settings.getString("sitekey", ""));
-    else if (key.equals("proxy"))
+      }
+    } else if (key.equals("proxy")) {
       if (settings.getString("proxy", "").equals("")) {
         proxyText.setSummary(getString(R.string.proxy_summary));
       } else {
@@ -593,6 +576,7 @@ public class GAEProxyActivity extends PreferenceActivity implements
         ed.commit();
         proxyText.setSummary(settings.getString("proxy", ""));
       }
+    }
   }
 
   @Override
@@ -609,9 +593,9 @@ public class GAEProxyActivity extends PreferenceActivity implements
 
   private void recovery() {
 
-    if (sProgressDialog == null)
-      sProgressDialog = ProgressDialog.show(this, "", getString(R.string.recovering),
-          true, true);
+    if (sProgressDialog == null) {
+      sProgressDialog = ProgressDialog.show(this, "", getString(R.string.recovering), true, true);
+    }
 
     final Handler h = new Handler() {
       @Override
@@ -646,24 +630,20 @@ public class GAEProxyActivity extends PreferenceActivity implements
         Utils.runCommand(GAEProxyService.BASE + "proxy.sh stop");
 
         File f = new File("/data/data/org.gaeproxy/certs");
-        if (f.exists() && f.isFile())
-          f.delete();
+        if (f.exists() && f.isFile()) f.delete();
 
         if (f.exists() && f.isDirectory()) {
           File[] files = f.listFiles();
           for (int i = 0; i < files.length; i++)
-            if (!files[i].isDirectory())
-              files[i].delete();
+            if (!files[i].isDirectory()) files[i].delete();
           f.delete();
         }
 
-        if (!f.exists())
-          f.mkdir();
+        if (!f.exists()) f.mkdir();
 
         File hosts = new File("/data/data/org.gaeproxy/hosts");
 
-        if (hosts.exists())
-          hosts.delete();
+        if (hosts.exists()) hosts.delete();
 
         copyAssets("");
 
@@ -679,12 +659,9 @@ public class GAEProxyActivity extends PreferenceActivity implements
         h.sendEmptyMessage(0);
       }
     }.start();
-
   }
 
-  /**
-   * Called when connect button is clicked.
-   */
+  /** Called when connect button is clicked. */
   public boolean serviceStart() {
 
     if (GAEProxyService.isServiceStarted()) {
@@ -696,39 +673,35 @@ public class GAEProxyActivity extends PreferenceActivity implements
       return false;
     }
 
-    SharedPreferences settings = PreferenceManager
-        .getDefaultSharedPreferences(this);
+    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
     final String proxy = settings.getString("proxy", "");
-    if (isTextEmpty(proxy, getString(R.string.proxy_empty)))
-      return false;
+    if (isTextEmpty(proxy, getString(R.string.proxy_empty))) return false;
 
     if (proxy.contains("proxyofmax.appspot.com")) {
       final TextView message = new TextView(this);
       message.setPadding(10, 5, 10, 5);
-      final SpannableString s = new SpannableString(
-          getText(R.string.default_proxy_alert));
+      final SpannableString s = new SpannableString(getText(R.string.default_proxy_alert));
       Linkify.addLinks(s, Linkify.WEB_URLS);
       message.setText(s);
       message.setMovementMethod(LinkMovementMethod.getInstance());
 
-      new AlertDialog.Builder(this)
-          .setTitle(R.string.warning)
+      new AlertDialog.Builder(this).setTitle(R.string.warning)
           .setCancelable(false)
           .setIcon(android.R.drawable.ic_dialog_info)
-          .setNegativeButton(getString(R.string.ok_iknow),
-              new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog,
-                                    int id) {
-                  dialog.cancel();
-                }
-              }).setView(message).create().show();
+          .setNegativeButton(getString(R.string.ok_iknow), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+              dialog.cancel();
+            }
+          })
+          .setView(message)
+          .create()
+          .show();
     }
 
     String portText = settings.getString("port", "");
-    if (isTextEmpty(portText, getString(R.string.port_empty)))
-      return false;
+    if (isTextEmpty(portText, getString(R.string.port_empty))) return false;
     try {
       int port = Integer.valueOf(portText);
       if (port <= 1024) {
@@ -755,15 +728,13 @@ public class GAEProxyActivity extends PreferenceActivity implements
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setMessage(msg)
         .setCancelable(false)
-        .setNegativeButton(getString(R.string.ok_iknow),
-            new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-              }
-            });
+        .setNegativeButton(getString(R.string.ok_iknow), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            dialog.cancel();
+          }
+        });
     AlertDialog alert = builder.create();
     alert.show();
   }
-
 }

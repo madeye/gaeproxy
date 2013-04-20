@@ -17,17 +17,19 @@ package org.gaeproxy.zirco.ui.runnables;
 
 import android.os.Handler;
 import android.os.Message;
-import org.gaeproxy.zirco.model.items.DownloadItem;
-import org.gaeproxy.zirco.utils.IOUtils;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import org.gaeproxy.zirco.model.items.DownloadItem;
+import org.gaeproxy.zirco.utils.IOUtils;
 
-/**
- * Background downloader.
- */
+/** Background downloader. */
 public class DownloadRunnable implements Runnable {
 
   private static final int BUFFER_SIZE = 4096;
@@ -54,9 +56,7 @@ public class DownloadRunnable implements Runnable {
     mAborted = false;
   }
 
-  /**
-   * Abort this download.
-   */
+  /** Abort this download. */
   public void abort() {
     mAborted = true;
   }
@@ -74,7 +74,6 @@ public class DownloadRunnable implements Runnable {
     if (downloadFolder != null) {
 
       return new File(downloadFolder, getFileNameFromUrl());
-
     } else {
       mParent.setErrorMessage("Unable to get download folder from SD Card.");
       return null;
@@ -87,8 +86,7 @@ public class DownloadRunnable implements Runnable {
    * @return The file name.
    */
   private String getFileNameFromUrl() {
-    return mParent.getUrl()
-        .substring(mParent.getUrl().lastIndexOf("/") + 1);
+    return mParent.getUrl().substring(mParent.getUrl().lastIndexOf("/") + 1);
   }
 
   @Override
@@ -119,8 +117,7 @@ public class DownloadRunnable implements Runnable {
         double completed = 0;
 
         bis = new BufferedInputStream(is);
-        bos = new BufferedOutputStream(new FileOutputStream(
-            downloadFile));
+        bos = new BufferedOutputStream(new FileOutputStream(downloadFile));
 
         boolean downLoading = true;
         byte[] buffer = new byte[BUFFER_SIZE];
@@ -130,8 +127,7 @@ public class DownloadRunnable implements Runnable {
 
         while ((downLoading) && (!mAborted)) {
 
-          if ((size - downloaded < BUFFER_SIZE)
-              && (size - downloaded > 0)) {
+          if ((size - downloaded < BUFFER_SIZE) && (size - downloaded > 0)) {
             buffer = new byte[size - downloaded];
           }
 
@@ -154,7 +150,6 @@ public class DownloadRunnable implements Runnable {
             oldCompleted = completed;
           }
         }
-
       } catch (MalformedURLException mue) {
         mParent.setErrorMessage(mue.getMessage());
       } catch (IOException ioe) {
@@ -182,10 +177,8 @@ public class DownloadRunnable implements Runnable {
           downloadFile.delete();
         }
       }
-
     }
 
     mHandler.sendEmptyMessage(0);
   }
-
 }

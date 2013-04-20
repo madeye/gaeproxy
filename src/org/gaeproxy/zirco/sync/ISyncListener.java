@@ -7,5 +7,4 @@ public interface ISyncListener {
   void onSyncEnd(Throwable result);
 
   void onSyncProgress(int step, int done, int total);
-
 }

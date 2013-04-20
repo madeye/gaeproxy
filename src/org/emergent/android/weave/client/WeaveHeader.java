@@ -16,9 +16,7 @@
 
 package org.emergent.android.weave.client;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 enum WeaveHeader {
 
   X_WEAVE_BACKOFF("X-Weave-Backoff"), X_WEAVE_ALERT("X-Weave-Alert"), X_WEAVE_TIMESTAMP(

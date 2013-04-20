@@ -21,8 +21,7 @@ import android.preference.PreferenceManager;
 import org.gaeproxy.R;
 import org.gaeproxy.zirco.utils.Constants;
 
-public class WeaveServerPreferenceActivity extends
-    BaseSpinnerCustomPreferenceActivity {
+public class WeaveServerPreferenceActivity extends BaseSpinnerCustomPreferenceActivity {
 
   @Override
   protected int getSpinnerPromptId() {
@@ -41,10 +40,8 @@ public class WeaveServerPreferenceActivity extends
 
   @Override
   protected void onOk() {
-    Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
-        .edit();
-    editor.putString(Constants.PREFERENCE_WEAVE_SERVER, mCustomEditText
-        .getText().toString());
+    Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+    editor.putString(Constants.PREFERENCE_WEAVE_SERVER, mCustomEditText.getText().toString());
     editor.commit();
   }
 
@@ -58,8 +55,7 @@ public class WeaveServerPreferenceActivity extends
       case 1: {
         mCustomEditText.setEnabled(true);
 
-        if (mCustomEditText.getText().toString()
-            .equals(Constants.WEAVE_DEFAULT_SERVER)) {
+        if (mCustomEditText.getText().toString().equals(Constants.WEAVE_DEFAULT_SERVER)) {
           mCustomEditText.setText(null);
         }
         break;
@@ -73,9 +69,8 @@ public class WeaveServerPreferenceActivity extends
 
   @Override
   protected void setSpinnerValueFromPreferences() {
-    String currentServer = PreferenceManager.getDefaultSharedPreferences(
-        this).getString(Constants.PREFERENCE_WEAVE_SERVER,
-        Constants.WEAVE_DEFAULT_SERVER);
+    String currentServer = PreferenceManager.getDefaultSharedPreferences(this)
+        .getString(Constants.PREFERENCE_WEAVE_SERVER, Constants.WEAVE_DEFAULT_SERVER);
 
     if (currentServer.equals(Constants.WEAVE_DEFAULT_SERVER)) {
       mSpinner.setSelection(0);
@@ -87,5 +82,4 @@ public class WeaveServerPreferenceActivity extends
       mCustomEditText.setText(currentServer);
     }
   }
-
 }

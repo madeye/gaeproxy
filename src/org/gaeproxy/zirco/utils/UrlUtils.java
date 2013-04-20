@@ -17,13 +17,10 @@ package org.gaeproxy.zirco.utils;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import java.util.Iterator;
 import org.gaeproxy.zirco.controllers.Controller;
 
-import java.util.Iterator;
-
-/**
- * Url management utils.
- */
+/** Url management utils. */
 public class UrlUtils {
 
   /**
@@ -31,15 +28,14 @@ public class UrlUtils {
    * url.
    *
    * @param context The current context.
-   * @param url     The url to check.
+   * @param url The url to check.
    * @return True if an item in the list match the given url.
    */
   public static boolean checkInMobileViewUrlList(Context context, String url) {
 
     if (url != null) {
       boolean inList = false;
-      Iterator<String> iter = Controller.getInstance()
-          .getMobileViewUrlList(context).iterator();
+      Iterator<String> iter = Controller.getInstance().getMobileViewUrlList(context).iterator();
       while ((iter.hasNext()) && (!inList)) {
         if (url.contains(iter.next())) {
           inList = true;
@@ -60,12 +56,10 @@ public class UrlUtils {
   public static String checkUrl(String url) {
     if ((url != null) && (url.length() > 0)) {
 
-      if ((!url.startsWith("http://")) && (!url.startsWith("https://"))
-          && (!url.startsWith(Constants.URL_ABOUT_BLANK))
-          && (!url.startsWith(Constants.URL_ABOUT_START))) {
+      if ((!url.startsWith("http://")) && (!url.startsWith("https://")) && (!url.startsWith(
+          Constants.URL_ABOUT_BLANK)) && (!url.startsWith(Constants.URL_ABOUT_START))) {
 
         url = "http://" + url;
-
       }
     }
 
@@ -75,15 +69,13 @@ public class UrlUtils {
   /**
    * Get the current search url.
    *
-   * @param context     The current context.
+   * @param context The current context.
    * @param searchTerms The terms to search for.
    * @return The search url.
    */
   public static String getSearchUrl(Context context, String searchTerms) {
-    String currentSearchUrl = PreferenceManager
-        .getDefaultSharedPreferences(context).getString(
-            Constants.PREFERENCES_GENERAL_SEARCH_URL,
-            Constants.URL_SEARCH_GOOGLE);
+    String currentSearchUrl = PreferenceManager.getDefaultSharedPreferences(context)
+        .getString(Constants.PREFERENCES_GENERAL_SEARCH_URL, Constants.URL_SEARCH_GOOGLE);
     return String.format(currentSearchUrl, searchTerms);
   }
 
@@ -96,7 +88,7 @@ public class UrlUtils {
    */
   public static boolean isUrl(String url) {
     return url.equals(Constants.URL_ABOUT_BLANK)
-        || url.equals(Constants.URL_ABOUT_START) || url.contains(".");
+        || url.equals(Constants.URL_ABOUT_START)
+        || url.contains(".");
   }
-
 }

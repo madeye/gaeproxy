@@ -18,9 +18,7 @@ package org.gaeproxy.zirco.utils;
 import android.content.Context;
 import org.gaeproxy.R;
 
-/**
- * Defines constants.
- */
+/** Defines constants. */
 public class Constants {
 
   public static final String EXTRA_ID_NEW_TAB = "EXTRA_ID_NEW_TAB";
@@ -33,30 +31,24 @@ public class Constants {
   public static final int BOOKMARK_THUMBNAIL_WIDTH_FACTOR = 70;
   public static final int BOOKMARK_THUMBNAIL_HEIGHT_FACTOR = 60;
 
-  /**
-   * Specials urls.
-   */
+  /** Specials urls. */
   public static final String URL_ABOUT_BLANK = "about:blank";
   public static final String URL_ABOUT_START = "about:start";
   public static final String URL_ACTION_SEARCH = "action:search?q=";
   public static final String URL_GOOGLE_MOBILE_VIEW = "http://www.google.com/gwt/x?u=%s";
   public static final String URL_GOOGLE_MOBILE_VIEW_NO_FORMAT = "http://www.google.com/gwt/x?u=";
 
-  /**
-   * Search urls.
-   */
-  public static String URL_SEARCH_GOOGLE = "http://www.google.com/search?ie=UTF-8&sourceid=navclient&gfns=1&q=%s";
+  /** Search urls. */
+  public static String URL_SEARCH_GOOGLE =
+      "http://www.google.com/search?ie=UTF-8&sourceid=navclient&gfns=1&q=%s";
   public static String URL_SEARCH_WIKIPEDIA = "http://en.wikipedia.org/w/index.php?search=%s&go=Go";
 
-  /**
-   * User agents.
-   */
+  /** User agents. */
   public static String USER_AGENT_DEFAULT = "";
-  public static String USER_AGENT_DESKTOP = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/534.7 (KHTML, like Gecko) Chrome/7.0.517.44 Safari/534.7";
+  public static String USER_AGENT_DESKTOP =
+      "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/534.7 (KHTML, like Gecko) Chrome/7.0.517.44 Safari/534.7";
 
-  /**
-   * Preferences.
-   */
+  /** Preferences. */
   public static final String PREFERENCES_GENERAL_HOME_PAGE = "GeneralHomePage";
   public static final String PREFERENCES_GENERAL_SEARCH_URL = "GeneralSearchUrl";
   public static final String PREFERENCES_GENERAL_SWITCH_TABS_METHOD = "GeneralSwitchTabMethod";
@@ -79,7 +71,8 @@ public class Constants {
   public static final String PREFERENCES_BROWSER_ENABLE_PASSWORDS = "BrowserEnablePasswords";
   public static final String PREFERENCES_BROWSER_ENABLE_COOKIES = "BrowserEnableCookies";
   public static final String PREFERENCES_BROWSER_USER_AGENT = "BrowserUserAgent";
-  public static final String PREFERENCES_BROWSER_ENABLE_PLUGINS_ECLAIR = "BrowserEnablePluginsEclair";
+  public static final String PREFERENCES_BROWSER_ENABLE_PLUGINS_ECLAIR =
+      "BrowserEnablePluginsEclair";
   public static final String PREFERENCES_BROWSER_ENABLE_PLUGINS = "BrowserEnablePlugins";
 
   public static final String PREFERENCES_PRIVACY_CLEAR_CACHE_ON_EXIT = "PrivacyClearCacheOnExit";
@@ -103,7 +96,8 @@ public class Constants {
   public static final String PREFERENCE_WEAVE_KEY = "PREFERENCE_WEAVE_KEY";
   public static final String PREFERENCE_WEAVE_LAST_SYNC_DATE = "PREFERENCE_WEAVE_LAST_SYNC_DATE";
 
-  public static final String WEAVE_AUTH_TOKEN_SCHEME = "{\"secret\":\"%s\",\"password\":\"%s\",\"username\":\"%s\",\"server\":\"%s\"}";
+  public static final String WEAVE_AUTH_TOKEN_SCHEME =
+      "{\"secret\":\"%s\",\"password\":\"%s\",\"username\":\"%s\",\"server\":\"%s\"}";
 
   public static final String WEAVE_DEFAULT_SERVER = "https://auth.services.mozilla.com/";
 
@@ -117,10 +111,7 @@ public class Constants {
    * @param context The current context.
    */
   public static void initializeConstantsFromResources(Context context) {
-    URL_SEARCH_GOOGLE = context.getResources().getString(
-        R.string.Constants_SearchUrlGoogle);
-    URL_SEARCH_WIKIPEDIA = context.getResources().getString(
-        R.string.Constants_SearchUrlWikipedia);
+    URL_SEARCH_GOOGLE = context.getResources().getString(R.string.Constants_SearchUrlGoogle);
+    URL_SEARCH_WIKIPEDIA = context.getResources().getString(R.string.Constants_SearchUrlWikipedia);
   }
-
 }

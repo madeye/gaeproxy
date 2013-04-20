@@ -18,14 +18,13 @@
 
 package com.loopj.android.http;
 
+import java.io.IOException;
+import java.net.ConnectException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.protocol.HttpContext;
-
-import java.io.IOException;
-import java.net.ConnectException;
 
 class AsyncHttpRequest implements Runnable {
   private final AbstractHttpClient client;
@@ -34,7 +33,8 @@ class AsyncHttpRequest implements Runnable {
   private final AsyncHttpResponseHandler responseHandler;
   private int executionCount;
 
-  public AsyncHttpRequest(AbstractHttpClient client, HttpContext context, HttpUriRequest request, AsyncHttpResponseHandler responseHandler) {
+  public AsyncHttpRequest(AbstractHttpClient client, HttpContext context, HttpUriRequest request,
+      AsyncHttpResponseHandler responseHandler) {
     this.client = client;
     this.context = context;
     this.request = request;

@@ -16,6 +16,12 @@
 
 package org.emergent.android.weave.client;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
@@ -23,16 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
-
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 public class WeaveUtil {
 
   public static class UriBuilder {
@@ -44,8 +41,7 @@ public class WeaveUtil {
     }
 
     public void appendEncodedPath(String s) {
-      if (m_val.charAt(m_val.length() - 1) != '/')
-        m_val += "/";
+      if (m_val.charAt(m_val.length() - 1) != '/') m_val += "/";
       m_val += s;
     }
 
@@ -67,15 +63,14 @@ public class WeaveUtil {
     return new UriBuilder(serverUri);
   }
 
-  @SuppressWarnings({})
+  @SuppressWarnings({ })
   public static void checkNull(String str) {
     if (str == null || str.trim().length() < 1) {
-      Dbg.w(new IllegalArgumentException(
-          "checkNull(String) had empty arg"));
+      Dbg.w(new IllegalArgumentException("checkNull(String) had empty arg"));
     }
   }
 
-  @SuppressWarnings({})
+  @SuppressWarnings({ })
   public static void checkNull(URI uri) {
     if (uri == null) {
       Dbg.w(new IllegalArgumentException("checkNull(URI) had null arg"));
@@ -118,13 +113,10 @@ public class WeaveUtil {
   }
 
   @SuppressWarnings("unused")
-  private static HttpEntity toHttpEntity(JSONArray jsonArray)
-      throws JSONException {
+  private static HttpEntity toHttpEntity(JSONArray jsonArray) throws JSONException {
     try {
-      StringEntity entity = new StringEntity(jsonArray.toString(0),
-          ENTITY_CHARSET_NAME);
-      entity.setContentType(JSON_STREAM_TYPE + HTTP.CHARSET_PARAM
-          + ENTITY_CHARSET_NAME);
+      StringEntity entity = new StringEntity(jsonArray.toString(0), ENTITY_CHARSET_NAME);
+      entity.setContentType(JSON_STREAM_TYPE + HTTP.CHARSET_PARAM + ENTITY_CHARSET_NAME);
       return entity;
     } catch (UnsupportedEncodingException e) {
       throw new IllegalStateException(e);
@@ -132,13 +124,10 @@ public class WeaveUtil {
   }
 
   @SuppressWarnings("unused")
-  private static HttpEntity toHttpEntity(WeaveBasicObject wbo)
-      throws JSONException {
+  private static HttpEntity toHttpEntity(WeaveBasicObject wbo) throws JSONException {
     try {
-      StringEntity entity = new StringEntity(wbo.toJSONObjectString(),
-          ENTITY_CHARSET_NAME);
-      entity.setContentType(JSON_STREAM_TYPE + HTTP.CHARSET_PARAM
-          + ENTITY_CHARSET_NAME);
+      StringEntity entity = new StringEntity(wbo.toJSONObjectString(), ENTITY_CHARSET_NAME);
+      entity.setContentType(JSON_STREAM_TYPE + HTTP.CHARSET_PARAM + ENTITY_CHARSET_NAME);
       return entity;
     } catch (UnsupportedEncodingException e) {
       throw new IllegalStateException(e);
@@ -155,8 +144,7 @@ public class WeaveUtil {
   }
 
   public static Date toModifiedTimeDate(String modified) {
-    @SuppressWarnings("unused")
-    long now = System.currentTimeMillis();
+    @SuppressWarnings("unused") long now = System.currentTimeMillis();
     try {
       double modDouble = Double.parseDouble(modified) * 1000;
       long mod = Math.round(modDouble);
@@ -200,8 +188,7 @@ public class WeaveUtil {
   }
 
   public static void zeroize(char[] secret) {
-    if (secret != null)
-      Arrays.fill(secret, '\0');
+    if (secret != null) Arrays.fill(secret, '\0');
   }
 
   private WeaveUtil() {

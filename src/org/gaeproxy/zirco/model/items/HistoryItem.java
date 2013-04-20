@@ -18,9 +18,7 @@ package org.gaeproxy.zirco.model.items;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-/**
- * Represent an history element.
- */
+/** Represent an history element. */
 public class HistoryItem {
 
   private long mId;
@@ -31,9 +29,9 @@ public class HistoryItem {
   /**
    * Constructor.
    *
-   * @param id          The element id.
-   * @param title       The title.
-   * @param url         The url.
+   * @param id The element id.
+   * @param title The title.
+   * @param url The url.
    * @param faviconData The favicon.
    */
   public HistoryItem(long id, String title, String url, byte[] faviconData) {
@@ -41,8 +39,7 @@ public class HistoryItem {
     mTitle = title;
     mUrl = url;
     if (faviconData != null) {
-      mFavicon = BitmapFactory.decodeByteArray(faviconData, 0,
-          faviconData.length);
+      mFavicon = BitmapFactory.decodeByteArray(faviconData, 0, faviconData.length);
     } else {
       mFavicon = null;
     }
@@ -83,5 +80,4 @@ public class HistoryItem {
   public String getUrl() {
     return mUrl;
   }
-
 }

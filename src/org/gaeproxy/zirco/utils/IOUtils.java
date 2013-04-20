@@ -16,7 +16,6 @@
 package org.gaeproxy.zirco.utils;
 
 import android.os.Environment;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -24,9 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Utilities for I/O reading and writing.
- */
+/** Utilities for I/O reading and writing. */
 public class IOUtils {
 
   private static final String APPLICATION_FOLDER = "zirco";
@@ -49,7 +46,6 @@ public class IOUtils {
       }
 
       return folder;
-
     } else {
       return null;
     }
@@ -73,7 +69,6 @@ public class IOUtils {
       }
 
       return folder;
-
     } else {
       return null;
     }
@@ -97,7 +92,6 @@ public class IOUtils {
       }
 
       return folder;
-
     } else {
       return null;
     }
@@ -119,8 +113,7 @@ public class IOUtils {
 
         @Override
         public boolean accept(File pathname) {
-          if ((pathname.isFile())
-              && (pathname.getPath().endsWith(".xml"))) {
+          if ((pathname.isFile()) && (pathname.getPath().endsWith(".xml"))) {
             return true;
           }
           return false;
@@ -144,5 +137,4 @@ public class IOUtils {
 
     return result;
   }
-
 }

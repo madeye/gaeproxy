@@ -26,7 +26,11 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.*;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,9 +40,7 @@ import org.gaeproxy.zirco.controllers.Controller;
 import org.gaeproxy.zirco.model.DbAdapter;
 import org.gaeproxy.zirco.utils.ApplicationUtils;
 
-/**
- * AdBlocker white list activity.
- */
+/** AdBlocker white list activity. */
 public class AdBlockerWhiteListActivity extends ListActivity {
 
   private static final int MENU_ADD = Menu.FIRST;
@@ -50,15 +52,12 @@ public class AdBlockerWhiteListActivity extends ListActivity {
   private DbAdapter mDbAdapter;
   private SimpleCursorAdapter mCursorAdapter;
 
-  /**
-   * Build and show a dialog for user input. Add user input to the white list.
-   */
+  /** Build and show a dialog for user input. Add user input to the white list. */
   private void addToWhiteList() {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setCancelable(true);
     builder.setIcon(android.R.drawable.ic_input_add);
-    builder.setTitle(getResources().getString(
-        R.string.AdBlockerWhiteListActivity_AddMessage));
+    builder.setTitle(getResources().getString(R.string.AdBlockerWhiteListActivity_AddMessage));
 
     builder.setInverseBackgroundForced(true);
 
@@ -68,8 +67,7 @@ public class AdBlockerWhiteListActivity extends ListActivity {
     builder.setView(input);
 
     builder.setInverseBackgroundForced(true);
-    builder.setPositiveButton(
-        getResources().getString(R.string.Commons_Ok),
+    builder.setPositiveButton(getResources().getString(R.string.Commons_Ok),
         new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
@@ -77,8 +75,7 @@ public class AdBlockerWhiteListActivity extends ListActivity {
             doAddToWhiteList(input.getText().toString());
           }
         });
-    builder.setNegativeButton(
-        getResources().getString(R.string.Commons_Cancel),
+    builder.setNegativeButton(getResources().getString(R.string.Commons_Cancel),
         new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
@@ -87,17 +84,12 @@ public class AdBlockerWhiteListActivity extends ListActivity {
         });
     AlertDialog alert = builder.create();
     alert.show();
-
   }
 
-  /**
-   * Display a confirmation dialog and clear the white list.
-   */
+  /** Display a confirmation dialog and clear the white list. */
   private void clearWhiteList() {
-    ApplicationUtils.showYesNoDialog(this,
-        android.R.drawable.ic_dialog_alert,
-        R.string.AdBlockerWhiteListActivity_ClearMessage,
-        R.string.Commons_NoUndoMessage,
+    ApplicationUtils.showYesNoDialog(this, android.R.drawable.ic_dialog_alert,
+        R.string.AdBlockerWhiteListActivity_ClearMessage, R.string.Commons_NoUndoMessage,
         new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
@@ -118,27 +110,23 @@ public class AdBlockerWhiteListActivity extends ListActivity {
     fillData();
   }
 
-  /**
-   * Clear the white list.
-   */
+  /** Clear the white list. */
   private void doClearWhiteList() {
     mDbAdapter.clearWhiteList();
     Controller.getInstance().resetAdBlockWhiteList();
     fillData();
   }
 
-  /**
-   * Fill the list view.
-   */
+  /** Fill the list view. */
   private void fillData() {
     mCursor = mDbAdapter.getWhiteListCursor();
     startManagingCursor(mCursor);
 
-    String[] from = new String[]{DbAdapter.ADBLOCK_URL};
-    int[] to = new int[]{R.id.AdBlockerWhiteListRow_Title};
+    String[] from = new String[] { DbAdapter.ADBLOCK_URL };
+    int[] to = new int[] { R.id.AdBlockerWhiteListRow_Title };
 
-    mCursorAdapter = new SimpleCursorAdapter(this,
-        R.layout.adblocker_whitelist_row, mCursor, from, to);
+    mCursorAdapter =
+        new SimpleCursorAdapter(this, R.layout.adblocker_whitelist_row, mCursor, from, to);
     setListAdapter(mCursorAdapter);
 
     setAnimation();
@@ -146,8 +134,7 @@ public class AdBlockerWhiteListActivity extends ListActivity {
 
   @Override
   public boolean onContextItemSelected(MenuItem item) {
-    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-        .getMenuInfo();
+    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
     switch (item.getItemId()) {
       case MENU_DELETE:
@@ -176,8 +163,7 @@ public class AdBlockerWhiteListActivity extends ListActivity {
   }
 
   @Override
-  public void onCreateContextMenu(ContextMenu menu, View v,
-                                  ContextMenuInfo menuInfo) {
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
     long id = ((AdapterContextMenuInfo) menuInfo).id;
@@ -225,9 +211,7 @@ public class AdBlockerWhiteListActivity extends ListActivity {
     }
   }
 
-  /**
-   * Set the view loading animation.
-   */
+  /** Set the view loading animation. */
   private void setAnimation() {
     AnimationSet set = new AnimationSet(true);
 
@@ -235,16 +219,14 @@ public class AdBlockerWhiteListActivity extends ListActivity {
     animation.setDuration(100);
     set.addAnimation(animation);
 
-    animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-        -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+    animation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
     animation.setDuration(100);
     set.addAnimation(animation);
 
-    LayoutAnimationController controller = new LayoutAnimationController(
-        set, 0.5f);
+    LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
     ListView listView = getListView();
     listView.setLayoutAnimation(controller);
   }
-
 }

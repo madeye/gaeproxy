@@ -17,9 +17,7 @@ package org.emergent.android.weave.client;
 
 import java.security.Key;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 class BulkKeyCouplet {
   public final Key cipherKey;
   public final Key hmacKey;

@@ -27,8 +27,8 @@ import org.gaeproxy.zirco.providers.WeaveColumns;
 
 public class WeaveBookmarksCursorAdapter extends SimpleCursorAdapter {
 
-  public WeaveBookmarksCursorAdapter(Context context, int layout, Cursor c,
-                                     String[] from, int[] to) {
+  public WeaveBookmarksCursorAdapter(Context context, int layout, Cursor c, String[] from,
+      int[] to) {
     super(context, layout, c, from, to);
   }
 
@@ -38,14 +38,11 @@ public class WeaveBookmarksCursorAdapter extends SimpleCursorAdapter {
 
     Cursor c = getCursor();
 
-    boolean isFolder = c.getInt(c
-        .getColumnIndex(WeaveColumns.WEAVE_BOOKMARKS_FOLDER)) > 0 ? true
-        : false;
+    boolean isFolder =
+        c.getInt(c.getColumnIndex(WeaveColumns.WEAVE_BOOKMARKS_FOLDER)) > 0 ? true : false;
 
-    ImageView iconView = (ImageView) superView
-        .findViewById(R.id.BookmarkRow_Thumbnail);
-    TextView urlView = (TextView) superView
-        .findViewById(R.id.BookmarkRow_Url);
+    ImageView iconView = (ImageView) superView.findViewById(R.id.BookmarkRow_Thumbnail);
+    TextView urlView = (TextView) superView.findViewById(R.id.BookmarkRow_Url);
 
     if (isFolder) {
       urlView.setVisibility(View.GONE);
@@ -57,5 +54,4 @@ public class WeaveBookmarksCursorAdapter extends SimpleCursorAdapter {
 
     return superView;
   }
-
 }

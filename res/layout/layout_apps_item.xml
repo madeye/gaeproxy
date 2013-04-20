@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:stretchColumns="1">
-	<TableRow>
-		<ImageView android:id="@+id/itemicon" android:layout_width="48sp"
-			android:layout_height="48sp" android:scaleType="fitCenter"
-			android:padding="3dip"></ImageView>
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:stretchColumns="1">
+  <TableRow>
+    <ImageView android:id="@+id/itemicon" android:layout_width="48sp"
+        android:layout_height="48sp" android:scaleType="fitCenter"
+        android:padding="3dip"></ImageView>
 
-		<TextView android:layout_height="wrap_content" android:id="@+id/itemtext"
-			android:text="uid:packages" android:maxLength="25" android:textSize="18sp" android:padding="3dip"></TextView>
+    <TextView android:layout_height="fill_parent" android:id="@+id/itemtext"
+        android:gravity="center_vertical"
+        android:text="uid:packages" android:maxLength="25" android:textSize="18sp"
+        android:padding="3dip"></TextView>
 
-		<CheckBox android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:id="@+id/itemcheck"></CheckBox>
+    <CheckBox android:layout_width="wrap_content" android:layout_marginRight="6dip"
+        android:layout_height="fill_parent" android:id="@+id/itemcheck"></CheckBox>
 
-	</TableRow>
+  </TableRow>
 </TableLayout>

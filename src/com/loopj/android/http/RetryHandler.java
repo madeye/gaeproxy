@@ -24,18 +24,17 @@
 package com.loopj.android.http;
 
 import android.os.SystemClock;
-import org.apache.http.NoHttpResponseException;
-import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.protocol.ExecutionContext;
-import org.apache.http.protocol.HttpContext;
-
-import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.HashSet;
+import javax.net.ssl.SSLHandshakeException;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.protocol.HttpContext;
 
 class RetryHandler implements HttpRequestRetryHandler {
   private static final int RETRY_SLEEP_TIME_MILLIS = 1500;
@@ -82,7 +81,8 @@ class RetryHandler implements HttpRequestRetryHandler {
       retry = true;
     } else {
       // resend all idempotent requests
-      HttpUriRequest currentReq = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
+      HttpUriRequest currentReq =
+          (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
       String requestType = currentReq.getMethod();
       if (!requestType.equals("POST")) {
         retry = true;

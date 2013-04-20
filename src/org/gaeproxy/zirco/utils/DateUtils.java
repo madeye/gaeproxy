@@ -17,16 +17,13 @@ package org.gaeproxy.zirco.utils;
 
 import android.content.Context;
 import android.util.Log;
-import org.gaeproxy.R;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import org.gaeproxy.R;
 
-/**
- * Utilities for date / time management.
- */
+/** Utilities for date / time management. */
 public class DateUtils {
 
   /**
@@ -34,7 +31,7 @@ public class DateUtils {
    * object.
    *
    * @param context The current context.
-   * @param date    The date to convert.
+   * @param date The date to convert.
    * @return The converted date. If an error occurs during conversion, will be
    *         the current date.
    */
@@ -44,10 +41,8 @@ public class DateUtils {
     try {
 
       return sdf.parse(date);
-
     } catch (ParseException e) {
-      Log.w(DateUtils.class.toString(), "Error parsing date (" + date
-          + "): " + e.getMessage());
+      Log.w(DateUtils.class.toString(), "Error parsing date (" + date + "): " + e.getMessage());
 
       return new Date();
     }
@@ -75,5 +70,4 @@ public class DateUtils {
 
     return sdf.format(c.getTime());
   }
-
 }

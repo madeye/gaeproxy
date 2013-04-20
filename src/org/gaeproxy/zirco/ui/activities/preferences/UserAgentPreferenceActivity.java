@@ -20,11 +20,8 @@ import android.preference.PreferenceManager;
 import org.gaeproxy.R;
 import org.gaeproxy.zirco.utils.Constants;
 
-/**
- * User agent preference chooser activity.
- */
-public class UserAgentPreferenceActivity extends
-    BaseSpinnerCustomPreferenceActivity {
+/** User agent preference chooser activity. */
+public class UserAgentPreferenceActivity extends BaseSpinnerCustomPreferenceActivity {
 
   @Override
   protected int getSpinnerPromptId() {
@@ -38,8 +35,7 @@ public class UserAgentPreferenceActivity extends
 
   @Override
   protected void onOk() {
-    Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
-        .edit();
+    Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
     editor.putString(Constants.PREFERENCES_BROWSER_USER_AGENT,
         mCustomEditText.getText().toString());
     editor.commit();
@@ -59,10 +55,8 @@ public class UserAgentPreferenceActivity extends
       case 2: {
         mCustomEditText.setEnabled(true);
 
-        if ((mCustomEditText.getText().toString()
-            .equals(Constants.USER_AGENT_DEFAULT))
-            || (mCustomEditText.getText().toString()
-            .equals(Constants.USER_AGENT_DESKTOP))) {
+        if ((mCustomEditText.getText().toString().equals(Constants.USER_AGENT_DEFAULT))
+            || (mCustomEditText.getText().toString().equals(Constants.USER_AGENT_DESKTOP))) {
           mCustomEditText.setText(null);
         }
         break;
@@ -76,10 +70,8 @@ public class UserAgentPreferenceActivity extends
 
   @Override
   protected void setSpinnerValueFromPreferences() {
-    String currentUserAgent = PreferenceManager
-        .getDefaultSharedPreferences(this).getString(
-            Constants.PREFERENCES_BROWSER_USER_AGENT,
-            Constants.USER_AGENT_DEFAULT);
+    String currentUserAgent = PreferenceManager.getDefaultSharedPreferences(this)
+        .getString(Constants.PREFERENCES_BROWSER_USER_AGENT, Constants.USER_AGENT_DEFAULT);
 
     if (currentUserAgent.equals(Constants.USER_AGENT_DEFAULT)) {
       mSpinner.setSelection(0);
@@ -95,5 +87,4 @@ public class UserAgentPreferenceActivity extends
       mCustomEditText.setText(currentUserAgent);
     }
   }
-
 }

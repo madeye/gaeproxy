@@ -19,13 +19,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.view.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
-import org.gaeproxy.R;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.gaeproxy.R;
 
 /**
  * Abstraction of a {@link QuickAction} wrapper. A QuickActionWidget is
@@ -94,8 +97,8 @@ public abstract class QuickActionWidget extends PopupWindow {
     setWidth(LayoutParams.WRAP_CONTENT);
     setHeight(LayoutParams.WRAP_CONTENT);
 
-    final WindowManager windowManager = (WindowManager) mContext
-        .getSystemService(Context.WINDOW_SERVICE);
+    final WindowManager windowManager =
+        (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
     mScreenWidth = windowManager.getDefaultDisplay().getWidth();
     mScreenHeight = windowManager.getDefaultDisplay().getHeight();
   }
@@ -115,9 +118,7 @@ public abstract class QuickActionWidget extends PopupWindow {
     }
   }
 
-  /**
-   * Removes all {@link QuickAction} from this {@link QuickActionWidget}.
-   */
+  /** Removes all {@link QuickAction} from this {@link QuickActionWidget}. */
   public void clearAllQuickActions() {
     if (!mQuickActions.isEmpty()) {
       mQuickActions.clear();
@@ -173,8 +174,7 @@ public abstract class QuickActionWidget extends PopupWindow {
 
   private void initializeDefault() {
     mDismissOnClick = true;
-    mArrowOffsetY = mContext.getResources().getDimensionPixelSize(
-        R.dimen.gd_arrow_offset);
+    mArrowOffsetY = mContext.getResources().getDimensionPixelSize(R.dimen.gd_arrow_offset);
   }
 
   protected void onClearQuickActions() {
@@ -230,7 +230,7 @@ public abstract class QuickActionWidget extends PopupWindow {
    * method.
    *
    * @param dismissOnClick True if you want the {@link QuickActionWidget} to be dismissed
-   *                       on click else false.
+   * on click else false.
    */
   public void setDismissOnClick(boolean dismissOnClick) {
     mDismissOnClick = dismissOnClick;
@@ -239,8 +239,7 @@ public abstract class QuickActionWidget extends PopupWindow {
   /**
    * @param listener
    */
-  public void setOnQuickActionClickListener(
-      OnQuickActionClickListener listener) {
+  public void setOnQuickActionClickListener(OnQuickActionClickListener listener) {
     mOnQuickActionClickListener = listener;
   }
 
@@ -271,8 +270,7 @@ public abstract class QuickActionWidget extends PopupWindow {
 
     final int[] loc = mLocation;
     anchor.getLocationOnScreen(loc);
-    mRect.set(loc[0], loc[1], loc[0] + anchor.getWidth(),
-        loc[1] + anchor.getHeight());
+    mRect.set(loc[0], loc[1], loc[0] + anchor.getWidth(), loc[1] + anchor.getHeight());
 
     if (mIsDirty) {
       clearQuickActions();
@@ -308,8 +306,7 @@ public abstract class QuickActionWidget extends PopupWindow {
       arrowDown.setVisibility(View.VISIBLE);
     }
 
-    ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams) arrow
-        .getLayoutParams();
+    ViewGroup.MarginLayoutParams param = (ViewGroup.MarginLayoutParams) arrow.getLayoutParams();
     param.leftMargin = mRect.centerX() - (arrow.getMeasuredWidth()) / 2;
   }
 }

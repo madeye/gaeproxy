@@ -18,9 +18,7 @@ package org.emergent.android.weave.client;
 
 import org.apache.http.client.HttpResponseException;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 @SuppressWarnings("serial")
 public class WeaveException extends Exception {
 
@@ -30,8 +28,7 @@ public class WeaveException extends Exception {
 
   public static boolean isAuthFailure(HttpResponseException e) {
     int statusCode = e.getStatusCode();
-    if (WeaveConstants.UNAUTHORIZED_HTTP_STATUS_CODE == statusCode)
-      return true;
+    if (WeaveConstants.UNAUTHORIZED_HTTP_STATUS_CODE == statusCode) return true;
     return false;
   }
 
@@ -62,8 +59,7 @@ public class WeaveException extends Exception {
     m_type = type;
   }
 
-  public WeaveException(WeaveException.ExceptionType type, String message,
-                        Throwable cause) {
+  public WeaveException(WeaveException.ExceptionType type, String message, Throwable cause) {
     super(message, cause);
     m_type = type;
   }

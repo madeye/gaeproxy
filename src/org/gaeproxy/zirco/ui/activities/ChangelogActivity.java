@@ -24,9 +24,7 @@ import android.widget.TextView;
 import org.gaeproxy.R;
 import org.gaeproxy.zirco.utils.ApplicationUtils;
 
-/**
- * Changelog dialog activity.
- */
+/** Changelog dialog activity. */
 public class ChangelogActivity extends Activity {
 
   @Override
@@ -38,22 +36,18 @@ public class ChangelogActivity extends Activity {
 
     setContentView(R.layout.changelog_activity);
 
-    w.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
-        android.R.drawable.ic_dialog_info);
+    w.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.R.drawable.ic_dialog_info);
 
     TextView changelogText = (TextView) findViewById(R.id.ChangelogContent);
     changelogText.setText(ApplicationUtils.getChangelogString(this));
 
-    Button closeBtn = (Button) this
-        .findViewById(R.id.ChangelogActivity_CloseBtn);
+    Button closeBtn = (Button) this.findViewById(R.id.ChangelogActivity_CloseBtn);
     closeBtn.setOnClickListener(new View.OnClickListener() {
 
       @Override
       public void onClick(View view) {
         finish();
       }
-
     });
   }
-
 }
