@@ -428,15 +428,6 @@ public class GAEProxyService extends Service {
 
     if (!isGlobalProxy) {
       if (mProxiedApps == null) {
-
-        boolean packageChanged = settings.getBoolean("packageChanged", true);
-        if (packageChanged) {
-          Set<Integer> appSet = App.getProxiedApps(this);
-          App.updateApps(this, appSet);
-
-          settings.edit().putBoolean("packageChanged", false).commit();
-        }
-
         mProxiedApps = App.getProxiedApps(this);
       }
     }

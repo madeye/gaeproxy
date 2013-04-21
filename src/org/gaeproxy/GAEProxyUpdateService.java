@@ -1,4 +1,4 @@
-/* gaeproxy - GAppProxy / WallProxy client App for Android
+package org.gaeproxy;/* gaeproxy - GAppProxy / WallProxy client App for Android
  * Copyright (C) 2011 <max.c.lv@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,8 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
- * 
+ *
+ *
  *                            ___====-_  _-====___
  *                      _--^^^#####//      \\#####^^^--_
  *                   _-^##########// (    ) \\##########^-_
@@ -36,23 +36,27 @@
  *
  */
 
-package org.gaeproxy;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import java.util.Set;
+import org.gaeproxy.db.App;
 
-public class GAEProxyPackageReceiver extends BroadcastReceiver {
+public class GAEProxyUpdateService extends IntentService {
 
-  private static final String TAG = "GAEProxy";
+  public static final String TAG = "GAEProxyUpdateService";
 
-  @Override
-  public void onReceive(Context context, Intent intent) {
+  public GAEProxyUpdateService() {
+    super(TAG);
+  }
 
-    Intent i = new Intent(context, GAEProxyUpdateService.class);
-    context.startService(i);
+  @Override protected void onHandleIntent(Intent intent) {
+    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-    Log.d(TAG, "Package Changed");
+    Set<Integer> appSet = App.getProxiedApps(this);
+    App.updateApps(this, appSet);
+
+    settings.edit().putBoolean("packageChanged", false).commit();
   }
 }

@@ -32,7 +32,7 @@ public class App implements Comparable<App> {
   @DatabaseField(columnName = "proxied")
   private boolean proxied = false;
 
-  public static List<App> getApps(Context context) {
+  public static synchronized List<App> getApps(Context context) {
     OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
     DatabaseHelper helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
 
@@ -65,7 +65,7 @@ public class App implements Comparable<App> {
     return apps;
   }
 
-  public static Set<Integer> getProxiedApps(Context context) {
+  public static synchronized Set<Integer> getProxiedApps(Context context) {
     OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
     DatabaseHelper helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
     Set<Integer> result = new HashSet<Integer>();
@@ -105,7 +105,7 @@ public class App implements Comparable<App> {
     return result;
   }
 
-  public static void updateApps(Context context, Set<Integer> ids) {
+  public static synchronized void updateApps(Context context, Set<Integer> ids) {
 
     // else load the apps up
     PackageManager pMgr = context.getPackageManager();
@@ -177,7 +177,7 @@ public class App implements Comparable<App> {
     OpenHelperManager.releaseHelper();
   }
 
-  public static void forceToUpdateApp(Context context, App app) {
+  public static synchronized void forceToUpdateApp(Context context, App app) {
 
     OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
     DatabaseHelper helper = OpenHelperManager.getHelper(context, DatabaseHelper.class);

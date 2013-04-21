@@ -56,6 +56,9 @@
         android:name=".GAEProxyService"
         android:enabled="true"/>
 
+    <service
+        android:name=".GAEProxyUpdateService"/>
+
     <receiver android:name=".GAEProxyBootReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
