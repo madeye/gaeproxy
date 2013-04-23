@@ -1,8 +1,6 @@
 package org.gaeproxy.zirco.model.items;
 
-/**
- * Represent a bookmark.
- */
+/** Represent a bookmark. */
 public class BookmarkItem {
 
   private String mTitle;
@@ -12,7 +10,7 @@ public class BookmarkItem {
    * Constructor.
    *
    * @param title The bookmark title.
-   * @param url   The bookmark url.
+   * @param url The bookmark url.
    */
   public BookmarkItem(String title, String url) {
     mTitle = title;
@@ -36,5 +34,4 @@ public class BookmarkItem {
   public String getUrl() {
     return mUrl;
   }
-
 }

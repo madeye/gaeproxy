@@ -30,7 +30,11 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.*;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -42,9 +46,7 @@ import org.gaeproxy.zirco.providers.BookmarksProviderWrapper;
 import org.gaeproxy.zirco.utils.ApplicationUtils;
 import org.gaeproxy.zirco.utils.Constants;
 
-/**
- * Bookmarks list activity.
- */
+/** Bookmarks list activity. */
 public class BookmarksListActivity extends Activity {
 
   private static final int MENU_ADD_BOOKMARK = Menu.FIRST;
@@ -64,24 +66,21 @@ public class BookmarksListActivity extends Activity {
 
   private ListView mList;
 
-  /**
-   * Show a dialog for choosing the sort mode. Perform the change if required.
-   */
+  /** Show a dialog for choosing the sort mode. Perform the change if required. */
   private void changeSortMode() {
 
-    int currentSort = PreferenceManager.getDefaultSharedPreferences(this).getInt(
-        Constants.PREFERENCES_BOOKMARKS_SORT_MODE, 0);
+    int currentSort = PreferenceManager.getDefaultSharedPreferences(this)
+        .getInt(Constants.PREFERENCES_BOOKMARKS_SORT_MODE, 0);
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setInverseBackgroundForced(true);
     builder.setIcon(android.R.drawable.ic_dialog_info);
     builder.setTitle(getResources().getString(R.string.BookmarksListActivity_MenuSortMode));
-    builder.setSingleChoiceItems(
-        new String[]{
-            getResources().getString(R.string.BookmarksListActivity_MostUsedSortMode),
-            getResources().getString(R.string.BookmarksListActivity_AlphaSortMode),
-            getResources().getString(R.string.BookmarksListActivity_RecentSortMode)},
-        currentSort, new OnClickListener() {
+    builder.setSingleChoiceItems(new String[] {
+        getResources().getString(R.string.BookmarksListActivity_MostUsedSortMode),
+        getResources().getString(R.string.BookmarksListActivity_AlphaSortMode),
+        getResources().getString(R.string.BookmarksListActivity_RecentSortMode)
+    }, currentSort, new OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         doChangeSortMode(which);
@@ -108,18 +107,15 @@ public class BookmarksListActivity extends Activity {
     fillData();
   }
 
-  /**
-   * Fill the bookmark to the list UI.
-   */
+  /** Fill the bookmark to the list UI. */
   private void fillData() {
-    mCursor = BookmarksProviderWrapper.getStockBookmarks(
-        getContentResolver(),
-        PreferenceManager.getDefaultSharedPreferences(this).getInt(
-            Constants.PREFERENCES_BOOKMARKS_SORT_MODE, 0));
+    mCursor = BookmarksProviderWrapper.getStockBookmarks(getContentResolver(),
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .getInt(Constants.PREFERENCES_BOOKMARKS_SORT_MODE, 0));
     startManagingCursor(mCursor);
 
-    String[] from = new String[]{Browser.BookmarkColumns.TITLE, Browser.BookmarkColumns.URL};
-    int[] to = new int[]{R.id.BookmarkRow_Title, R.id.BookmarkRow_Url};
+    String[] from = new String[] { Browser.BookmarkColumns.TITLE, Browser.BookmarkColumns.URL };
+    int[] to = new int[] { R.id.BookmarkRow_Title, R.id.BookmarkRow_Url };
 
     mCursorAdapter = new BookmarksCursorAdapter(this, R.layout.bookmark_row, mCursor, from, to,
         ApplicationUtils.getFaviconSizeForBookmarks(this));
@@ -155,8 +151,8 @@ public class BookmarksListActivity extends Activity {
     AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
     Intent i;
-    BookmarkItem bookmarkItem = BookmarksProviderWrapper.getStockBookmarkById(
-        getContentResolver(), info.id);
+    BookmarkItem bookmarkItem =
+        BookmarksProviderWrapper.getStockBookmarkById(getContentResolver(), info.id);
 
     switch (item.getItemId()) {
       case MENU_OPEN_IN_TAB:
@@ -166,11 +162,9 @@ public class BookmarksListActivity extends Activity {
         if (bookmarkItem != null) {
           i.putExtra(Constants.EXTRA_ID_URL, bookmarkItem.getUrl());
         } else {
-          i.putExtra(
-              Constants.EXTRA_ID_URL,
+          i.putExtra(Constants.EXTRA_ID_URL,
               PreferenceManager.getDefaultSharedPreferences(BookmarksListActivity.this)
-                  .getString(Constants.PREFERENCES_GENERAL_HOME_PAGE,
-                      Constants.URL_ABOUT_START));
+                  .getString(Constants.PREFERENCES_GENERAL_HOME_PAGE, Constants.URL_ABOUT_START));
         }
 
         if (getParent() != null) {
@@ -235,17 +229,13 @@ public class BookmarksListActivity extends Activity {
         Intent result = new Intent();
         result.putExtra(Constants.EXTRA_ID_NEW_TAB, false);
 
-        BookmarkItem item = BookmarksProviderWrapper.getStockBookmarkById(
-            getContentResolver(), id);
+        BookmarkItem item = BookmarksProviderWrapper.getStockBookmarkById(getContentResolver(), id);
         if (item != null) {
           result.putExtra(Constants.EXTRA_ID_URL, item.getUrl());
         } else {
-          result.putExtra(
-              Constants.EXTRA_ID_URL,
-              PreferenceManager.getDefaultSharedPreferences(
-                  BookmarksListActivity.this).getString(
-                  Constants.PREFERENCES_GENERAL_HOME_PAGE,
-                  Constants.URL_ABOUT_START));
+          result.putExtra(Constants.EXTRA_ID_URL,
+              PreferenceManager.getDefaultSharedPreferences(BookmarksListActivity.this)
+                  .getString(Constants.PREFERENCES_GENERAL_HOME_PAGE, Constants.URL_ABOUT_START));
         }
 
         if (getParent() != null) {
@@ -269,8 +259,7 @@ public class BookmarksListActivity extends Activity {
 
     long id = ((AdapterContextMenuInfo) menuInfo).id;
     if (id != -1) {
-      BookmarkItem item = BookmarksProviderWrapper.getStockBookmarkById(getContentResolver(),
-          id);
+      BookmarkItem item = BookmarksProviderWrapper.getStockBookmarkById(getContentResolver(), id);
       if (item != null) {
         menu.setHeaderTitle(item.getTitle());
       }
@@ -281,7 +270,6 @@ public class BookmarksListActivity extends Activity {
     menu.add(0, MENU_SHARE, 0, R.string.Main_MenuShareLinkUrl);
     menu.add(0, MENU_EDIT_BOOKMARK, 0, R.string.BookmarksListActivity_MenuEditBookmark);
     menu.add(0, MENU_DELETE_BOOKMARK, 0, R.string.BookmarksListActivity_MenuDeleteBookmark);
-
   }
 
   @Override
@@ -300,8 +288,7 @@ public class BookmarksListActivity extends Activity {
 
   @Override
   protected void onDestroy() {
-    if (mCursor != null)
-      mCursor.close();
+    if (mCursor != null) mCursor.close();
     super.onDestroy();
   }
 
@@ -322,9 +309,7 @@ public class BookmarksListActivity extends Activity {
     }
   }
 
-  /**
-   * Display the add bookmark dialog.
-   */
+  /** Display the add bookmark dialog. */
   private void openAddBookmarkDialog() {
     Intent i = new Intent(this, EditBookmarkActivity.class);
 
@@ -335,9 +320,7 @@ public class BookmarksListActivity extends Activity {
     startActivityForResult(i, ACTIVITY_ADD_BOOKMARK);
   }
 
-  /**
-   * Set the list loading animation.
-   */
+  /** Set the list loading animation. */
   private void setAnimation() {
     AnimationSet set = new AnimationSet(true);
 
@@ -345,9 +328,9 @@ public class BookmarksListActivity extends Activity {
     animation.setDuration(100);
     set.addAnimation(animation);
 
-    animation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, -1.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f);
+    animation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
     animation.setDuration(100);
     set.addAnimation(animation);
 
@@ -355,5 +338,4 @@ public class BookmarksListActivity extends Activity {
 
     mList.setLayoutAnimation(controller);
   }
-
 }

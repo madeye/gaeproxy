@@ -41,14 +41,10 @@ import org.gaeproxy.zirco.ui.components.CustomWebView;
 import org.gaeproxy.zirco.utils.ApplicationUtils;
 import org.gaeproxy.zirco.utils.Constants;
 
-/**
- * history list activity.
- */
+/** history list activity. */
 public class HistoryListActivity extends ExpandableListActivity {
 
-  /**
-   * Runnable to clear history.
-   */
+  /** Runnable to clear history. */
   private class HistoryClearer implements Runnable {
 
     private Handler handler = new Handler() {
@@ -59,9 +55,7 @@ public class HistoryListActivity extends ExpandableListActivity {
       }
     };
 
-    /**
-     * Constructor.
-     */
+    /** Constructor. */
     public HistoryClearer() {
       new Thread(this).start();
     }
@@ -89,9 +83,7 @@ public class HistoryListActivity extends ExpandableListActivity {
 
   private ProgressDialog mProgressDialog;
 
-  /**
-   * Display confirmation and clear history.
-   */
+  /** Display confirmation and clear history. */
   private void clearHistory() {
     ApplicationUtils.showYesNoDialog(this, android.R.drawable.ic_dialog_alert,
         R.string.Commons_ClearHistory, R.string.Commons_NoUndoMessage,
@@ -104,13 +96,11 @@ public class HistoryListActivity extends ExpandableListActivity {
         });
   }
 
-  /**
-   * Clear history.
-   */
+  /** Clear history. */
   private void doClearHistory() {
-    mProgressDialog = ProgressDialog.show(this,
-        this.getResources().getString(R.string.Commons_PleaseWait), this.getResources()
-        .getString(R.string.Commons_ClearingHistory));
+    mProgressDialog =
+        ProgressDialog.show(this, this.getResources().getString(R.string.Commons_PleaseWait),
+            this.getResources().getString(R.string.Commons_ClearingHistory));
 
     new HistoryClearer();
   }
@@ -118,9 +108,9 @@ public class HistoryListActivity extends ExpandableListActivity {
   /**
    * Load the given url.
    *
-   * @param url    The url.
+   * @param url The url.
    * @param newTab If True, will open a new tab. If False, the current tab is
-   *               used.
+   * used.
    */
   private void doNavigateToUrl(String url, boolean newTab) {
     Intent result = new Intent();
@@ -135,14 +125,11 @@ public class HistoryListActivity extends ExpandableListActivity {
     finish();
   }
 
-  /**
-   * Fill the history list.
-   */
+  /** Fill the history list. */
   private void fillData() {
     Cursor c = BookmarksProviderWrapper.getStockHistory(getContentResolver());
 
-    if (c == null)
-      return;
+    if (c == null) return;
 
     mAdapter = new HistoryExpandableListAdapter(this, c, Browser.HISTORY_PROJECTION_DATE_INDEX,
         ApplicationUtils.getFaviconSizeForBookmarks(this));
@@ -156,9 +143,9 @@ public class HistoryListActivity extends ExpandableListActivity {
 
   @Override
   public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
-                              int childPosition, long id) {
-    HistoryItem item = (HistoryItem) getExpandableListAdapter().getChild(groupPosition,
-        childPosition);
+      int childPosition, long id) {
+    HistoryItem item =
+        (HistoryItem) getExpandableListAdapter().getChild(groupPosition, childPosition);
     doNavigateToUrl(item.getUrl(), false);
 
     return super.onChildClick(parent, v, groupPosition, childPosition, id);
@@ -214,7 +201,8 @@ public class HistoryListActivity extends ExpandableListActivity {
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo);
 
-    ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
+    ExpandableListView.ExpandableListContextMenuInfo info =
+        (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
 
     int type = ExpandableListView.getPackedPositionType(info.packedPosition);
     int group = ExpandableListView.getPackedPositionGroup(info.packedPosition);
@@ -254,5 +242,4 @@ public class HistoryListActivity extends ExpandableListActivity {
         return super.onMenuItemSelected(featureId, item);
     }
   }
-
 }

@@ -47,7 +47,7 @@ import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-public class GAEProxyReceiver extends BroadcastReceiver {
+public class GAEProxyBootReceiver extends BroadcastReceiver {
 
   private static final String TAG = "GAEProxy";
 
@@ -55,9 +55,11 @@ public class GAEProxyReceiver extends BroadcastReceiver {
   public void onReceive(Context context, Intent intent) {
 
     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+
     String versionName;
     try {
-      versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+      versionName =
+          context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
     } catch (NameNotFoundException e) {
       versionName = "NONE";
     }
@@ -68,8 +70,7 @@ public class GAEProxyReceiver extends BroadcastReceiver {
     boolean isMarketEnable = settings.getBoolean("isMarketEnable", false);
 
     if (isMarketEnable) {
-      TelephonyManager tm = (TelephonyManager) context
-          .getSystemService(Context.TELEPHONY_SERVICE);
+      TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
       String countryCode = tm.getSimCountryIso();
 
       try {
@@ -112,5 +113,4 @@ public class GAEProxyReceiver extends BroadcastReceiver {
       context.startService(it);
     }
   }
-
 }

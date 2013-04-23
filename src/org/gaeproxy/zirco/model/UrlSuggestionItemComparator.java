@@ -15,15 +15,11 @@
 
 package org.gaeproxy.zirco.model;
 
+import java.util.Comparator;
 import org.gaeproxy.zirco.model.items.UrlSuggestionItem;
 
-import java.util.Comparator;
-
-/**
- * Comparator for UrlSuggestionItem.
- */
-public class UrlSuggestionItemComparator implements
-    Comparator<UrlSuggestionItem> {
+/** Comparator for UrlSuggestionItem. */
+public class UrlSuggestionItemComparator implements Comparator<UrlSuggestionItem> {
 
   @Override
   public int compare(UrlSuggestionItem object1, UrlSuggestionItem object2) {
@@ -31,5 +27,4 @@ public class UrlSuggestionItemComparator implements
     Float value2 = new Float(object2.getNote());
     return value2.compareTo(value1);
   }
-
 }

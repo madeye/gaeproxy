@@ -29,8 +29,8 @@ package org.emergent.android.weave.client;
  */
 public class Base32 {
   private static final String base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-  private static final int[] base32Lookup = {0xFF, 0xFF, 0x1A, 0x1B, 0x1C,
-      0x1D, 0x1E, 0x1F, // '0', '1', '2', '3', '4', '5', '6', '7'
+  private static final int[] base32Lookup = {
+      0xFF, 0xFF, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, // '0', '1', '2', '3', '4', '5', '6', '7'
       0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // '8', '9', ':',
       // ';', '<', '=',
       // '>', '?'
@@ -63,7 +63,6 @@ public class Base32 {
   /**
    * Decodes the given Base32 String to a raw byte array.
    *
-   * @param base32
    * @return Decoded <code>base32</code> String as a raw byte array.
    */
   static public byte[] decode(final String base32) {
@@ -90,8 +89,7 @@ public class Base32 {
         if (index == 0) {
           bytes[offset] |= digit;
           offset++;
-          if (offset >= bytes.length)
-            break;
+          if (offset >= bytes.length) break;
         } else {
           bytes[offset] |= digit << (8 - index);
         }
@@ -134,8 +132,7 @@ public class Base32 {
       /* Is the current digit going to span a byte boundary? */
       if (index > 3) {
         if ((i + 1) < bytes.length) {
-          nextByte = (bytes[i + 1] >= 0) ? bytes[i + 1]
-              : (bytes[i + 1] + 256);
+          nextByte = (bytes[i + 1] >= 0) ? bytes[i + 1] : (bytes[i + 1] + 256);
         } else {
           nextByte = 0;
         }
@@ -148,8 +145,7 @@ public class Base32 {
       } else {
         digit = (currByte >> (8 - (index + 5))) & 0x1F;
         index = (index + 5) % 8;
-        if (index == 0)
-          i++;
+        if (index == 0) i++;
       }
       base32.append(base32Chars.charAt(digit));
     }
@@ -160,8 +156,6 @@ public class Base32 {
   /**
    * For testing, take a command-line argument in Base32, decode, print in
    * hex, encode, print
-   *
-   * @param args
    */
   static public void main(String[] args) {
     if (args.length == 0) {

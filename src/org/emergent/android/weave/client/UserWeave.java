@@ -1,10 +1,5 @@
 package org.emergent.android.weave.client;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,6 +9,10 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.crypto.spec.SecretKeySpec;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class UserWeave {
 
@@ -30,8 +29,7 @@ public class UserWeave {
   }
 
   public enum HashNode {
-    INFO_COLLECTIONS(false, "/info/collections"), META_GLOBAL(false,
-        "/storage/meta/global"),;
+    INFO_COLLECTIONS(false, "/info/collections"), META_GLOBAL(false, "/storage/meta/global"),;
 
     public final boolean userServer;
     public final String nodePath;
@@ -42,15 +40,13 @@ public class UserWeave {
     }
   }
 
-  protected static URI buildSyncUriFromSubpath(URI clusterUri, String userId,
-                                               QueryParams params, String pathSection) {
+  protected static URI buildSyncUriFromSubpath(URI clusterUri, String userId, QueryParams params,
+      String pathSection) {
     String subpath = pathSection;
-    if (params != null)
-      subpath = subpath + params.toQueryString();
+    if (params != null) subpath = subpath + params.toQueryString();
     WeaveUtil.checkNull(clusterUri);
     WeaveUtil.UriBuilder builder = WeaveUtil.buildUpon(clusterUri);
-    builder.appendEncodedPath(WeaveConstants.WEAVE_API_VERSION + "/"
-        + userId);
+    builder.appendEncodedPath(WeaveConstants.WEAVE_API_VERSION + "/" + userId);
     while (subpath.startsWith("/")) {
       subpath = subpath.substring(1);
     }
@@ -58,17 +54,14 @@ public class UserWeave {
     return builder.build();
   }
 
-  protected static URI buildSyncUriFromSubpath(URI clusterUri, String userId,
-                                               String subpath) {
+  protected static URI buildSyncUriFromSubpath(URI clusterUri, String userId, String subpath) {
     return buildSyncUriFromSubpath(clusterUri, userId, null, subpath);
   }
 
-  protected static URI buildUserUriFromSubpath(URI authUri, String userId,
-                                               String subpath) {
+  protected static URI buildUserUriFromSubpath(URI authUri, String userId, String subpath) {
     WeaveUtil.checkNull(authUri);
     WeaveUtil.UriBuilder builder = WeaveUtil.buildUpon(authUri);
-    builder.appendEncodedPath("user/" + WeaveConstants.WEAVE_API_VERSION
-        + "/" + userId);
+    builder.appendEncodedPath("user/" + WeaveConstants.WEAVE_API_VERSION + "/" + userId);
     while (subpath.startsWith("/")) {
       subpath = subpath.substring(1);
     }
@@ -87,17 +80,15 @@ public class UserWeave {
 
   private final AtomicReference<URI> m_clusterUri;
 
-  UserWeave(WeaveTransport transport, URI authUri, String userId,
-            String password) {
+  UserWeave(WeaveTransport transport, URI authUri, String userId, String password) {
     this(transport, authUri, userId, password, null);
   }
 
-  protected UserWeave(WeaveTransport transport, URI authUri, String userId,
-                      String password, URI clusterUri) {
+  protected UserWeave(WeaveTransport transport, URI authUri, String userId, String password,
+      URI clusterUri) {
     m_authUri = authUri;
     m_userId = userId;
-    m_legalUsername = WeaveCryptoUtil.getInstance()
-        .legalizeUsername(userId);
+    m_legalUsername = WeaveCryptoUtil.getInstance().legalizeUsername(userId);
     m_password = password;
     m_transport = transport;
     m_clusterUri = new AtomicReference<URI>(clusterUri);
@@ -113,8 +104,7 @@ public class UserWeave {
   }
 
   public URI buildSyncUriFromSubpath(String subpath) throws WeaveException {
-    return buildSyncUriFromSubpath(getClusterUri(), getLegalUsername(),
-        subpath);
+    return buildSyncUriFromSubpath(getClusterUri(), getLegalUsername(), subpath);
   }
 
   public URI buildUserUriFromSubpath(String subpath) {
@@ -134,18 +124,16 @@ public class UserWeave {
   protected BulkKeyCouplet getBulkKeyPair(byte[] syncKey)
       throws GeneralSecurityException, WeaveException {
     try {
-      byte[] keyBytes = WeaveCryptoUtil.deriveSyncKey(syncKey,
-          getLegalUsername());
+      byte[] keyBytes = WeaveCryptoUtil.deriveSyncKey(syncKey, getLegalUsername());
       Key bulkKey = new SecretKeySpec(keyBytes, "AES");
 
-      byte[] hmkeyBytes = WeaveCryptoUtil.deriveSyncHmacKey(syncKey,
-          keyBytes, getLegalUsername());
+      byte[] hmkeyBytes = WeaveCryptoUtil.deriveSyncHmacKey(syncKey, keyBytes, getLegalUsername());
       Key hmbulkKey = new SecretKeySpec(hmkeyBytes, "AES");
 
       JSONObject ckwbojsonobj = getCryptoKeys();
 
-      WeaveBasicObject.WeaveEncryptedObject weo = new WeaveBasicObject.WeaveEncryptedObject(
-          ckwbojsonobj);
+      WeaveBasicObject.WeaveEncryptedObject weo =
+          new WeaveBasicObject.WeaveEncryptedObject(ckwbojsonobj);
       JSONObject ckencPayload = weo.decryptObject(bulkKey, hmbulkKey);
 
       JSONArray jsonArray = ckencPayload.getJSONArray("default");
@@ -171,8 +159,7 @@ public class UserWeave {
 
   public final URI getClusterUri(boolean useCache) throws WeaveException {
     URI cached = null;
-    if (useCache && ((cached = m_clusterUri.get()) != null))
-      return cached;
+    if (useCache && ((cached = m_clusterUri.get()) != null)) return cached;
 
     URI retval = getClusterUriSafe();
     m_clusterUri.compareAndSet(cached, retval);
@@ -183,8 +170,7 @@ public class UserWeave {
     URI retval = m_authUri;
     try {
       URI unsafeResult = getClusterUriUnsafe();
-      if (unsafeResult != null)
-        retval = unsafeResult;
+      if (unsafeResult != null) retval = unsafeResult;
     } catch (Exception ignored) {
       // Dbg.v(e);
     }
@@ -204,8 +190,8 @@ public class UserWeave {
   protected JSONObject getCryptoKeys() throws WeaveException {
     try {
       URI nodeUri = buildSyncUriFromSubpath("/storage/crypto/keys");
-      WeaveBasicObject nodeObj = new WeaveBasicObject(nodeUri,
-          new JSONObject(getNode(nodeUri).getBody()));
+      WeaveBasicObject nodeObj =
+          new WeaveBasicObject(nodeUri, new JSONObject(getNode(nodeUri).getBody()));
       return nodeObj.getPayload();
     } catch (JSONException e) {
       throw new WeaveException(e);
@@ -221,8 +207,7 @@ public class UserWeave {
       URI nodeUri = node.userServer ? buildUserUriFromSubpath(node.nodePath)
           : buildSyncUriFromSubpath(node.nodePath);
       WeaveResponse result = getNode(nodeUri);
-      return new QueryResult<JSONObject>(result, new JSONObject(
-          result.getBody()));
+      return new QueryResult<JSONObject>(result, new JSONObject(result.getBody()));
     } catch (JSONException e) {
       throw new WeaveException(e);
     }
@@ -230,8 +215,7 @@ public class UserWeave {
 
   protected final WeaveResponse getNode(URI nodeUri) throws WeaveException {
     try {
-      return m_transport.execGetMethod(getLegalUsername(), m_password,
-          nodeUri);
+      return m_transport.execGetMethod(getLegalUsername(), m_password, nodeUri);
     } catch (IOException e) {
       throw new WeaveException(e);
     }
@@ -240,8 +224,8 @@ public class UserWeave {
   protected RSAPublicKey getPublicKey() throws WeaveException {
     try {
       URI nodeUri = buildSyncUriFromSubpath("/storage/keys/pubkey");
-      WeaveBasicObject nodeObj = new WeaveBasicObject(nodeUri,
-          new JSONObject(getNode(nodeUri).getBody()));
+      WeaveBasicObject nodeObj =
+          new WeaveBasicObject(nodeUri, new JSONObject(getNode(nodeUri).getBody()));
       JSONObject payloadObj = nodeObj.getPayload();
       String pubKey = payloadObj.getString("keyData");
       return WeaveCryptoUtil.getInstance().readCertificatePubKey(pubKey);
@@ -252,18 +236,16 @@ public class UserWeave {
     }
   }
 
-  protected final WeaveResponse getUserNode(String path)
-      throws WeaveException {
+  protected final WeaveResponse getUserNode(String path) throws WeaveException {
     URI nodeUri = buildUserUriFromSubpath(path);
     return getNode(nodeUri);
   }
 
-  public QueryResult<List<WeaveBasicObject>> getWboCollection(URI uri)
-      throws WeaveException {
+  public QueryResult<List<WeaveBasicObject>> getWboCollection(URI uri) throws WeaveException {
     try {
       WeaveResponse response = getNode(uri);
-      QueryResult<List<WeaveBasicObject>> result = new QueryResult<List<WeaveBasicObject>>(
-          response);
+      QueryResult<List<WeaveBasicObject>> result =
+          new QueryResult<List<WeaveBasicObject>>(response);
       JSONArray jsonPassArray = new JSONArray(response.getBody());
       List<WeaveBasicObject> records = new ArrayList<WeaveBasicObject>();
       for (int ii = 0; ii < jsonPassArray.length(); ii++) {

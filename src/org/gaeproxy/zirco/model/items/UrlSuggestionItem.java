@@ -15,9 +15,7 @@
 
 package org.gaeproxy.zirco.model.items;
 
-/**
- * Store a suggestion item.
- */
+/** Store a suggestion item. */
 public class UrlSuggestionItem {
 
   private static final float TITLE_COEFFICIENT = 2;
@@ -39,9 +37,9 @@ public class UrlSuggestionItem {
    * Constructor.
    *
    * @param pattern The parent pattern.
-   * @param title   The item's title.
-   * @param url     The item's url.
-   * @param type    The item's type (1 -> history, 2 -> bookmark).
+   * @param title The item's title.
+   * @param url The item's url.
+   * @param type The item's type (1 -> history, 2 -> bookmark).
    */
   public UrlSuggestionItem(String pattern, String title, String url, int type) {
     mPattern = pattern;
@@ -71,8 +69,7 @@ public class UrlSuggestionItem {
     String url = mUrl.toLowerCase();
     int urlMatchCount = url.split("\\Q" + pattern + "\\E").length - 1;
 
-    mNote = (titleMatchCount * TITLE_COEFFICIENT)
-        + (urlMatchCount * URL_COEFFICIENT);
+    mNote = (titleMatchCount * TITLE_COEFFICIENT) + (urlMatchCount * URL_COEFFICIENT);
 
     switch (mType) {
       case 1:
@@ -87,7 +84,6 @@ public class UrlSuggestionItem {
       default:
         break;
     }
-
   }
 
   /**
@@ -129,5 +125,4 @@ public class UrlSuggestionItem {
   public String getUrl() {
     return mUrl;
   }
-
 }

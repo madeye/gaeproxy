@@ -19,14 +19,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Implementation of the EventController.
- */
+/** Implementation of the EventController. */
 public final class EventController {
 
-  /**
-   * Holder for singleton implementation.
-   */
+  /** Holder for singleton implementation. */
   private static class EventControllerHolder {
     private static final EventController INSTANCE = new EventController();
   }
@@ -42,9 +38,7 @@ public final class EventController {
 
   private List<IDownloadEventsListener> mDownloadListeners;
 
-  /**
-   * Private Constructor.
-   */
+  /** Private Constructor. */
   private EventController() {
     mDownloadListeners = new ArrayList<IDownloadEventsListener>();
   }
@@ -54,8 +48,7 @@ public final class EventController {
    *
    * @param listener The listener to add.
    */
-  public synchronized void addDownloadListener(
-      IDownloadEventsListener listener) {
+  public synchronized void addDownloadListener(IDownloadEventsListener listener) {
 
     if (!mDownloadListeners.contains(listener)) {
       mDownloadListeners.add(listener);
@@ -66,7 +59,7 @@ public final class EventController {
    * Trigger a download event.
    *
    * @param event The event.
-   * @param data  Additional data.
+   * @param data Additional data.
    */
   public synchronized void fireDownloadEvent(String event, Object data) {
     Iterator<IDownloadEventsListener> iter = mDownloadListeners.iterator();
@@ -80,9 +73,7 @@ public final class EventController {
    *
    * @param listener The listener to remove.
    */
-  public synchronized void removeDownloadListener(
-      IDownloadEventsListener listener) {
+  public synchronized void removeDownloadListener(IDownloadEventsListener listener) {
     mDownloadListeners.remove(listener);
   }
-
 }

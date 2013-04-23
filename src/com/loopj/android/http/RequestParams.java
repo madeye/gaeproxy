@@ -18,16 +18,19 @@
 
 package com.loopj.android.http;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 
 /**
  * A collection of string request parameters or files to send along with
@@ -54,9 +57,7 @@ public class RequestParams {
   protected ConcurrentHashMap<String, String> urlParams;
   protected ConcurrentHashMap<String, FileWrapper> fileParams;
 
-  /**
-   * Constructs a new empty <code>RequestParams</code> instance.
-   */
+  /** Constructs a new empty <code>RequestParams</code> instance. */
   public RequestParams() {
     init();
   }
@@ -79,7 +80,7 @@ public class RequestParams {
    * Constructs a new RequestParams instance and populate it with a single
    * initial key/value string param.
    *
-   * @param key   the key name for the intial param.
+   * @param key the key name for the intial param.
    * @param value the value string for the initial param.
    */
   public RequestParams(String key, String value) {
@@ -91,7 +92,7 @@ public class RequestParams {
   /**
    * Adds a key/value string pair to the request.
    *
-   * @param key   the key name for the new param.
+   * @param key the key name for the new param.
    * @param value the value string for the new param.
    */
   public void put(String key, String value) {
@@ -103,7 +104,7 @@ public class RequestParams {
   /**
    * Adds a file to the request.
    *
-   * @param key  the key name for the new param.
+   * @param key the key name for the new param.
    * @param file the file to add.
    */
   public void put(String key, File file) throws FileNotFoundException {
@@ -113,7 +114,7 @@ public class RequestParams {
   /**
    * Adds an input stream to the request.
    *
-   * @param key    the key name for the new param.
+   * @param key the key name for the new param.
    * @param stream the input stream to add.
    */
   public void put(String key, InputStream stream) {
@@ -123,8 +124,8 @@ public class RequestParams {
   /**
    * Adds an input stream to the request.
    *
-   * @param key      the key name for the new param.
-   * @param stream   the input stream to add.
+   * @param key the key name for the new param.
+   * @param stream the input stream to add.
    * @param fileName the name of the file.
    */
   public void put(String key, InputStream stream, String fileName) {
@@ -134,9 +135,9 @@ public class RequestParams {
   /**
    * Adds an input stream to the request.
    *
-   * @param key         the key name for the new param.
-   * @param stream      the input stream to add.
-   * @param fileName    the name of the file.
+   * @param key the key name for the new param.
+   * @param stream the input stream to add.
+   * @param fileName the name of the file.
    * @param contentType the content type of the file, eg. application/json
    */
   public void put(String key, InputStream stream, String fileName, String contentType) {
@@ -159,8 +160,7 @@ public class RequestParams {
   public String toString() {
     StringBuilder result = new StringBuilder();
     for (ConcurrentHashMap.Entry<String, String> entry : urlParams.entrySet()) {
-      if (result.length() > 0)
-        result.append("&");
+      if (result.length() > 0) result.append("&");
 
       result.append(entry.getKey());
       result.append("=");
@@ -168,8 +168,7 @@ public class RequestParams {
     }
 
     for (ConcurrentHashMap.Entry<String, FileWrapper> entry : fileParams.entrySet()) {
-      if (result.length() > 0)
-        result.append("&");
+      if (result.length() > 0) result.append("&");
 
       result.append(entry.getKey());
       result.append("=");
@@ -179,9 +178,7 @@ public class RequestParams {
     return result.toString();
   }
 
-  /**
-   * Returns an HttpEntity containing all request parameters
-   */
+  /** Returns an HttpEntity containing all request parameters */
   public HttpEntity getEntity() {
     HttpEntity entity = null;
 
@@ -201,7 +198,8 @@ public class RequestParams {
         if (file.inputStream != null) {
           boolean isLast = currentIndex == lastIndex;
           if (file.contentType != null) {
-            multipartEntity.addPart(entry.getKey(), file.getFileName(), file.inputStream, file.contentType, isLast);
+            multipartEntity.addPart(entry.getKey(), file.getFileName(), file.inputStream,
+                file.contentType, isLast);
           } else {
             multipartEntity.addPart(entry.getKey(), file.getFileName(), file.inputStream, isLast);
           }

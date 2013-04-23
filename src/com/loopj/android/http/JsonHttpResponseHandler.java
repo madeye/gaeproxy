@@ -50,7 +50,6 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
   public void onSuccess(JSONObject response) {
   }
 
-
   /**
    * Fired when a request returns successfully and contains a json array
    * at the base of the response string. Override to handle in your
@@ -60,7 +59,6 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
    */
   public void onSuccess(JSONArray response) {
   }
-
 
   // Utility methods
   @Override
@@ -85,9 +83,7 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
     return new JSONTokener(responseBody).nextValue();
   }
 
-  /**
-   * Handle cases where a failure is returned as JSON
-   */
+  /** Handle cases where a failure is returned as JSON */
   public void onFailure(Throwable e, JSONObject errorResponse) {
   }
 
@@ -97,17 +93,18 @@ public class JsonHttpResponseHandler extends AsyncHttpResponseHandler {
   @Override
   protected void handleFailureMessage(Throwable e, String responseBody) {
     super.handleFailureMessage(e, responseBody);
-    if (responseBody != null) try {
-      Object jsonResponse = parseResponse(responseBody);
-      if (jsonResponse instanceof JSONObject) {
-        onFailure(e, (JSONObject) jsonResponse);
-      } else if (jsonResponse instanceof JSONArray) {
-        onFailure(e, (JSONArray) jsonResponse);
+    if (responseBody != null) {
+      try {
+        Object jsonResponse = parseResponse(responseBody);
+        if (jsonResponse instanceof JSONObject) {
+          onFailure(e, (JSONObject) jsonResponse);
+        } else if (jsonResponse instanceof JSONArray) {
+          onFailure(e, (JSONArray) jsonResponse);
+        }
+      } catch (JSONException ex) {
+        onFailure(e, responseBody);
       }
-    } catch (JSONException ex) {
-      onFailure(e, responseBody);
-    }
-    else {
+    } else {
       onFailure(e, "");
     }
   }

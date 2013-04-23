@@ -68,20 +68,20 @@ public class DomainValidator implements Serializable {
   // 1123)
   private static final String DOMAIN_LABEL_REGEX = "\\p{Alnum}(?>[\\p{Alnum}-]*\\p{Alnum})*";
   private static final String TOP_LABEL_REGEX = "\\p{Alpha}{2,}";
-  private static final String DOMAIN_NAME_REGEX = "^(?:" + DOMAIN_LABEL_REGEX
-      + "\\.)+" + "(" + TOP_LABEL_REGEX + ")$";
+  private static final String DOMAIN_NAME_REGEX =
+      "^(?:" + DOMAIN_LABEL_REGEX + "\\.)+" + "(" + TOP_LABEL_REGEX + ")$";
 
-  /**
-   * Singleton instance of this validator.
-   */
+  /** Singleton instance of this validator. */
   private static final DomainValidator DOMAIN_VALIDATOR = new DomainValidator();
 
-  private static final String[] INFRASTRUCTURE_TLDS = new String[]{"arpa", // internet
+  private static final String[] INFRASTRUCTURE_TLDS = new String[] {
+      "arpa", // internet
       // infrastructure
       "root" // diagnostic marker for non-truncated root zone
   };
 
-  private static final String[] GENERIC_TLDS = new String[]{"aero", // air
+  private static final String[] GENERIC_TLDS = new String[] {
+      "aero", // air
       // transport
       // industry
       "asia", // Pan-Asia/Asia Pacific
@@ -105,7 +105,8 @@ public class DomainValidator implements Serializable {
       "int" // organizations established by international treaty
   };
 
-  private static final String[] COUNTRY_CODE_TLDS = new String[]{"ac", // Ascension
+  private static final String[] COUNTRY_CODE_TLDS = new String[] {
+      "ac", // Ascension
       // Island
       "ad", // Andorra
       "ae", // United Arab Emirates
@@ -361,13 +362,11 @@ public class DomainValidator implements Serializable {
       "zw", // Zimbabwe
   };
 
-  private static final List INFRASTRUCTURE_TLD_LIST = Arrays
-      .asList(INFRASTRUCTURE_TLDS);
+  private static final List INFRASTRUCTURE_TLD_LIST = Arrays.asList(INFRASTRUCTURE_TLDS);
 
   private static final List GENERIC_TLD_LIST = Arrays.asList(GENERIC_TLDS);
 
-  private static final List COUNTRY_CODE_TLD_LIST = Arrays
-      .asList(COUNTRY_CODE_TLDS);
+  private static final List COUNTRY_CODE_TLD_LIST = Arrays.asList(COUNTRY_CODE_TLDS);
 
   /**
    * Returns the singleton instance of this validator.
@@ -378,15 +377,10 @@ public class DomainValidator implements Serializable {
     return DOMAIN_VALIDATOR;
   }
 
-  /**
-   * RegexValidator for matching domains.
-   */
-  private final RegexValidator domainRegex = new RegexValidator(
-      DOMAIN_NAME_REGEX);
+  /** RegexValidator for matching domains. */
+  private final RegexValidator domainRegex = new RegexValidator(DOMAIN_NAME_REGEX);
 
-  /**
-   * Private constructor.
-   */
+  /** Private constructor. */
   private DomainValidator() {
   }
 
@@ -429,8 +423,7 @@ public class DomainValidator implements Serializable {
    * @return true if the parameter is a country code TLD
    */
   public boolean isValidCountryCodeTld(String ccTld) {
-    return COUNTRY_CODE_TLD_LIST.contains(chompLeadingDot(ccTld
-        .toLowerCase()));
+    return COUNTRY_CODE_TLD_LIST.contains(chompLeadingDot(ccTld.toLowerCase()));
   }
 
   /**
@@ -454,8 +447,7 @@ public class DomainValidator implements Serializable {
    * @return true if the parameter is an infrastructure TLD
    */
   public boolean isValidInfrastructureTld(String iTld) {
-    return INFRASTRUCTURE_TLD_LIST.contains(chompLeadingDot(iTld
-        .toLowerCase()));
+    return INFRASTRUCTURE_TLD_LIST.contains(chompLeadingDot(iTld.toLowerCase()));
   }
 
   /**
@@ -467,7 +459,6 @@ public class DomainValidator implements Serializable {
    * @return true if the parameter is a TLD
    */
   public boolean isValidTld(String tld) {
-    return isValidInfrastructureTld(tld) || isValidGenericTld(tld)
-        || isValidCountryCodeTld(tld);
+    return isValidInfrastructureTld(tld) || isValidGenericTld(tld) || isValidCountryCodeTld(tld);
   }
 }

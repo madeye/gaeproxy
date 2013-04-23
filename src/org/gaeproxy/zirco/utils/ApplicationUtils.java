@@ -29,20 +29,17 @@ import android.text.ClipboardManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
-import org.gaeproxy.R;
-import org.gaeproxy.zirco.model.items.BookmarkItem;
-import org.gaeproxy.zirco.model.items.HistoryItem;
-import org.gaeproxy.zirco.providers.BookmarksProviderWrapper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import org.gaeproxy.R;
+import org.gaeproxy.zirco.model.items.BookmarkItem;
+import org.gaeproxy.zirco.model.items.HistoryItem;
+import org.gaeproxy.zirco.providers.BookmarksProviderWrapper;
 
-/**
- * Application utilities.
- */
+/** Application utilities. */
 public class ApplicationUtils {
 
   private static String mAdSweepString = null;
@@ -61,7 +58,7 @@ public class ApplicationUtils {
   /**
    * Check if the SD card is available. Display an alert if not.
    *
-   * @param context     The current context.
+   * @param context The current context.
    * @param showMessage If true, will display a message for the user.
    * @return True if the SD card is available, false otherwise.
    */
@@ -80,8 +77,7 @@ public class ApplicationUtils {
       }
 
       if (showMessage) {
-        ApplicationUtils.showErrorDialog(context,
-            R.string.Commons_SDCardErrorTitle, messageId);
+        ApplicationUtils.showErrorDialog(context, R.string.Commons_SDCardErrorTitle, messageId);
       }
 
       return false;
@@ -93,15 +89,14 @@ public class ApplicationUtils {
   /**
    * Copy a text to the clipboard.
    *
-   * @param context      The current context.
-   * @param text         The text to copy.
+   * @param context The current context.
+   * @param text The text to copy.
    * @param toastMessage The message to show in a Toast notification. If empty or null,
-   *                     does not display notification.
+   * does not display notification.
    */
-  public static void copyTextToClipboard(Context context, String text,
-                                         String toastMessage) {
-    ClipboardManager clipboard = (ClipboardManager) context
-        .getSystemService(Context.CLIPBOARD_SERVICE);
+  public static void copyTextToClipboard(Context context, String text, String toastMessage) {
+    ClipboardManager clipboard =
+        (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
     clipboard.setText(text);
 
     if ((toastMessage != null) && (toastMessage.length() > 0)) {
@@ -117,29 +112,25 @@ public class ApplicationUtils {
    */
   public static String getAdSweepString(Context context) {
     if (mAdSweepString == null) {
-      InputStream is = context.getResources().openRawResource(
-          R.raw.adsweep);
+      InputStream is = context.getResources().openRawResource(R.raw.adsweep);
       if (is != null) {
         StringBuilder sb = new StringBuilder();
         String line;
 
         try {
-          BufferedReader reader = new BufferedReader(
-              new InputStreamReader(is, "UTF-8"));
+          BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
           while ((line = reader.readLine()) != null) {
             if ((line.length() > 0) && (!line.startsWith("//"))) {
               sb.append(line).append("\n");
             }
           }
         } catch (IOException e) {
-          Log.w("AdSweep",
-              "Unable to load AdSweep: " + e.getMessage());
+          Log.w("AdSweep", "Unable to load AdSweep: " + e.getMessage());
         } finally {
           try {
             is.close();
           } catch (IOException e) {
-            Log.w("AdSweep",
-                "Unable to load AdSweep: " + e.getMessage());
+            Log.w("AdSweep", "Unable to load AdSweep: " + e.getMessage());
           }
         }
         mAdSweepString = sb.toString();
@@ -163,14 +154,11 @@ public class ApplicationUtils {
     try {
 
       PackageManager manager = context.getPackageManager();
-      PackageInfo info = manager.getPackageInfo(context.getPackageName(),
-          0);
+      PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
 
       result = info.versionCode;
-
     } catch (NameNotFoundException e) {
-      Log.w("ApplicationUtils",
-          "Unable to get application version: " + e.getMessage());
+      Log.w("ApplicationUtils", "Unable to get application version: " + e.getMessage());
       result = -1;
     }
 
@@ -187,35 +175,28 @@ public class ApplicationUtils {
     String result = "";
     StringBuilder bookmarksSb = new StringBuilder();
 
-    if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-        Constants.PREFERENCES_START_PAGE_SHOW_BOOKMARKS, true)) {
+    if (PreferenceManager.getDefaultSharedPreferences(context)
+        .getBoolean(Constants.PREFERENCES_START_PAGE_SHOW_BOOKMARKS, true)) {
 
       int limit;
       try {
-        limit = Integer
-            .parseInt(PreferenceManager
-                .getDefaultSharedPreferences(context)
-                .getString(
-                    Constants.PREFERENCES_START_PAGE_BOOKMARKS_LIMIT,
-                    "5"));
+        limit = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
+            .getString(Constants.PREFERENCES_START_PAGE_BOOKMARKS_LIMIT, "5"));
       } catch (Exception e) {
         limit = 5;
       }
 
-      List<BookmarkItem> results = BookmarksProviderWrapper
-          .getStockBookmarksWithLimit(context.getContentResolver(),
-              limit);
+      List<BookmarkItem> results =
+          BookmarksProviderWrapper.getStockBookmarksWithLimit(context.getContentResolver(), limit);
 
       for (BookmarkItem item : results) {
-        bookmarksSb.append(String.format(
-            "<li><a href=\"%s\">%s</a></li>", item.getUrl(),
-            item.getTitle()));
+        bookmarksSb.append(
+            String.format("<li><a href=\"%s\">%s</a></li>", item.getUrl(), item.getTitle()));
       }
     }
 
-    result = String.format(mRawStartPageBookmarks, context.getResources()
-        .getString(R.string.StartPage_Bookmarks), bookmarksSb
-        .toString());
+    result = String.format(mRawStartPageBookmarks,
+        context.getResources().getString(R.string.StartPage_Bookmarks), bookmarksSb.toString());
 
     return result;
   }
@@ -300,32 +281,28 @@ public class ApplicationUtils {
     String result = "";
     StringBuilder historySb = new StringBuilder();
 
-    if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-        Constants.PREFERENCES_START_PAGE_SHOW_HISTORY, true)) {
+    if (PreferenceManager.getDefaultSharedPreferences(context)
+        .getBoolean(Constants.PREFERENCES_START_PAGE_SHOW_HISTORY, true)) {
 
       int limit;
       try {
-        limit = Integer.parseInt(PreferenceManager
-            .getDefaultSharedPreferences(context).getString(
-                Constants.PREFERENCES_START_PAGE_HISTORY_LIMIT,
-                "5"));
+        limit = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context)
+            .getString(Constants.PREFERENCES_START_PAGE_HISTORY_LIMIT, "5"));
       } catch (Exception e) {
         limit = 5;
       }
 
-      List<HistoryItem> results = BookmarksProviderWrapper
-          .getStockHistoryWithLimit(context.getContentResolver(),
-              limit);
+      List<HistoryItem> results =
+          BookmarksProviderWrapper.getStockHistoryWithLimit(context.getContentResolver(), limit);
 
       for (HistoryItem item : results) {
-        historySb.append(String.format(
-            "<li><a href=\"%s\">%s</a></li>", item.getUrl(),
-            item.getTitle()));
+        historySb.append(
+            String.format("<li><a href=\"%s\">%s</a></li>", item.getUrl(), item.getTitle()));
       }
     }
 
-    result = String.format(mRawStartPageHistory, context.getResources()
-        .getString(R.string.StartPage_History), historySb.toString());
+    result = String.format(mRawStartPageHistory,
+        context.getResources().getString(R.string.StartPage_History), historySb.toString());
 
     return result;
   }
@@ -364,15 +341,11 @@ public class ApplicationUtils {
     if (mRawStartPage == null) {
 
       mRawStartPage = getStringFromRawResource(context, R.raw.start);
-      mRawStartPageStyles = getStringFromRawResource(context,
-          R.raw.start_style);
-      mRawStartPageBookmarks = getStringFromRawResource(context,
-          R.raw.start_bookmarks);
-      mRawStartPageHistory = getStringFromRawResource(context,
-          R.raw.start_history);
+      mRawStartPageStyles = getStringFromRawResource(context, R.raw.start_style);
+      mRawStartPageBookmarks = getStringFromRawResource(context, R.raw.start_bookmarks);
+      mRawStartPageHistory = getStringFromRawResource(context, R.raw.start_history);
 
-      mRawStartPageSearch = getStringFromRawResource(context,
-          R.raw.start_search);
+      mRawStartPageSearch = getStringFromRawResource(context, R.raw.start_search);
     }
 
     String result = mRawStartPage;
@@ -381,22 +354,17 @@ public class ApplicationUtils {
     String historyHtml = getHistoryHtml(context);
 
     String searchHtml = "";
-    if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-        Constants.PREFERENCES_START_PAGE_SHOW_SEARCH, false)) {
-      searchHtml = String
-          .format(mRawStartPageSearch,
-              context.getResources().getString(
-                  R.string.StartPage_Search),
-              context.getResources().getString(
-                  R.string.StartPage_SearchButton));
+    if (PreferenceManager.getDefaultSharedPreferences(context)
+        .getBoolean(Constants.PREFERENCES_START_PAGE_SHOW_SEARCH, false)) {
+      searchHtml = String.format(mRawStartPageSearch,
+          context.getResources().getString(R.string.StartPage_Search),
+          context.getResources().getString(R.string.StartPage_SearchButton));
     }
 
     String bodyHtml = searchHtml + bookmarksHtml + historyHtml;
 
-    result = String
-        .format(mRawStartPage, mRawStartPageStyles, context
-            .getResources().getString(R.string.StartPage_Welcome),
-            bodyHtml);
+    result = String.format(mRawStartPage, mRawStartPageStyles,
+        context.getResources().getString(R.string.StartPage_Welcome), bodyHtml);
 
     return result;
   }
@@ -404,12 +372,11 @@ public class ApplicationUtils {
   /**
    * Load a raw string resource.
    *
-   * @param context    The current context.
+   * @param context The current context.
    * @param resourceId The resource id.
    * @return The loaded string.
    */
-  private static String getStringFromRawResource(Context context,
-                                                 int resourceId) {
+  private static String getStringFromRawResource(Context context, int resourceId) {
     String result = null;
 
     InputStream is = context.getResources().openRawResource(resourceId);
@@ -418,22 +385,19 @@ public class ApplicationUtils {
       String line;
 
       try {
-        BufferedReader reader = new BufferedReader(
-            new InputStreamReader(is, "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
         while ((line = reader.readLine()) != null) {
           sb.append(line).append("\n");
         }
       } catch (IOException e) {
-        Log.w("ApplicationUtils", String.format(
-            "Unable to load resource %s: %s", resourceId,
-            e.getMessage()));
+        Log.w("ApplicationUtils",
+            String.format("Unable to load resource %s: %s", resourceId, e.getMessage()));
       } finally {
         try {
           is.close();
         } catch (IOException e) {
-          Log.w("ApplicationUtils", String.format(
-              "Unable to load resource %s: %s", resourceId,
-              e.getMessage()));
+          Log.w("ApplicationUtils",
+              String.format("Unable to load resource %s: %s", resourceId, e.getMessage()));
         }
       }
       result = sb.toString();
@@ -446,26 +410,26 @@ public class ApplicationUtils {
 
   public static String getWeaveAuthToken(Context context) {
     String server = PreferenceManager.getDefaultSharedPreferences(context)
-        .getString(Constants.PREFERENCE_WEAVE_SERVER,
-            Constants.WEAVE_DEFAULT_SERVER);
-    String userName = PreferenceManager
-        .getDefaultSharedPreferences(context).getString(
-            Constants.PREFERENCE_WEAVE_USERNAME, null);
-    String password = PreferenceManager
-        .getDefaultSharedPreferences(context).getString(
-            Constants.PREFERENCE_WEAVE_PASSWORD, null);
+        .getString(Constants.PREFERENCE_WEAVE_SERVER, Constants.WEAVE_DEFAULT_SERVER);
+    String userName = PreferenceManager.getDefaultSharedPreferences(context)
+        .getString(Constants.PREFERENCE_WEAVE_USERNAME, null);
+    String password = PreferenceManager.getDefaultSharedPreferences(context)
+        .getString(Constants.PREFERENCE_WEAVE_PASSWORD, null);
     String key = PreferenceManager.getDefaultSharedPreferences(context)
         .getString(Constants.PREFERENCE_WEAVE_KEY, null);
 
-    boolean ok = (server != null) && (server.length() > 0)
-        && (UrlUtils.isUrl(server)) && (userName != null)
-        && (userName.length() > 0) && (password != null)
-        && (password.length() > 0) && (key != null)
+    boolean ok = (server != null)
+        && (server.length() > 0)
+        && (UrlUtils.isUrl(server))
+        && (userName != null)
+        && (userName.length() > 0)
+        && (password != null)
+        && (password.length() > 0)
+        && (key != null)
         && (key.length() > 0);
 
     if (ok) {
-      return String.format(Constants.WEAVE_AUTH_TOKEN_SCHEME, key,
-          password, userName, server);
+      return String.format(Constants.WEAVE_AUTH_TOKEN_SCHEME, key, password, userName, server);
     } else {
       return null;
     }
@@ -475,8 +439,8 @@ public class ApplicationUtils {
    * Share a page.
    *
    * @param activity The parent activity.
-   * @param title    The page title.
-   * @param url      The page url.
+   * @param title The page title.
+   * @param url The page url.
    */
   public static void sharePage(Activity activity, String title, String url) {
     Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -486,8 +450,8 @@ public class ApplicationUtils {
     shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
 
     try {
-      activity.startActivity(Intent.createChooser(shareIntent,
-          activity.getString(R.string.Main_ShareChooserTitle)));
+      activity.startActivity(
+          Intent.createChooser(shareIntent, activity.getString(R.string.Main_ShareChooserTitle)));
     } catch (android.content.ActivityNotFoundException ex) {
       // if no app handles it, do nothing
     }
@@ -496,17 +460,16 @@ public class ApplicationUtils {
   /**
    * Display a continue / cancel dialog.
    *
-   * @param context    The current context.
-   * @param icon       The dialog icon.
-   * @param title      The dialog title.
-   * @param message    The dialog message.
+   * @param context The current context.
+   * @param icon The dialog icon.
+   * @param title The dialog title.
+   * @param message The dialog message.
    * @param onContinue The dialog listener for the continue button.
-   * @param onCancel   The dialog listener for the cancel button.
+   * @param onCancel The dialog listener for the cancel button.
    */
-  public static void showContinueCancelDialog(Context context, int icon,
-                                              String title, String message,
-                                              DialogInterface.OnClickListener onContinue,
-                                              DialogInterface.OnClickListener onCancel) {
+  public static void showContinueCancelDialog(Context context, int icon, String title,
+      String message, DialogInterface.OnClickListener onContinue,
+      DialogInterface.OnClickListener onCancel) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
     builder.setCancelable(true);
     builder.setIcon(icon);
@@ -514,12 +477,9 @@ public class ApplicationUtils {
     builder.setMessage(message);
 
     builder.setInverseBackgroundForced(true);
-    builder.setPositiveButton(
-        context.getResources().getString(R.string.Commons_Continue),
+    builder.setPositiveButton(context.getResources().getString(R.string.Commons_Continue),
         onContinue);
-    builder.setNegativeButton(
-        context.getResources().getString(R.string.Commons_Cancel),
-        onCancel);
+    builder.setNegativeButton(context.getResources().getString(R.string.Commons_Cancel), onCancel);
     AlertDialog alert = builder.create();
     alert.show();
   }
@@ -528,35 +488,36 @@ public class ApplicationUtils {
    * Show an error dialog.
    *
    * @param context The current context.
-   * @param title   The title string id.
+   * @param title The title string id.
    * @param message The message string id.
    */
   public static void showErrorDialog(Context context, int title, int message) {
     new AlertDialog.Builder(context).setTitle(title)
         .setIcon(android.R.drawable.ic_dialog_alert)
         .setMessage(message)
-        .setPositiveButton(R.string.Commons_Ok, null).show();
+        .setPositiveButton(R.string.Commons_Ok, null)
+        .show();
   }
 
-  public static void showErrorDialog(Context context, int title,
-                                     String message) {
+  public static void showErrorDialog(Context context, int title, String message) {
     new AlertDialog.Builder(context).setTitle(title)
         .setIcon(android.R.drawable.ic_dialog_alert)
         .setMessage(message)
-        .setPositiveButton(R.string.Commons_Ok, null).show();
+        .setPositiveButton(R.string.Commons_Ok, null)
+        .show();
   }
 
   /**
    * Display a standard Ok / Cancel dialog.
    *
    * @param context The current context.
-   * @param icon    The dialog icon.
-   * @param title   The dialog title.
+   * @param icon The dialog icon.
+   * @param title The dialog title.
    * @param message The dialog message.
-   * @param onYes   The dialog listener for the yes button.
+   * @param onYes The dialog listener for the yes button.
    */
-  public static void showOkCancelDialog(Context context, int icon,
-                                        String title, String message, DialogInterface.OnClickListener onYes) {
+  public static void showOkCancelDialog(Context context, int icon, String title, String message,
+      DialogInterface.OnClickListener onYes) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
     builder.setCancelable(true);
     builder.setIcon(icon);
@@ -564,10 +525,8 @@ public class ApplicationUtils {
     builder.setMessage(message);
 
     builder.setInverseBackgroundForced(true);
-    builder.setPositiveButton(
-        context.getResources().getString(R.string.Commons_Ok), onYes);
-    builder.setNegativeButton(
-        context.getResources().getString(R.string.Commons_Cancel),
+    builder.setPositiveButton(context.getResources().getString(R.string.Commons_Ok), onYes);
+    builder.setNegativeButton(context.getResources().getString(R.string.Commons_Cancel),
         new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
@@ -582,12 +541,11 @@ public class ApplicationUtils {
    * Display a standard Ok dialog.
    *
    * @param context The current context.
-   * @param icon    The dialog icon.
-   * @param title   The dialog title.
+   * @param icon The dialog icon.
+   * @param title The dialog title.
    * @param message The dialog message.
    */
-  public static void showOkDialog(Context context, int icon, String title,
-                                  String message) {
+  public static void showOkDialog(Context context, int icon, String title, String message) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
     builder.setCancelable(false);
     builder.setIcon(icon);
@@ -595,8 +553,7 @@ public class ApplicationUtils {
     builder.setMessage(message);
 
     builder.setInverseBackgroundForced(true);
-    builder.setPositiveButton(
-        context.getResources().getString(R.string.Commons_Ok),
+    builder.setPositiveButton(context.getResources().getString(R.string.Commons_Ok),
         new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
@@ -611,13 +568,13 @@ public class ApplicationUtils {
    * Display a standard yes / no dialog.
    *
    * @param context The current context.
-   * @param icon    The dialog icon.
-   * @param title   The dialog title.
+   * @param icon The dialog icon.
+   * @param title The dialog title.
    * @param message The dialog message.
-   * @param onYes   The dialog listener for the yes button.
+   * @param onYes The dialog listener for the yes button.
    */
-  public static void showYesNoDialog(Context context, int icon, int title,
-                                     int message, DialogInterface.OnClickListener onYes) {
+  public static void showYesNoDialog(Context context, int icon, int title, int message,
+      DialogInterface.OnClickListener onYes) {
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
     builder.setCancelable(true);
     builder.setIcon(icon);
@@ -625,10 +582,8 @@ public class ApplicationUtils {
     builder.setMessage(context.getResources().getString(message));
 
     builder.setInverseBackgroundForced(true);
-    builder.setPositiveButton(
-        context.getResources().getString(R.string.Commons_Yes), onYes);
-    builder.setNegativeButton(
-        context.getResources().getString(R.string.Commons_No),
+    builder.setPositiveButton(context.getResources().getString(R.string.Commons_Yes), onYes);
+    builder.setNegativeButton(context.getResources().getString(R.string.Commons_No),
         new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
@@ -638,5 +593,4 @@ public class ApplicationUtils {
     AlertDialog alert = builder.create();
     alert.show();
   }
-
 }

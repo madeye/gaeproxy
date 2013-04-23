@@ -7,8 +7,7 @@ public class WeaveBookmarkItem {
   private boolean mIsFolder;
   private String mWeaveId;
 
-  public WeaveBookmarkItem(String title, String url, String weaveId,
-                           boolean isFolder) {
+  public WeaveBookmarkItem(String title, String url, String weaveId, boolean isFolder) {
     mTitle = title;
     mUrl = url;
     mWeaveId = weaveId;
@@ -30,5 +29,4 @@ public class WeaveBookmarkItem {
   public boolean isFolder() {
     return mIsFolder;
   }
-
 }

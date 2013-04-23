@@ -30,22 +30,16 @@ import org.gaeproxy.zirco.events.IDownloadEventsListener;
 import org.gaeproxy.zirco.model.adapters.DownloadListAdapter;
 import org.gaeproxy.zirco.model.items.DownloadItem;
 
-/**
- * Download list activity.
- */
-public class DownloadsListActivity extends ListActivity implements
-    IDownloadEventsListener {
+/** Download list activity. */
+public class DownloadsListActivity extends ListActivity implements IDownloadEventsListener {
 
   private static final int MENU_CLEAR_DOWNLOADS = Menu.FIRST;
 
   private DownloadListAdapter mAdapter;
 
-  /**
-   * Fill the download list.
-   */
+  /** Fill the download list. */
   private void fillData() {
-    mAdapter = new DownloadListAdapter(this, Controller.getInstance()
-        .getDownloadList());
+    mAdapter = new DownloadListAdapter(this, Controller.getInstance().getDownloadList());
     setListAdapter(mAdapter);
   }
 
@@ -98,14 +92,12 @@ public class DownloadsListActivity extends ListActivity implements
         TextView title = mAdapter.getTitleMap().get(item);
         if (title != null) {
           if (item.isAborted()) {
-            title.setText(String.format(
-                getResources().getString(
-                    R.string.DownloadListActivity_Aborted),
-                item.getFileName()));
+            title.setText(
+                String.format(getResources().getString(R.string.DownloadListActivity_Aborted),
+                    item.getFileName()));
           } else {
-            title.setText(String
-                .format(getResources().getString(
-                    R.string.DownloadListActivity_Finished),
+            title.setText(
+                String.format(getResources().getString(R.string.DownloadListActivity_Finished),
                     item.getFileName()));
           }
         }
@@ -121,7 +113,6 @@ public class DownloadsListActivity extends ListActivity implements
         }
       }
     }
-
   }
 
   @Override
@@ -136,5 +127,4 @@ public class DownloadsListActivity extends ListActivity implements
         return super.onMenuItemSelected(featureId, item);
     }
   }
-
 }

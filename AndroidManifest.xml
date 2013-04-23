@@ -1,143 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.gaeproxy"
-          android:installLocation="auto"
-          android:versionCode="163"
-          android:versionName="0.21.6">
+    package="org.gaeproxy"
+    android:installLocation="auto"
+    android:versionCode="163"
+    android:versionName="0.21.6">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS"/>
-    <uses-permission android:name="com.android.browser.permission.WRITE_HISTORY_BOOKMARKS"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="android.permission.ACCESS_SUPERUSER"/>
+  <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS"/>
+  <uses-permission android:name="com.android.browser.permission.WRITE_HISTORY_BOOKMARKS"/>
 
-    <uses-feature
-            android:name="android.hardware.touchscreen"
-            android:required="false"/>
+  <uses-feature
+      android:name="android.hardware.touchscreen"
+      android:required="false"/>
 
-    <supports-screens
-            android:anyDensity="true"
-            android:largeScreens="true"
-            android:normalScreens="true"
-            android:smallScreens="true"/>
+  <supports-screens
+      android:anyDensity="true"
+      android:largeScreens="true"
+      android:normalScreens="true"
+      android:smallScreens="true"/>
 
-    <uses-sdk
-            android:minSdkVersion="9"
-            android:targetSdkVersion="15"/>
+  <uses-sdk
+      android:minSdkVersion="9"
+      android:targetSdkVersion="15"/>
 
-    <application
-            android:name=".GAEProxyApplication"
-            android:hardwareAccelerated="true"
-            android:icon="@drawable/icon"
-            android:label="@string/app_name">
-        <activity
-                android:name=".GAEProxyActivity"
-                android:label="@string/app_name"
-                android:launchMode="singleTask"
-                android:taskAffinity=".GAEProxy">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+  <application
+      android:name=".GAEProxyApplication"
+      android:hardwareAccelerated="true"
+      android:icon="@drawable/icon"
+      android:label="@string/app_name">
+    <activity
+        android:name=".GAEProxyActivity"
+        android:label="@string/app_name"
+        android:launchMode="singleTask"
+        android:taskAffinity=".GAEProxy">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name="com.google.ads.AdActivity"
-                android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
-        <activity
-                android:name=".ProxiedAppActivity"
-                android:label="@string/app_name"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <activity
+        android:name="com.google.ads.AdActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+    <activity
+        android:name=".ProxiedAppActivity"
+        android:label="@string/app_name"/>
 
-        <service
-                android:name=".GAEProxyService"
-                android:enabled="true"/>
+    <service
+        android:name=".GAEProxyService"
+        android:enabled="true"/>
 
-        <receiver android:name=".GAEProxyReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".GAEProxyWidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-                <action android:name="org.gaeproxy.GAEProxyWidgetProvider.PROXY_SWITCH_ACTION"/>
-            </intent-filter>
+    <service
+        android:name=".GAEProxyUpdateService"/>
 
-            <meta-data
-                    android:name="android.appwidget.provider"
-                    android:resource="@xml/gaeproxy_appwidget_provider"/>
-        </receiver>
+    <receiver android:name=".GAEProxyBootReceiver">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      </intent-filter>
+    </receiver>
 
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.MainActivity"
-                android:configChanges="keyboardHidden|orientation"
-                android:label="@string/ApplicationName"
-                android:launchMode="singleTask"
-                android:theme="@style/Theme.GAEProxy">
-        </activity>
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.AboutActivity"
-                android:label="@string/AboutActivity.Title"
-                android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.EditBookmarkActivity"
-                android:label="@string/EditBookmarkActivity.Title"
-                android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity android:name="org.gaeproxy.zirco.ui.activities.BookmarksListActivity">
-        </activity>
-        <activity android:name="org.gaeproxy.zirco.ui.activities.HistoryListActivity">
-        </activity>
-        <activity android:name="org.gaeproxy.zirco.ui.activities.DownloadsListActivity">
-        </activity>
-        <activity android:name="org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity">
-        </activity>
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.BookmarksHistoryActivity"
-                android:configChanges="keyboardHidden|orientation">
-        </activity>
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.ChangelogActivity"
-                android:label="@string/ChangelogActivity.Title"
-                android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity android:name="org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity">
-        </activity>
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.preferences.HomepagePreferenceActivity"
-                android:label="@string/HomepagePreferenceActivity.Title"
-                android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.preferences.SearchUrlPreferenceActivity"
-                android:label="@string/SearchUrlPreferenceActivity.Title"
-                android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.preferences.UserAgentPreferenceActivity"
-                android:label="@string/UserAgentPreferenceActivity.Title"
-                android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity android:name="org.gaeproxy.zirco.ui.activities.MobileViewListActivity">
-        </activity>
-        <activity android:name="org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity">
-        </activity>
-        <activity android:name="org.gaeproxy.zirco.ui.activities.preferences.WeavePreferencesActivity">
-        </activity>
-        <activity
-                android:name="org.gaeproxy.zirco.ui.activities.preferences.WeaveServerPreferenceActivity"
-                android:label="@string/WeaveServerPreferenceActivity.Title"
-                android:theme="@android:style/Theme.Dialog">
-        </activity>
+    <receiver android:name=".GAEProxyPackageReceiver">
+      <intent-filter>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <action android:name="android.intent.action.PACKAGE_ADDED"/>
+        <action android:name="android.intent.action.PACKAGE_CHANGED"/>
+        <action android:name="android.intent.action.PACKAGE_INSTALL"/>
+        <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+        <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+        <data android:scheme="package"/>
+      </intent-filter>
+    </receiver>
 
-        <provider
-                android:name="org.gaeproxy.zirco.providers.WeaveContentProvider"
-                android:authorities="org.gaeproxy.zirco.providers.weavecontentprovider">
-        </provider>
-    </application>
+    <receiver android:name=".GAEProxyWidgetProvider">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+        <action android:name="org.gaeproxy.GAEProxyWidgetProvider.PROXY_SWITCH_ACTION"/>
+      </intent-filter>
+
+      <meta-data
+          android:name="android.appwidget.provider"
+          android:resource="@xml/gaeproxy_appwidget_provider"/>
+    </receiver>
+
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.MainActivity"
+        android:configChanges="keyboardHidden|orientation"
+        android:label="@string/ApplicationName"
+        android:launchMode="singleTask"
+        android:theme="@style/Theme.GAEProxy">
+    </activity>
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.AboutActivity"
+        android:label="@string/AboutActivity.Title"
+        android:theme="@android:style/Theme.Dialog">
+    </activity>
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.EditBookmarkActivity"
+        android:label="@string/EditBookmarkActivity.Title"
+        android:theme="@android:style/Theme.Dialog">
+    </activity>
+    <activity android:name="org.gaeproxy.zirco.ui.activities.BookmarksListActivity">
+    </activity>
+    <activity android:name="org.gaeproxy.zirco.ui.activities.HistoryListActivity">
+    </activity>
+    <activity android:name="org.gaeproxy.zirco.ui.activities.DownloadsListActivity">
+    </activity>
+    <activity android:name="org.gaeproxy.zirco.ui.activities.AdBlockerWhiteListActivity">
+    </activity>
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.BookmarksHistoryActivity"
+        android:configChanges="keyboardHidden|orientation">
+    </activity>
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.ChangelogActivity"
+        android:label="@string/ChangelogActivity.Title"
+        android:theme="@android:style/Theme.Dialog">
+    </activity>
+    <activity android:name="org.gaeproxy.zirco.ui.activities.preferences.PreferencesActivity">
+    </activity>
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.preferences.HomepagePreferenceActivity"
+        android:label="@string/HomepagePreferenceActivity.Title"
+        android:theme="@android:style/Theme.Dialog">
+    </activity>
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.preferences.SearchUrlPreferenceActivity"
+        android:label="@string/SearchUrlPreferenceActivity.Title"
+        android:theme="@android:style/Theme.Dialog">
+    </activity>
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.preferences.UserAgentPreferenceActivity"
+        android:label="@string/UserAgentPreferenceActivity.Title"
+        android:theme="@android:style/Theme.Dialog">
+    </activity>
+    <activity android:name="org.gaeproxy.zirco.ui.activities.MobileViewListActivity">
+    </activity>
+    <activity android:name="org.gaeproxy.zirco.ui.activities.WeaveBookmarksListActivity">
+    </activity>
+    <activity android:name="org.gaeproxy.zirco.ui.activities.preferences.WeavePreferencesActivity">
+    </activity>
+    <activity
+        android:name="org.gaeproxy.zirco.ui.activities.preferences.WeaveServerPreferenceActivity"
+        android:label="@string/WeaveServerPreferenceActivity.Title"
+        android:theme="@android:style/Theme.Dialog">
+    </activity>
+
+    <provider
+        android:name="org.gaeproxy.zirco.providers.WeaveContentProvider"
+        android:authorities="org.gaeproxy.zirco.providers.weavecontentprovider">
+    </provider>
+  </application>
 
 </manifest>

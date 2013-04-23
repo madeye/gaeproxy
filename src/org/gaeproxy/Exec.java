@@ -31,9 +31,7 @@ public class Exec {
     System.loadLibrary("exec");
   }
 
-  /**
-   * Close a given file descriptor.
-   */
+  /** Close a given file descriptor. */
   public static native void close(FileDescriptor fd);
 
   /**
@@ -43,23 +41,20 @@ public class Exec {
    * Callers are responsible for calling Exec.close() on the returned file
    * descriptor.
    *
-   * @param rdt       Whether redirect the stdout and stderr
-   * @param cmd       The command to execute
-   * @param args      An array of arguments to the command
-   * @param envVars   An array of strings of the form "VAR=value" to be added to the
-   *                  environment of the process
-   * @param           The script file
+   * @param rdt Whether redirect the stdout and stderr
+   * @param cmd The command to execute
+   * @param args An array of arguments to the command
+   * @param envVars An array of strings of the form "VAR=value" to be added to the
+   * environment of the process
+   * @param The script file
    * @param processId A one-element array to which the process ID of the started
-   *                  process will be written.
+   * process will be written.
    * @return the file descriptor of the started process.
    */
-  public static native FileDescriptor createSubprocess(int rdt, String cmd,
-                                                       String[] args, String[] envVars,
-                                                       String scripts, int[] processId);
+  public static native FileDescriptor createSubprocess(int rdt, String cmd, String[] args,
+      String[] envVars, String scripts, int[] processId);
 
-  /**
-   * Send SIGHUP to a process group.
-   */
+  /** Send SIGHUP to a process group. */
   public static native void hangupProcessGroup(int processId);
 
   /**

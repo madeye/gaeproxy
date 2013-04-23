@@ -18,7 +18,6 @@ package org.greendroid;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-
 import java.lang.ref.WeakReference;
 
 /**
@@ -54,5 +53,4 @@ public class QuickAction {
     mDrawable = d;
     mTitle = title;
   }
-
 }

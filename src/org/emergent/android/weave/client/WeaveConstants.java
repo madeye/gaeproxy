@@ -16,30 +16,24 @@
 
 package org.emergent.android.weave.client;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 public class WeaveConstants {
 
-  private static final String PACKAGE_NAME = WeaveConstants.class
-      .getPackage().getName();
+  private static final String PACKAGE_NAME = WeaveConstants.class.getPackage().getName();
 
   private static final String APP_NAME = "EmergentWeave";
 
   private static final double APP_VERSION = 0.9;
 
-  private static final String APP_VERSION_STRING = String.format("%1.1f",
-      APP_VERSION);
+  private static final String APP_VERSION_STRING = String.format("%1.1f", APP_VERSION);
 
-  private static final String USER_AGENT_DEFAULT = APP_NAME + "/"
-      + APP_VERSION_STRING;
+  private static final String USER_AGENT_DEFAULT = APP_NAME + "/" + APP_VERSION_STRING;
 
   private static final String LOGGER_NAME_DEFAULT = APP_NAME; // maps to
   // android log
   // tag
 
-  private static final String LOGGER_NAME = getProperty("logger_name",
-      LOGGER_NAME_DEFAULT);
+  private static final String LOGGER_NAME = getProperty("logger_name", LOGGER_NAME_DEFAULT);
 
   static final String WEAVE_API_VERSION = "1.0";
 
@@ -51,11 +45,10 @@ public class WeaveConstants {
 
   static final boolean CONNECTION_POOL_ENABLED_DEFAULT = true;
 
-  public static final String LOGGER_NAME_FULL = getProperty(
-      "logger_name_full", PACKAGE_NAME + "." + LOGGER_NAME);
+  public static final String LOGGER_NAME_FULL =
+      getProperty("logger_name_full", PACKAGE_NAME + "." + LOGGER_NAME);
 
-  public static final String USER_AGENT = getProperty("user_agent",
-      USER_AGENT_DEFAULT);
+  public static final String USER_AGENT = getProperty("user_agent", USER_AGENT_DEFAULT);
 
   private static String getFullyQualifiedKey(String key) {
     return PACKAGE_NAME + "." + key;

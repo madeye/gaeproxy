@@ -7,7 +7,6 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-
 import java.sql.SQLException;
 
 /**
@@ -22,7 +21,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
   private static final String DATABASE_NAME = "gaeproxy.db";
   // any time you make changes to your database objects, you may have to
   // increase the database version
-  private static final int DATABASE_VERSION = 4;
+  private static final int DATABASE_VERSION = 5;
 
   // the DAO object we use to access the SimpleData table
   private Dao<DNSResponse, String> mDnsCacheDao = null;
@@ -32,9 +31,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
-  /**
-   * Close the database connections and clear any cached DAOs.
-   */
+  /** Close the database connections and clear any cached DAOs. */
   @Override
   public void close() {
     super.close();
@@ -58,7 +55,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
    * Returns the Database Access Object (DAO) for our SimpleData class. It
    * will create it or just give the cached value.
    */
-  public Dao<App, String> getProxiedAppDao() throws SQLException {
+  public Dao<App, String> getAppDao() throws SQLException {
     if (mProxiedCacheDao == null) {
       mProxiedCacheDao = getDao(App.class);
       mProxiedCacheDao.setObjectCache(false);
@@ -89,8 +86,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
    * new version number.
    */
   @Override
-  public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
-                        int oldVersion, int newVersion) {
+  public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion,
+      int newVersion) {
     switch (oldVersion) {
       default:
         try {

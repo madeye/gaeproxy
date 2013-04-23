@@ -82,8 +82,7 @@ class Hex {
    *
    * @return the number of bytes produced.
    */
-  public static int encode(byte[] data, int off, int length, OutputStream out)
-      throws IOException {
+  public static int encode(byte[] data, int off, int length, OutputStream out) throws IOException {
     return encoder.encode(data, off, length, out);
   }
 

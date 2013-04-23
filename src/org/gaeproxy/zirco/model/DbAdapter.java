@@ -23,22 +23,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.Browser;
 import android.util.Log;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.gaeproxy.zirco.ui.runnables.XmlHistoryBookmarksExporter;
 import org.gaeproxy.zirco.utils.ApplicationUtils;
 import org.gaeproxy.zirco.utils.DateUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-/**
- * Implementation of the database adapter.
- */
+/** Implementation of the database adapter. */
 public class DbAdapter {
 
-  /**
-   * DatabaseHelper.
-   */
+  /** DatabaseHelper. */
   private static class DatabaseHelper extends SQLiteOpenHelper {
 
     private DbAdapter mParent;
@@ -47,7 +42,7 @@ public class DbAdapter {
      * Constructor.
      *
      * @param context The current context.
-     * @param parent  The DbAdapter parent.
+     * @param parent The DbAdapter parent.
      */
     public DatabaseHelper(Context context, DbAdapter parent) {
       super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -69,36 +64,31 @@ public class DbAdapter {
       try {
         if (ApplicationUtils.checkCardState(mParent.mContext, false)) {
 
-          Log.i("DbAdapter",
-              "Export of old bookmarks: SDCard checked.");
+          Log.i("DbAdapter", "Export of old bookmarks: SDCard checked.");
 
           MatrixCursor cursor = null;
 
-          Cursor c = db.query("BOOKMARKS", new String[]{"_id",
-              "title", "url", "creation_date", "count"}, null,
-              null, null, null, null);
+          Cursor c = db.query("BOOKMARKS", new String[] {
+              "_id", "title", "url", "creation_date", "count"
+          }, null, null, null, null, null);
 
           if (c != null) {
             if (c.moveToFirst()) {
 
-              cursor = new MatrixCursor(new String[]{
-                  Browser.BookmarkColumns.TITLE,
-                  Browser.BookmarkColumns.URL,
-                  Browser.BookmarkColumns.VISITS,
-                  Browser.BookmarkColumns.DATE,
-                  Browser.BookmarkColumns.CREATED,
-                  Browser.BookmarkColumns.BOOKMARK});
+              cursor = new MatrixCursor(new String[] {
+                  Browser.BookmarkColumns.TITLE, Browser.BookmarkColumns.URL,
+                  Browser.BookmarkColumns.VISITS, Browser.BookmarkColumns.DATE,
+                  Browser.BookmarkColumns.CREATED, Browser.BookmarkColumns.BOOKMARK
+              });
 
               int titleColumn = c.getColumnIndex("title");
               int urlColumn = c.getColumnIndex("url");
-              int creationDateColumn = c
-                  .getColumnIndex("creation_date");
+              int creationDateColumn = c.getColumnIndex("creation_date");
               int countColumn = c.getColumnIndex("count");
 
               while (!c.isAfterLast()) {
 
-                Date date = DateUtils.convertFromDatabase(
-                    mParent.mContext,
+                Date date = DateUtils.convertFromDatabase(mParent.mContext,
                     c.getString(creationDateColumn));
 
                 Object[] data = new Object[6];
@@ -119,15 +109,13 @@ public class DbAdapter {
           }
 
           if (cursor != null) {
-            Log.i("DbAdapter",
-                "Export of old bookmarks: Writing file.");
-            new Thread(new XmlHistoryBookmarksExporter(null,
-                "auto-export.xml", cursor, null)).start();
+            Log.i("DbAdapter", "Export of old bookmarks: Writing file.");
+            new Thread(
+                new XmlHistoryBookmarksExporter(null, "auto-export.xml", cursor, null)).start();
           }
         }
       } catch (Exception e) {
-        Log.i("DbAdapter",
-            "Export of old bookmarks failed: " + e.getMessage());
+        Log.i("DbAdapter", "Export of old bookmarks failed: " + e.getMessage());
       }
 
       Log.i("DbAdapter", "End of export of old bookmarks.");
@@ -167,16 +155,13 @@ public class DbAdapter {
           break;
       }
     }
-
   }
 
   private static final String TAG = "DbAdapter";
   private static final String DATABASE_NAME = "ZIRCO";
 
   private static final int DATABASE_VERSION = 6;
-  /**
-   * Adblock white list table.
-   */
+  /** Adblock white list table. */
   public static final String ADBLOCK_ROWID = "_id";
 
   public static final String ADBLOCK_URL = "url";
@@ -190,9 +175,7 @@ public class DbAdapter {
       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
       + ADBLOCK_URL
       + " TEXT NOT NULL);";
-  /**
-   * Mobile view url table.
-   */
+  /** Mobile view url table. */
   public static final String MOBILE_VIEW_URL_ROWID = "_id";
 
   public static final String MOBILE_VIEW_URL_URL = "url";
@@ -200,8 +183,11 @@ public class DbAdapter {
   private static final String MOBILE_VIEW_DATABASE_TABLE = "MOBILE_VIEW_URL";
 
   private static final String MOBILE_VIEW_DATABASE_CREATE = "CREATE TABLE "
-      + MOBILE_VIEW_DATABASE_TABLE + " (" + MOBILE_VIEW_URL_ROWID
-      + " INTEGER PRIMARY KEY AUTOINCREMENT, " + MOBILE_VIEW_URL_URL
+      + MOBILE_VIEW_DATABASE_TABLE
+      + " ("
+      + MOBILE_VIEW_URL_ROWID
+      + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+      + MOBILE_VIEW_URL_URL
       + " TEXT NOT NULL);";
 
   protected boolean mAdBlockListNeedPopulate = false;
@@ -220,16 +206,12 @@ public class DbAdapter {
     this.mContext = ctx;
   }
 
-  /**
-   * Clear the mobile view url list.
-   */
+  /** Clear the mobile view url list. */
   public void clearMobileViewUrlList() {
     mDb.execSQL("DELETE FROM " + MOBILE_VIEW_DATABASE_TABLE + ";");
   }
 
-  /**
-   * Delete all records from the white list.
-   */
+  /** Delete all records from the white list. */
   public void clearWhiteList() {
     mDb.execSQL("DELETE FROM " + ADBLOCK_WHITELIST_DATABASE_TABLE + ";");
   }
@@ -238,9 +220,7 @@ public class DbAdapter {
    * Adblock white list.
    */
 
-  /**
-   * Close the database helper.
-   */
+  /** Close the database helper. */
   public void close() {
     mDbHelper.close();
   }
@@ -251,8 +231,13 @@ public class DbAdapter {
    * @param id The id of the url to delete.
    */
   public void deleteFromMobileViewUrlList(long id) {
-    mDb.execSQL("DELETE FROM " + MOBILE_VIEW_DATABASE_TABLE + " WHERE "
-        + MOBILE_VIEW_URL_ROWID + " = " + id + ";");
+    mDb.execSQL("DELETE FROM "
+        + MOBILE_VIEW_DATABASE_TABLE
+        + " WHERE "
+        + MOBILE_VIEW_URL_ROWID
+        + " = "
+        + id
+        + ";");
   }
 
   /**
@@ -261,8 +246,13 @@ public class DbAdapter {
    * @param id The id to delete.
    */
   public void deleteFromWhiteList(long id) {
-    mDb.execSQL("DELETE FROM " + ADBLOCK_WHITELIST_DATABASE_TABLE
-        + " WHERE " + ADBLOCK_ROWID + " = " + id + ";");
+    mDb.execSQL("DELETE FROM "
+        + ADBLOCK_WHITELIST_DATABASE_TABLE
+        + " WHERE "
+        + ADBLOCK_ROWID
+        + " = "
+        + id
+        + ";");
   }
 
   public SQLiteDatabase getDatabase() {
@@ -275,9 +265,9 @@ public class DbAdapter {
    * @return A Cursor to the mobile view url list.
    */
   public Cursor getMobileViewUrlCursor() {
-    return mDb.query(MOBILE_VIEW_DATABASE_TABLE, new String[]{
-        MOBILE_VIEW_URL_ROWID, MOBILE_VIEW_URL_URL}, null, null, null,
-        null, null);
+    return mDb.query(MOBILE_VIEW_DATABASE_TABLE, new String[] {
+        MOBILE_VIEW_URL_ROWID, MOBILE_VIEW_URL_URL
+    }, null, null, null, null, null);
   }
 
   /**
@@ -288,20 +278,17 @@ public class DbAdapter {
    */
   public String getMobileViewUrlItemById(long rowId) {
     Cursor cursor = mDb.query(true, MOBILE_VIEW_DATABASE_TABLE,
-        new String[]{MOBILE_VIEW_URL_ROWID, MOBILE_VIEW_URL_URL},
-        MOBILE_VIEW_URL_ROWID + "=" + rowId, null, null, null, null,
-        null);
+        new String[] { MOBILE_VIEW_URL_ROWID, MOBILE_VIEW_URL_URL },
+        MOBILE_VIEW_URL_ROWID + "=" + rowId, null, null, null, null, null);
 
     if (cursor.moveToFirst()) {
 
       String result;
-      result = cursor.getString(cursor
-          .getColumnIndex(MOBILE_VIEW_URL_URL));
+      result = cursor.getString(cursor.getColumnIndex(MOBILE_VIEW_URL_URL));
 
       cursor.close();
 
       return result;
-
     } else {
       cursor.close();
       return null;
@@ -325,9 +312,7 @@ public class DbAdapter {
     if (cursor.moveToFirst()) {
       do {
 
-        result.add(cursor.getString(cursor
-            .getColumnIndex(MOBILE_VIEW_URL_URL)));
-
+        result.add(cursor.getString(cursor.getColumnIndex(MOBILE_VIEW_URL_URL)));
       } while (cursor.moveToNext());
     }
 
@@ -350,7 +335,6 @@ public class DbAdapter {
       do {
 
         result.add(cursor.getString(cursor.getColumnIndex(ADBLOCK_URL)));
-
       } while (cursor.moveToNext());
     }
 
@@ -365,8 +349,9 @@ public class DbAdapter {
    * @return A cursor to the list of url presents in white list.
    */
   public Cursor getWhiteListCursor() {
-    return mDb.query(ADBLOCK_WHITELIST_DATABASE_TABLE, new String[]{
-        ADBLOCK_ROWID, ADBLOCK_URL}, null, null, null, null, null);
+    return mDb.query(ADBLOCK_WHITELIST_DATABASE_TABLE, new String[] {
+        ADBLOCK_ROWID, ADBLOCK_URL
+    }, null, null, null, null, null);
   }
 
   /**
@@ -377,8 +362,8 @@ public class DbAdapter {
    */
   public String getWhiteListItemById(long rowId) {
     Cursor cursor = mDb.query(true, ADBLOCK_WHITELIST_DATABASE_TABLE,
-        new String[]{ADBLOCK_ROWID, ADBLOCK_URL}, ADBLOCK_ROWID
-        + "=" + rowId, null, null, null, null, null);
+        new String[] { ADBLOCK_ROWID, ADBLOCK_URL }, ADBLOCK_ROWID + "=" + rowId, null, null, null,
+        null, null);
 
     if (cursor.moveToFirst()) {
 
@@ -388,7 +373,6 @@ public class DbAdapter {
       cursor.close();
 
       return result;
-
     } else {
       cursor.close();
       return null;
@@ -436,11 +420,8 @@ public class DbAdapter {
     return this;
   }
 
-  /**
-   * Populate the white list with default values.
-   */
+  /** Populate the white list with default values. */
   private void populateDefaultWhiteList() {
     insertInWhiteList("google.com/reader");
   }
-
 }

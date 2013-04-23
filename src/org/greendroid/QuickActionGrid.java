@@ -27,9 +27,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
-import org.gaeproxy.R;
-
 import java.util.List;
+import org.gaeproxy.R;
 
 /**
  * A {@link QuickActionGrid} is an implementation of a {@link QuickActionWidget}
@@ -45,10 +44,8 @@ public class QuickActionGrid extends QuickActionWidget {
 
   private OnItemClickListener mInternalItemClickListener = new OnItemClickListener() {
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view,
-                            int position, long id) {
-      getOnQuickActionClickListener().onQuickActionClicked(
-          QuickActionGrid.this, position);
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+      getOnQuickActionClickListener().onQuickActionClicked(QuickActionGrid.this, position);
       if (getDismissOnClick()) {
         dismiss();
       }
@@ -67,10 +64,10 @@ public class QuickActionGrid extends QuickActionWidget {
   @Override
   protected void onMeasureAndLayout(Rect anchorRect, View contentView) {
 
-    contentView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-        LayoutParams.WRAP_CONTENT));
-    contentView.measure(MeasureSpec.makeMeasureSpec(getScreenWidth(),
-        MeasureSpec.EXACTLY), LayoutParams.WRAP_CONTENT);
+    contentView.setLayoutParams(
+        new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    contentView.measure(MeasureSpec.makeMeasureSpec(getScreenWidth(), MeasureSpec.EXACTLY),
+        LayoutParams.WRAP_CONTENT);
 
     int rootHeight = contentView.getMeasuredHeight();
 
@@ -79,8 +76,7 @@ public class QuickActionGrid extends QuickActionWidget {
     int dyBottom = getScreenHeight() - anchorRect.bottom;
 
     boolean onTop = (dyTop > dyBottom);
-    int popupY = (onTop) ? anchorRect.top - rootHeight + offsetY
-        : anchorRect.bottom - offsetY;
+    int popupY = (onTop) ? anchorRect.top - rootHeight + offsetY : anchorRect.bottom - offsetY;
 
     setWidgetSpecs(popupY, onTop);
   }
@@ -111,24 +107,19 @@ public class QuickActionGrid extends QuickActionWidget {
         TextView textView = (TextView) view;
 
         if (view == null) {
-          final LayoutInflater inflater = LayoutInflater
-              .from(getContext());
-          textView = (TextView) inflater.inflate(
-              R.layout.gd_quick_action_grid_item, mGridView,
-              false);
+          final LayoutInflater inflater = LayoutInflater.from(getContext());
+          textView =
+              (TextView) inflater.inflate(R.layout.gd_quick_action_grid_item, mGridView, false);
         }
 
         QuickAction quickAction = quickActions.get(position);
         textView.setText(quickAction.mTitle);
-        textView.setCompoundDrawablesWithIntrinsicBounds(null,
-            quickAction.mDrawable, null, null);
+        textView.setCompoundDrawablesWithIntrinsicBounds(null, quickAction.mDrawable, null, null);
 
         return textView;
-
       }
     });
 
     mGridView.setOnItemClickListener(mInternalItemClickListener);
   }
-
 }

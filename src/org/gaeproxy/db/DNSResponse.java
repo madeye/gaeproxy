@@ -26,9 +26,7 @@ public class DNSResponse implements Comparable<DNSResponse> {
     this.request = request;
   }
 
-  /**
-   * @return IP string
-   */
+  /** @return IP string */
   public static String getIPString(byte[] answer) {
     String ip = null;
     int i;
@@ -52,9 +50,7 @@ public class DNSResponse implements Comparable<DNSResponse> {
     return ip;
   }
 
-  /**
-   * @return the reqTimes
-   */
+  /** @return the reqTimes */
   public int getReqTimes() {
     return reqTimes;
   }
@@ -63,16 +59,12 @@ public class DNSResponse implements Comparable<DNSResponse> {
     return this.request;
   }
 
-  /**
-   * @return the reqTimes
-   */
+  /** @return the reqTimes */
   public long getReqTimestamp() {
     return reqTimestamp;
   }
 
-  /**
-   * @return the timestamp
-   */
+  /** @return the timestamp */
   public long getTimestamp() {
     return timestamp;
   }

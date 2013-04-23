@@ -19,14 +19,10 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
-/**
- * Holder for animation objects.
- */
+/** Holder for animation objects. */
 public final class AnimationManager {
 
-  /**
-   * Holder for singleton implementation.
-   */
+  /** Holder for singleton implementation. */
   private static class AnimationManagerHolder {
     private static final AnimationManager INSTANCE = new AnimationManager();
   }
@@ -61,99 +57,81 @@ public final class AnimationManager {
 
   private Animation mOutToRightAnimation;
 
-  /**
-   * Contructor.
-   */
+  /** Contructor. */
   private AnimationManager() {
 
-    mTopBarShowAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-        0.0f, Animation.RELATIVE_TO_SELF, -1.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f);
+    mTopBarShowAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 
     mTopBarShowAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-    mTopBarHideAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-        0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-        Animation.RELATIVE_TO_SELF, -1.0f);
+    mTopBarHideAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
 
     mTopBarHideAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-    mBottomBarShowAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-        0.0f, Animation.RELATIVE_TO_SELF, 1.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f);
+    mBottomBarShowAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 
     mBottomBarShowAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-    mBottomBarHideAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-        0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-        Animation.RELATIVE_TO_SELF, 1.0f);
+    mBottomBarHideAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
 
     mBottomBarHideAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-    mPreviousTabViewShowAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF,
-        0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f);
+    mPreviousTabViewShowAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 
     mPreviousTabViewShowAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-    mPreviousTabViewHideAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-        -1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f);
+    mPreviousTabViewHideAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, -1.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 
     mPreviousTabViewHideAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-    mNextTabViewShowAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF,
-        0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f);
+    mNextTabViewShowAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 
     mNextTabViewShowAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-    mNextTabViewHideAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-        1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
-        Animation.RELATIVE_TO_SELF, 0.0f);
+    mNextTabViewHideAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f,
+            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 
     mNextTabViewHideAnimation.setDuration(BARS_ANIMATION_DURATION);
 
-    mInFromRightAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_PARENT, +1.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f);
+    mInFromRightAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_PARENT, +1.0f, Animation.RELATIVE_TO_PARENT,
+            0.0f, Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
 
     mInFromRightAnimation.setDuration(ANIMATION_DURATION);
     mInFromRightAnimation.setInterpolator(new AccelerateInterpolator());
 
-    mOutToLeftAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_PARENT, 0.0f,
-        Animation.RELATIVE_TO_PARENT, -1.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f);
+    mOutToLeftAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
+            -1.0f, Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
 
     mOutToLeftAnimation.setDuration(ANIMATION_DURATION);
     mOutToLeftAnimation.setInterpolator(new AccelerateInterpolator());
 
-    mInFromLeftAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_PARENT, -1.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f);
+    mInFromLeftAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT,
+            0.0f, Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
 
     mInFromLeftAnimation.setDuration(ANIMATION_DURATION);
     mInFromLeftAnimation.setInterpolator(new AccelerateInterpolator());
 
-    mOutToRightAnimation = new TranslateAnimation(
-        Animation.RELATIVE_TO_PARENT, 0.0f,
-        Animation.RELATIVE_TO_PARENT, +1.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f,
-        Animation.RELATIVE_TO_PARENT, 0.0f);
+    mOutToRightAnimation =
+        new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
+            +1.0f, Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
 
     mOutToRightAnimation.setDuration(ANIMATION_DURATION);
     mOutToRightAnimation.setInterpolator(new AccelerateInterpolator());
@@ -226,5 +204,4 @@ public final class AnimationManager {
   public Animation getTopBarShowAnimation() {
     return mTopBarShowAnimation;
   }
-
 }

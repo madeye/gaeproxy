@@ -15,7 +15,11 @@
 
 package org.gaeproxy.zirco.providers;
 
-import android.content.*;
+import android.content.ContentProvider;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,13 +53,20 @@ public class WeaveContentProvider extends ContentProvider {
   public static final String WEAVE_BOOKMARKS_TABLE = "WEAVE_BOOKMARKS";
 
   private static final String WEAVE_BOOKMARKS_TABLE_CREATE = "CREATE TABLE "
-      + WEAVE_BOOKMARKS_TABLE + " (" + WeaveColumns.WEAVE_BOOKMARKS_ID
+      + WEAVE_BOOKMARKS_TABLE
+      + " ("
+      + WeaveColumns.WEAVE_BOOKMARKS_ID
       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-      + WeaveColumns.WEAVE_BOOKMARKS_WEAVE_ID + " TEXT, "
-      + WeaveColumns.WEAVE_BOOKMARKS_WEAVE_PARENT_ID + " TEXT, "
-      + WeaveColumns.WEAVE_BOOKMARKS_TITLE + " TEXT, "
-      + WeaveColumns.WEAVE_BOOKMARKS_URL + " TEXT, "
-      + WeaveColumns.WEAVE_BOOKMARKS_FOLDER + " BOOLEAN);";
+      + WeaveColumns.WEAVE_BOOKMARKS_WEAVE_ID
+      + " TEXT, "
+      + WeaveColumns.WEAVE_BOOKMARKS_WEAVE_PARENT_ID
+      + " TEXT, "
+      + WeaveColumns.WEAVE_BOOKMARKS_TITLE
+      + " TEXT, "
+      + WeaveColumns.WEAVE_BOOKMARKS_URL
+      + " TEXT, "
+      + WeaveColumns.WEAVE_BOOKMARKS_FOLDER
+      + " BOOLEAN);";
   private static final int WEAVE_BOOKMARKS = 1;
 
   private static final int WEAVE_BOOKMARKS_BY_ID = 2;
@@ -70,8 +81,7 @@ public class WeaveContentProvider extends ContentProvider {
   static {
     sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     sUriMatcher.addURI(AUTHORITY, WEAVE_BOOKMARKS_TABLE, WEAVE_BOOKMARKS);
-    sUriMatcher.addURI(AUTHORITY, WEAVE_BOOKMARKS_TABLE + "/#",
-        WEAVE_BOOKMARKS_BY_ID);
+    sUriMatcher.addURI(AUTHORITY, WEAVE_BOOKMARKS_TABLE + "/#", WEAVE_BOOKMARKS_BY_ID);
   }
 
   @Override
@@ -113,8 +123,7 @@ public class WeaveContentProvider extends ContentProvider {
       case WEAVE_BOOKMARKS:
         long rowId = mDb.insert(WEAVE_BOOKMARKS_TABLE, null, values);
         if (rowId > 0) {
-          Uri rowUri = ContentUris.withAppendedId(
-              WeaveColumns.CONTENT_URI, rowId);
+          Uri rowUri = ContentUris.withAppendedId(WeaveColumns.CONTENT_URI, rowId);
           mContext.getContentResolver().notifyChange(rowUri, null);
           return rowUri;
         }
@@ -135,8 +144,8 @@ public class WeaveContentProvider extends ContentProvider {
   }
 
   @Override
-  public Cursor query(Uri uri, String[] projection, String selection,
-                      String[] selectionArgs, String sortOrder) {
+  public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+      String sortOrder) {
     SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
     switch (sUriMatcher.match(uri)) {
@@ -145,28 +154,24 @@ public class WeaveContentProvider extends ContentProvider {
         break;
       case WEAVE_BOOKMARKS_BY_ID:
         qb.setTables(WEAVE_BOOKMARKS_TABLE);
-        qb.appendWhere(WeaveColumns.WEAVE_BOOKMARKS_ID + " = "
-            + uri.getPathSegments().get(1));
+        qb.appendWhere(WeaveColumns.WEAVE_BOOKMARKS_ID + " = " + uri.getPathSegments().get(1));
         break;
       default:
         throw new IllegalArgumentException("Unknown URI " + uri);
     }
 
-    Cursor c = qb.query(mDb, projection, selection, selectionArgs, null,
-        null, sortOrder);
+    Cursor c = qb.query(mDb, projection, selection, selectionArgs, null, null, sortOrder);
     c.setNotificationUri(getContext().getContentResolver(), uri);
 
     return c;
   }
 
   @Override
-  public int update(Uri uri, ContentValues values, String selection,
-                    String[] selectionArgs) {
+  public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
     int count = 0;
     switch (sUriMatcher.match(uri)) {
       case WEAVE_BOOKMARKS:
-        count = mDb.update(WEAVE_BOOKMARKS_TABLE, values, selection,
-            selectionArgs);
+        count = mDb.update(WEAVE_BOOKMARKS_TABLE, values, selection, selectionArgs);
         break;
 
       default:
@@ -179,5 +184,4 @@ public class WeaveContentProvider extends ContentProvider {
 
     return count;
   }
-
 }

@@ -25,9 +25,7 @@ import org.gaeproxy.R;
 import org.gaeproxy.zirco.providers.BookmarksProviderWrapper;
 import org.gaeproxy.zirco.utils.Constants;
 
-/**
- * Add / Edit bookmark activity.
- */
+/** Add / Edit bookmark activity. */
 public class EditBookmarkActivity extends Activity {
 
   private EditText mTitleEditText;
@@ -47,8 +45,7 @@ public class EditBookmarkActivity extends Activity {
 
     setContentView(R.layout.edit_bookmark_activity);
 
-    w.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
-        android.R.drawable.ic_input_add);
+    w.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.R.drawable.ic_input_add);
 
     mTitleEditText = (EditText) findViewById(R.id.EditBookmarkActivity_TitleValue);
     mUrlEditText = (EditText) findViewById(R.id.EditBookmarkActivity_UrlValue);
@@ -89,7 +86,6 @@ public class EditBookmarkActivity extends Activity {
       }
 
       mRowId = extras.getLong(Constants.EXTRA_ID_BOOKMARK_ID);
-
     }
 
     if (mRowId == -1) {
@@ -103,8 +99,6 @@ public class EditBookmarkActivity extends Activity {
    */
   private void setAsBookmark() {
     BookmarksProviderWrapper.setAsBookmark(getContentResolver(), mRowId,
-        mTitleEditText.getText().toString(), mUrlEditText.getText()
-        .toString(), true);
+        mTitleEditText.getText().toString(), mUrlEditText.getText().toString(), true);
   }
-
 }

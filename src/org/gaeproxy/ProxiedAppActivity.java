@@ -5,49 +5,43 @@ package org.gaeproxy;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.widget.*;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.gaeproxy.db.App;
 
-import java.util.*;
-
 public class ProxiedAppActivity extends Activity implements OnCheckedChangeListener {
-
-  private class UpdateDatabaseTask extends AsyncTask<Void, Void, Void> {
-
-    private void saveAppSettings() {
-      if (mAppList == null) return;
-
-      Set<App> proxiedApps = new HashSet<App>();
-      for (App app : mAppList) {
-        if (app.isProxied()) {
-          proxiedApps.add(app);
-        }
-      }
-
-      App.forceToUpdateProxiedApps(getApplicationContext(), proxiedApps);
-
-    }
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-      saveAppSettings();
-      return null;
-    }
-  }
 
   private static final int MSG_LOAD_START = 1;
   private static final int MSG_LOAD_FINISH = 2;
@@ -56,8 +50,9 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
     public void handleMessage(Message msg) {
       switch (msg.what) {
         case MSG_LOAD_START:
-          mProgressDialog = ProgressDialog.show(ProxiedAppActivity.this, "",
-              getString(R.string.loading), true, true);
+          mProgressDialog =
+              ProgressDialog.show(ProxiedAppActivity.this, "", getString(R.string.loading), true,
+                  true);
           break;
         case MSG_LOAD_FINISH:
 
@@ -68,23 +63,21 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
             boolean visible;
 
             @Override
-            public void onScroll(AbsListView view,
-                                 int firstVisibleItem, int visibleItemCount,
-                                 int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                int totalItemCount) {
               if (visible) {
                 String name = mAppList.get(firstVisibleItem).getName();
-                if (name != null && name.length() > 1)
-                  mOverlay.setText(mAppList.get(firstVisibleItem)
-                      .getName().substring(0, 1));
-                else
+                if (name != null && name.length() > 1) {
+                  mOverlay.setText(mAppList.get(firstVisibleItem).getName().substring(0, 1));
+                } else {
                   mOverlay.setText("*");
+                }
                 mOverlay.setVisibility(View.VISIBLE);
               }
             }
 
             @Override
-            public void onScrollStateChanged(AbsListView view,
-                                             int scrollState) {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
               visible = true;
               if (scrollState == ListView.OnScrollListener.SCROLL_STATE_IDLE) {
                 mOverlay.setVisibility(View.INVISIBLE);
@@ -104,7 +97,6 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
   ListView mAppListView;
   TextView mOverlay;
   ListAdapter mListAdapter;
-  ImageLoader mImageLoader;
   ProgressDialog mProgressDialog = null;
   boolean mIsAppsLoaded = false;
   List<App> mAppList = null;
@@ -123,67 +115,35 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
 
     setContentView(R.layout.layout_apps);
 
-    mImageLoader = ImageLoaderFactory.getImageLoader(this);
     mAppListView = (ListView) findViewById(R.id.applistview);
     mOverlay = (TextView) View.inflate(this, R.layout.overlay, null);
-    getWindowManager()
-        .addView(
-            mOverlay,
-            new WindowManager.LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                PixelFormat.TRANSLUCENT));
+    getWindowManager().addView(mOverlay,
+        new WindowManager.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_APPLICATION,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.TRANSLUCENT));
 
+    ImageLoaderConfiguration config =
+        new ImageLoaderConfiguration.Builder(getApplicationContext()).imageDownloader(
+            new AppIconImageDownloader(getApplicationContext())).build();
+    ImageLoader.getInstance().init(config);
   }
 
   public void getApps() {
 
     mAppList = new ArrayList<App>();
 
-    // else load the apps up
-    PackageManager pMgr = getPackageManager();
-    List<ApplicationInfo> lAppInfo = pMgr.getInstalledApplications(0);
-    Iterator<ApplicationInfo> itAppInfo = lAppInfo.iterator();
-    ApplicationInfo aInfo = null;
+    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-    while (itAppInfo.hasNext()) {
-      aInfo = itAppInfo.next();
+    boolean packageChanged = settings.getBoolean("packageChanged", true);
+    if (packageChanged) {
+      Set<Integer> appSet = App.getProxiedApps(this);
+      App.updateApps(this, appSet);
 
-      // ignore system apps
-      if (aInfo.uid < 10000)
-        continue;
-
-      if (aInfo.processName == null)
-        continue;
-      if (pMgr.getApplicationLabel(aInfo) == null
-          || pMgr.getApplicationLabel(aInfo).toString().equals(""))
-        continue;
-      if (pMgr.getApplicationIcon(aInfo) == null)
-        continue;
-
-      App app = new App();
-
-      app.setEnabled(aInfo.enabled);
-      app.setUid(aInfo.uid);
-      app.setUsername(pMgr.getNameForUid(app.getUid()));
-      app.setProcname(aInfo.processName);
-      app.setName(pMgr.getApplicationLabel(aInfo).toString());
-      app.setProxied(false);
-
-      mAppList.add(app);
+      settings.edit().putBoolean("packageChanged", false).commit();
     }
 
-    Map<String, App> proxiedApps = App.getProxiedApps(this);
-    if (proxiedApps != null) {
-      for (App app : mAppList) {
-        if (proxiedApps.containsKey(app.getUsername())) {
-          app.setProxied(true);
-        }
-      }
-    }
+    mAppList = App.getApps(this);
 
     Collections.sort(mAppList);
   }
@@ -193,22 +153,17 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
 
     final LayoutInflater inflater = getLayoutInflater();
 
-    mListAdapter = new ArrayAdapter<App>(this, R.layout.layout_apps_item,
-        R.id.itemtext, mAppList) {
+    mListAdapter = new ArrayAdapter<App>(this, R.layout.layout_apps_item, R.id.itemtext, mAppList) {
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
         ListEntry entry;
         if (convertView == null) {
           // Inflate a new view
-          convertView = inflater.inflate(R.layout.layout_apps_item,
-              parent, false);
+          convertView = inflater.inflate(R.layout.layout_apps_item, parent, false);
           entry = new ListEntry();
-          entry.icon = (ImageView) convertView
-              .findViewById(R.id.itemicon);
-          entry.box = (CheckBox) convertView
-              .findViewById(R.id.itemcheck);
-          entry.text = (TextView) convertView
-              .findViewById(R.id.itemtext);
+          entry.icon = (ImageView) convertView.findViewById(R.id.itemicon);
+          entry.box = (CheckBox) convertView.findViewById(R.id.itemcheck);
+          entry.text = (TextView) convertView.findViewById(R.id.itemtext);
 
           convertView.setTag(entry);
 
@@ -220,10 +175,17 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
 
         final App app = mAppList.get(position);
 
-        entry.icon.setTag(app.getUid());
+        DisplayImageOptions options =
+            new DisplayImageOptions.Builder().showStubImage(R.drawable.sym_def_app_icon)
+                .showImageForEmptyUri(R.drawable.sym_def_app_icon)
+                .showImageOnFail(R.drawable.sym_def_app_icon)
+                .resetViewBeforeLoading()
+                .cacheInMemory()
+                .cacheOnDisc()
+                .displayer(new FadeInBitmapDisplayer(300))
+                .build();
 
-        mImageLoader.DisplayImage(app.getUid(),
-            (Activity) convertView.getContext(), entry.icon);
+        ImageLoader.getInstance().displayImage("app://" + app.getUid(), entry.icon, options);
 
         entry.text.setText(app.getName());
 
@@ -238,18 +200,22 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
     };
 
     mIsAppsLoaded = true;
-
   }
 
-  /**
-   * Called an application is check/unchecked
-   */
+  /** Called an application is check/unchecked */
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     final App app = (App) buttonView.getTag();
     if (app != null) {
       app.setProxied(isChecked);
-      new UpdateDatabaseTask().execute();
+      GAEProxyApplication context = (GAEProxyApplication) getApplication();
+      context.UpdatePool.execute(new Runnable() {
+        @Override
+        public void run() {
+          if (mAppList == null) return;
+          App.forceToUpdateApp(getApplicationContext(), app);
+        }
+      });
     }
   }
 
@@ -258,16 +224,13 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
     super.onResume();
 
     new Thread() {
-
       @Override
       public void run() {
         handler.sendEmptyMessage(MSG_LOAD_START);
-        if (!mIsAppsLoaded)
-          loadApps();
+        if (!mIsAppsLoaded) loadApps();
         handler.sendEmptyMessage(MSG_LOAD_FINISH);
       }
     }.start();
-
   }
 
   @Override
@@ -291,5 +254,4 @@ public class ProxiedAppActivity extends Activity implements OnCheckedChangeListe
     private TextView text;
     private ImageView icon;
   }
-
 }

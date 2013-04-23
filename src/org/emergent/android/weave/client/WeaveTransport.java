@@ -1,6 +1,24 @@
 package org.emergent.android.weave.client;
 
-import org.apache.http.*;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import javax.net.ssl.SSLException;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpMessage;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthState;
 import org.apache.http.auth.Credentials;
@@ -9,7 +27,11 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerPNames;
@@ -31,19 +53,7 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
-import javax.net.ssl.SSLException;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 class WeaveTransport {
 
   private static class MyInterceptor implements HttpRequestInterceptor {
@@ -51,15 +61,12 @@ class WeaveTransport {
     @Override
     public void process(final HttpRequest request, final HttpContext context)
         throws HttpException, IOException {
-      AuthState authState = (AuthState) context
-          .getAttribute(ClientContext.TARGET_AUTH_STATE);
-      CredentialsProvider credsProvider = (CredentialsProvider) context
-          .getAttribute(ClientContext.CREDS_PROVIDER);
-      HttpHost targetHost = (HttpHost) context
-          .getAttribute(ExecutionContext.HTTP_TARGET_HOST);
+      AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
+      CredentialsProvider credsProvider =
+          (CredentialsProvider) context.getAttribute(ClientContext.CREDS_PROVIDER);
+      HttpHost targetHost = (HttpHost) context.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
       if (authState.getAuthScheme() == null) {
-        AuthScope authScope = new AuthScope(targetHost.getHostName(),
-            targetHost.getPort());
+        AuthScope authScope = new AuthScope(targetHost.getHostName(), targetHost.getPort());
         Credentials creds = credsProvider.getCredentials(authScope);
         if (creds != null) {
           authState.setAuthScheme(new BasicScheme());
@@ -69,11 +76,8 @@ class WeaveTransport {
     }
   }
 
-  /**
-   * Based on BasicResponseHandler
-   */
-  private static class MyResponseHandler implements
-      ResponseHandler<WeaveResponse> {
+  /** Based on BasicResponseHandler */
+  private static class MyResponseHandler implements ResponseHandler<WeaveResponse> {
 
     /**
      * Returns the response body as a String if the response was successful
@@ -86,26 +90,22 @@ class WeaveTransport {
         throws HttpResponseException, IOException {
       StatusLine statusLine = response.getStatusLine();
       if (statusLine.getStatusCode() >= 300) {
-        throw new WeaveResponseException(statusLine.getStatusCode(),
-            statusLine.getReasonPhrase(), response);
+        throw new WeaveResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase(),
+            response);
       }
       return new WeaveResponse(response);
     }
   }
 
-  /**
-   * @author Patrick Woodworth
-   */
+  /** @author Patrick Woodworth */
   static class WeaveHostnameVerifier extends AbstractVerifier {
 
     private static boolean isIPAddress(final String hostname) {
-      return hostname != null
-          && (InetAddressUtils.isIPv4Address(hostname) || InetAddressUtils
-          .isIPv6Address(hostname));
+      return hostname != null && (InetAddressUtils.isIPv4Address(hostname)
+          || InetAddressUtils.isIPv6Address(hostname));
     }
 
-    private static void resolveHostAddresses(String cn,
-                                             Collection<String> retval) {
+    private static void resolveHostAddresses(String cn, Collection<String> retval) {
       try {
         InetAddress[] addresses = InetAddress.getAllByName(cn);
         for (InetAddress address : addresses) {
@@ -117,16 +117,12 @@ class WeaveTransport {
     }
 
     @Override
-    public void verify(String host, String[] cns, String[] subjectAlts)
-        throws SSLException {
-      if (isIPAddress(host) && cns != null && cns.length > 0
-          && cns[0] != null) {
+    public void verify(String host, String[] cns, String[] subjectAlts) throws SSLException {
+      if (isIPAddress(host) && cns != null && cns.length > 0 && cns[0] != null) {
         HashSet<String> expandedAlts = new HashSet<String>();
         resolveHostAddresses(cns[0], expandedAlts);
-        if (subjectAlts != null)
-          expandedAlts.addAll(Arrays.asList(subjectAlts));
-        subjectAlts = expandedAlts.toArray(new String[expandedAlts
-            .size()]);
+        if (subjectAlts != null) expandedAlts.addAll(Arrays.asList(subjectAlts));
+        subjectAlts = expandedAlts.toArray(new String[expandedAlts.size()]);
       }
       verify(host, cns, subjectAlts, false);
     }
@@ -137,8 +133,7 @@ class WeaveTransport {
 
     private final WeaveResponseHeaders m_responseHeaders;
 
-    public WeaveResponseException(int statusCode, String reasonPhrase,
-                                  HttpResponse response) {
+    public WeaveResponseException(int statusCode, String reasonPhrase, HttpResponse response) {
       // super(statusCode, String.format("statusCode = %s ; reason = %s",
       // statusCode, reasonPhrase));
       super(statusCode, reasonPhrase);
@@ -169,8 +164,7 @@ class WeaveTransport {
       long retval = 0;
       try {
         String valStr = getHeaderValue(WeaveHeader.X_WEAVE_BACKOFF);
-        if (valStr != null)
-          retval = Long.parseLong(valStr);
+        if (valStr != null) retval = Long.parseLong(valStr);
       } catch (Exception ignored) {
       }
       return retval;
@@ -182,8 +176,7 @@ class WeaveTransport {
 
     private String getHeaderValue(String headerName) {
       for (Header header : m_headers) {
-        if (headerName.equals(header.getName()))
-          return header.getValue();
+        if (headerName.equals(header.getName())) return header.getValue();
       }
       return null;
     }
@@ -195,8 +188,7 @@ class WeaveTransport {
     public Date getServerTimestamp() {
       Date retval = null;
       String ststamp = getHeaderValue(WeaveHeader.X_WEAVE_TIMESTAMP);
-      if (ststamp != null)
-        retval = WeaveUtil.toModifiedTimeDate(ststamp);
+      if (ststamp != null) retval = WeaveUtil.toModifiedTimeDate(ststamp);
       return retval;
     }
   }
@@ -219,8 +211,7 @@ class WeaveTransport {
     HttpProtocolParams.setUseExpectContinue(params, false);
     // params.setParameter(HttpProtocolParams.USE_EXPECT_CONTINUE, false);
     params.setParameter(ConnManagerPNames.MAX_TOTAL_CONNECTIONS, 30);
-    params.setParameter(ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE,
-        new ConnPerRouteBean(30));
+    params.setParameter(ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE, new ConnPerRouteBean(30));
     sm_httpParams = params;
   }
 
@@ -230,8 +221,7 @@ class WeaveTransport {
       sslSocketFactory = new WeaveSSLSocketFactory();
     } else {
       sslSocketFactory = SSLSocketFactory.getSocketFactory();
-      ((SSLSocketFactory) sslSocketFactory)
-          .setHostnameVerifier(new WeaveHostnameVerifier());
+      ((SSLSocketFactory) sslSocketFactory).setHostnameVerifier(new WeaveHostnameVerifier());
     }
     return sslSocketFactory;
   }
@@ -250,20 +240,16 @@ class WeaveTransport {
 
   public WeaveTransport(boolean useConnectionPool, boolean allowInvalidCerts) {
     m_sslSocketFactory = createSocketFactory(allowInvalidCerts);
-    m_clientConMgr = useConnectionPool ? createClientConnectionManager(true)
-        : null;
+    m_clientConMgr = useConnectionPool ? createClientConnectionManager(true) : null;
   }
 
-  private ClientConnectionManager createClientConnectionManager(
-      boolean threadSafe) {
+  private ClientConnectionManager createClientConnectionManager(boolean threadSafe) {
     SchemeRegistry schemeRegistry = new SchemeRegistry();
-    schemeRegistry.register(new Scheme("http", PlainSocketFactory
-        .getSocketFactory(), HTTP_PORT_DEFAULT));
-    schemeRegistry.register(new Scheme("https", m_sslSocketFactory,
-        HTTPS_PORT_DEFAULT));
+    schemeRegistry.register(
+        new Scheme("http", PlainSocketFactory.getSocketFactory(), HTTP_PORT_DEFAULT));
+    schemeRegistry.register(new Scheme("https", m_sslSocketFactory, HTTPS_PORT_DEFAULT));
     if (threadSafe) {
-      return new ThreadSafeClientConnManager(sm_httpParams,
-          schemeRegistry);
+      return new ThreadSafeClientConnManager(sm_httpParams, schemeRegistry);
     } else {
       return new SingleClientConnManager(sm_httpParams, schemeRegistry);
     }
@@ -281,22 +267,20 @@ class WeaveTransport {
 
   private HttpClient createHttpClient(String userId, String password) {
     DefaultHttpClient retval = createDefaultHttpClient();
-    Credentials defaultcreds = new UsernamePasswordCredentials(userId,
-        password);
-    retval.getCredentialsProvider().setCredentials(AuthScope.ANY,
-        defaultcreds);
+    Credentials defaultcreds = new UsernamePasswordCredentials(userId, password);
+    retval.getCredentialsProvider().setCredentials(AuthScope.ANY, defaultcreds);
     retval.addRequestInterceptor(sm_preemptiveAuth, 0);
     return retval;
   }
 
-  public WeaveResponse execDeleteMethod(String username, String password,
-                                        URI uri) throws IOException, WeaveException {
+  public WeaveResponse execDeleteMethod(String username, String password, URI uri)
+      throws IOException, WeaveException {
     HttpDelete method = new HttpDelete(uri);
     return execGenericMethod(username, password, uri, method);
   }
 
-  private WeaveResponse execGenericMethod(HttpClient client, URI uri,
-                                          HttpRequestBase method) throws IOException, WeaveException {
+  private WeaveResponse execGenericMethod(HttpClient client, URI uri, HttpRequestBase method)
+      throws IOException, WeaveException {
     setMethodHeaders(method);
     MyResponseHandler responseHandler = sm_responseHandler;
     String scheme = uri.getScheme();
@@ -305,8 +289,7 @@ class WeaveTransport {
     HttpHost httpHost = new HttpHost(hostname, port, scheme);
     WeaveResponseHeaders responseHeaders = null;
     try {
-      WeaveResponse response = client.execute(httpHost, method,
-          responseHandler);
+      WeaveResponse response = client.execute(httpHost, method, responseHandler);
       response.setUri(uri);
       responseHeaders = response.getResponseHeaders();
       return response;
@@ -324,8 +307,8 @@ class WeaveTransport {
     }
   }
 
-  private WeaveResponse execGenericMethod(String username, String password,
-                                          URI uri, HttpRequestBase method) throws IOException, WeaveException {
+  private WeaveResponse execGenericMethod(String username, String password, URI uri,
+      HttpRequestBase method) throws IOException, WeaveException {
     HttpClient client = null;
     try {
       client = createHttpClient(username, password);
@@ -346,15 +329,15 @@ class WeaveTransport {
     return execGenericMethod(username, password, uri, method);
   }
 
-  public WeaveResponse execPostMethod(String username, String password,
-                                      URI uri, HttpEntity entity) throws IOException, WeaveException {
+  public WeaveResponse execPostMethod(String username, String password, URI uri, HttpEntity entity)
+      throws IOException, WeaveException {
     HttpPost method = new HttpPost(uri);
     method.setEntity(entity);
     return execGenericMethod(username, password, uri, method);
   }
 
-  public WeaveResponse execPutMethod(String username, String password,
-                                     URI uri, HttpEntity entity) throws IOException, WeaveException {
+  public WeaveResponse execPutMethod(String username, String password, URI uri, HttpEntity entity)
+      throws IOException, WeaveException {
     HttpPut method = new HttpPut(uri);
     method.setEntity(entity);
     return execGenericMethod(username, password, uri, method);

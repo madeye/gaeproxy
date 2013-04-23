@@ -23,9 +23,7 @@ import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import org.gaeproxy.R;
 
-/**
- * Adapter for suggestions.
- */
+/** Adapter for suggestions. */
 public class UrlSuggestionCursorAdapter extends SimpleCursorAdapter {
 
   public static final String URL_SUGGESTION_ID = "_id";
@@ -37,13 +35,13 @@ public class UrlSuggestionCursorAdapter extends SimpleCursorAdapter {
    * Constructor.
    *
    * @param context The context.
-   * @param layout  The layout.
-   * @param c       The Cursor.
-   * @param from    Input array.
-   * @param to      Output array.
+   * @param layout The layout.
+   * @param c The Cursor.
+   * @param from Input array.
+   * @param to Output array.
    */
-  public UrlSuggestionCursorAdapter(Context context, int layout, Cursor c,
-                                    String[] from, int[] to) {
+  public UrlSuggestionCursorAdapter(Context context, int layout, Cursor c, String[] from,
+      int[] to) {
     super(context, layout, c, from, to);
   }
 
@@ -52,13 +50,12 @@ public class UrlSuggestionCursorAdapter extends SimpleCursorAdapter {
 
     View superView = super.getView(position, convertView, parent);
 
-    ImageView iconView = (ImageView) superView
-        .findViewById(R.id.AutocompleteImageView);
+    ImageView iconView = (ImageView) superView.findViewById(R.id.AutocompleteImageView);
 
     int resultType;
     try {
-      resultType = Integer.parseInt(getCursor().getString(
-          getCursor().getColumnIndex(URL_SUGGESTION_TYPE)));
+      resultType =
+          Integer.parseInt(getCursor().getString(getCursor().getColumnIndex(URL_SUGGESTION_TYPE)));
     } catch (Exception e) {
       resultType = 0;
     }
@@ -79,5 +76,4 @@ public class UrlSuggestionCursorAdapter extends SimpleCursorAdapter {
 
     return superView;
   }
-
 }

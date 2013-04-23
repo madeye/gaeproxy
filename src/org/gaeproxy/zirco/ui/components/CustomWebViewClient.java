@@ -28,9 +28,7 @@ import org.gaeproxy.zirco.utils.ApplicationUtils;
 import org.gaeproxy.zirco.utils.Constants;
 import org.gaeproxy.zirco.utils.UrlUtils;
 
-/**
- * Convenient extension of WebViewClient.
- */
+/** Convenient extension of WebViewClient. */
 public class CustomWebViewClient extends WebViewClient {
 
   private MainActivity mMainActivity;
@@ -44,7 +42,8 @@ public class CustomWebViewClient extends WebViewClient {
   public void onLoadResource(WebView view, String url) {
     // Some dirty stuff for handling m.youtube.com. May break in the future
     // ?
-    if (url.startsWith("http://s.youtube.com/s?ns=yt&ps=blazer&playback=1&el=detailpage&app=youtube_mobile")) {
+    if (url.startsWith(
+        "http://s.youtube.com/s?ns=yt&ps=blazer&playback=1&el=detailpage&app=youtube_mobile")) {
 
       try {
         int startIndex = url.indexOf("&docid=") + 7;
@@ -53,7 +52,6 @@ public class CustomWebViewClient extends WebViewClient {
         String videoId = url.substring(startIndex, endIndex);
 
         mMainActivity.onVndUrl("vnd.youtube:" + videoId);
-
       } catch (Exception e) {
         Log.e("onLoadResource", "Unable to parse YouTube url: " + url);
       }
@@ -80,8 +78,7 @@ public class CustomWebViewClient extends WebViewClient {
     // loadDataWithBaseURL here, otherwise it won't load.
     if (url.equals(Constants.URL_ABOUT_START)) {
       view.loadDataWithBaseURL("file:///android_asset/startpage/",
-          ApplicationUtils.getStartPage(view.getContext()), "text/html", "UTF-8",
-          "about:start");
+          ApplicationUtils.getStartPage(view.getContext()), "text/html", "UTF-8", "about:start");
     }
 
     ((CustomWebView) view).notifyPageStarted();
@@ -104,22 +101,18 @@ public class CustomWebViewClient extends WebViewClient {
     } else if (url.startsWith(Constants.URL_ACTION_SEARCH)) {
       String searchTerm = url.replace(Constants.URL_ACTION_SEARCH, "");
 
-      String searchUrl = Controller
-          .getInstance()
+      String searchUrl = Controller.getInstance()
           .getPreferences()
-          .getString(Constants.PREFERENCES_GENERAL_SEARCH_URL,
-              Constants.URL_SEARCH_GOOGLE);
+          .getString(Constants.PREFERENCES_GENERAL_SEARCH_URL, Constants.URL_SEARCH_GOOGLE);
       String newUrl = String.format(searchUrl, searchTerm);
 
-      if (view != null)
-        view.loadUrl(newUrl);
+      if (view != null) view.loadUrl(newUrl);
       return true;
-
-    } else if (view != null && view.getHitTestResult() != null
+    } else if (view != null
+        && view.getHitTestResult() != null
         && view.getHitTestResult().getType() == HitTestResult.EMAIL_TYPE) {
       mMainActivity.onMailTo(url);
       return true;
-
     } else {
 
       // If the url is not from GWT mobile view, and is in the mobile view
@@ -128,10 +121,8 @@ public class CustomWebViewClient extends WebViewClient {
           && (UrlUtils.checkInMobileViewUrlList(view.getContext(), url))) {
 
         String newUrl = String.format(Constants.URL_GOOGLE_MOBILE_VIEW, url);
-        if (view != null)
-          view.loadUrl(newUrl);
+        if (view != null) view.loadUrl(newUrl);
         return true;
-
       } else {
         ((CustomWebView) view).resetLoadedUrl();
         mMainActivity.onUrlLoading(url);
@@ -139,5 +130,4 @@ public class CustomWebViewClient extends WebViewClient {
       }
     }
   }
-
 }

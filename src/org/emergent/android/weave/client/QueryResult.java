@@ -19,9 +19,7 @@ package org.emergent.android.weave.client;
 import java.net.URI;
 import java.util.Date;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 public class QueryResult<T> {
 
   private final URI m_uri;
@@ -45,8 +43,7 @@ public class QueryResult<T> {
   }
 
   public long getServerTimestampInSeconds() {
-    if (m_serverTimestamp != null)
-      return m_serverTimestamp.getTime();
+    if (m_serverTimestamp != null) return m_serverTimestamp.getTime();
     return 0;
   }
 

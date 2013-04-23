@@ -16,19 +16,16 @@
 
 package org.emergent.android.weave.client;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.util.Date;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-/**
- * @author Patrick Woodworth
- */
+/** @author Patrick Woodworth */
 public class WeaveBasicObject {
 
   public static class WeaveEncryptedObject {
@@ -46,8 +43,8 @@ public class WeaveBasicObject {
 
     public JSONObject decryptObject(Key key, Key hmacKey)
         throws GeneralSecurityException, JSONException {
-      byte[] bytes = WeaveCryptoUtil.getInstance().decrypt(key, hmacKey,
-          getCiphertext(), getIv(), getHmac());
+      byte[] bytes =
+          WeaveCryptoUtil.getInstance().decrypt(key, hmacKey, getCiphertext(), getIv(), getHmac());
       return new JSONObject(WeaveUtil.toUtf8String(bytes));
     }
 
@@ -75,15 +72,13 @@ public class WeaveBasicObject {
   }
 
   public JSONObject getEncryptedPayload(Key bulkKey, Key hmacKey)
-      throws JSONException, IOException, GeneralSecurityException,
-      WeaveException {
+      throws JSONException, IOException, GeneralSecurityException, WeaveException {
     WeaveEncryptedObject weo = new WeaveEncryptedObject(getPayload());
     return weo.decryptObject(bulkKey, hmacKey);
   }
 
   public JSONObject getEncryptedPayload(UserWeave weave, char[] secret)
-      throws JSONException, IOException, GeneralSecurityException,
-      WeaveException {
+      throws JSONException, IOException, GeneralSecurityException, WeaveException {
     WeaveEncryptedObject weo = new WeaveEncryptedObject(getPayload());
     byte[] syncKey = Base32.decodeModified(new String(secret)); // todo
     // don't
@@ -118,13 +113,11 @@ public class WeaveBasicObject {
       try {
         String baseUriStr = m_queryUri.toASCIIString();
         String queryPart = m_queryUri.getRawQuery();
-        if (queryPart != null)
-          baseUriStr = baseUriStr.substring(0,
-              baseUriStr.indexOf(queryPart) - 1);
-        if (!baseUriStr.endsWith("/"))
-          baseUriStr += "/";
-        String nodeUriStr = baseUriStr
-            + new URI(null, null, getId(), null).toASCIIString();
+        if (queryPart != null) {
+          baseUriStr = baseUriStr.substring(0, baseUriStr.indexOf(queryPart) - 1);
+        }
+        if (!baseUriStr.endsWith("/")) baseUriStr += "/";
+        String nodeUriStr = baseUriStr + new URI(null, null, getId(), null).toASCIIString();
         m_uri = new URI(nodeUriStr);
       } catch (URISyntaxException e) {
         throw new JSONException(e.getMessage());

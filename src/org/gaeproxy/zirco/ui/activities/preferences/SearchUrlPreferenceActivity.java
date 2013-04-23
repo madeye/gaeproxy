@@ -21,11 +21,8 @@ import android.preference.PreferenceManager;
 import org.gaeproxy.R;
 import org.gaeproxy.zirco.utils.Constants;
 
-/**
- * Search url preference chooser activity.
- */
-public class SearchUrlPreferenceActivity extends
-    BaseSpinnerCustomPreferenceActivity {
+/** Search url preference chooser activity. */
+public class SearchUrlPreferenceActivity extends BaseSpinnerCustomPreferenceActivity {
 
   @Override
   protected int getSpinnerPromptId() {
@@ -44,8 +41,7 @@ public class SearchUrlPreferenceActivity extends
 
   @Override
   protected void onOk() {
-    Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
-        .edit();
+    Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
     editor.putString(Constants.PREFERENCES_GENERAL_SEARCH_URL,
         mCustomEditText.getText().toString());
     editor.commit();
@@ -65,10 +61,8 @@ public class SearchUrlPreferenceActivity extends
       case 2: {
         mCustomEditText.setEnabled(true);
 
-        if ((mCustomEditText.getText().toString()
-            .equals(Constants.URL_SEARCH_GOOGLE))
-            || (mCustomEditText.getText().toString()
-            .equals(Constants.URL_SEARCH_WIKIPEDIA))) {
+        if ((mCustomEditText.getText().toString().equals(Constants.URL_SEARCH_GOOGLE))
+            || (mCustomEditText.getText().toString().equals(Constants.URL_SEARCH_WIKIPEDIA))) {
           mCustomEditText.setText(null);
         }
         break;
@@ -82,10 +76,8 @@ public class SearchUrlPreferenceActivity extends
 
   @Override
   protected void setSpinnerValueFromPreferences() {
-    String currentSearchUrl = PreferenceManager
-        .getDefaultSharedPreferences(this).getString(
-            Constants.PREFERENCES_GENERAL_SEARCH_URL,
-            Constants.URL_SEARCH_GOOGLE);
+    String currentSearchUrl = PreferenceManager.getDefaultSharedPreferences(this)
+        .getString(Constants.PREFERENCES_GENERAL_SEARCH_URL, Constants.URL_SEARCH_GOOGLE);
 
     if (currentSearchUrl.equals(Constants.URL_SEARCH_GOOGLE)) {
       mSpinner.setSelection(0);
@@ -101,5 +93,4 @@ public class SearchUrlPreferenceActivity extends
       mCustomEditText.setText(currentSearchUrl);
     }
   }
-
 }

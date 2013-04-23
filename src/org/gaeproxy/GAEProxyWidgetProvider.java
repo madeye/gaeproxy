@@ -54,7 +54,8 @@ import android.widget.Toast;
 
 public class GAEProxyWidgetProvider extends AppWidgetProvider {
 
-  public static final String PROXY_SWITCH_ACTION = "org.gaeproxy.GAEProxyWidgetProvider.PROXY_SWITCH_ACTION";
+  public static final String PROXY_SWITCH_ACTION =
+      "org.gaeproxy.GAEProxyWidgetProvider.PROXY_SWITCH_ACTION";
   public static final String SERVICE_NAME = "org.gaeproxy.GAEProxyService";
   public static final String TAG = "GAEProxyWidgetProvider";
 
@@ -77,14 +78,13 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
       // Vibrate for 10 milliseconds
       v.vibrate(10);
 
-      RemoteViews views = new RemoteViews(context.getPackageName(),
-          R.layout.gaeproxy_appwidget);
+      RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.gaeproxy_appwidget);
       try {
         views.setImageViewResource(R.id.serviceToggle, R.drawable.ing);
 
         AppWidgetManager awm = AppWidgetManager.getInstance(context);
-        awm.updateAppWidget(awm.getAppWidgetIds(new ComponentName(context,
-            GAEProxyWidgetProvider.class)), views);
+        awm.updateAppWidget(
+            awm.getAppWidgetIds(new ComponentName(context, GAEProxyWidgetProvider.class)), views);
       } catch (Exception ignore) {
         // Nothing
       }
@@ -99,22 +99,21 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
         } catch (Exception e) {
           // Nothing
         }
-
       } else {
 
         // Service is not working, then start it
         String versionName;
         try {
-          versionName = context.getPackageManager().getPackageInfo(
-              context.getPackageName(), 0).versionName;
+          versionName =
+              context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
           versionName = "NONE";
         }
         final boolean isInstalled = settings.getBoolean(versionName, false);
 
         if (isInstalled) {
-          Toast.makeText(context, context.getString(R.string.toast_start),
-              Toast.LENGTH_LONG).show();
+          Toast.makeText(context, context.getString(R.string.toast_start), Toast.LENGTH_LONG)
+              .show();
 
           final String portText = settings.getString("port", "");
           if (portText == null || portText.length() <= 0) {
@@ -141,15 +140,14 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
             views.setImageViewResource(R.id.serviceToggle, R.drawable.off);
 
             AppWidgetManager awm = AppWidgetManager.getInstance(context);
-            awm.updateAppWidget(awm.getAppWidgetIds(new ComponentName(context,
-                GAEProxyWidgetProvider.class)), views);
+            awm.updateAppWidget(
+                awm.getAppWidgetIds(new ComponentName(context, GAEProxyWidgetProvider.class)),
+                views);
           } catch (Exception ignore) {
             // Nothing
           }
         }
-
       }
-
     }
   }
 
@@ -167,8 +165,7 @@ public class GAEProxyWidgetProvider extends AppWidgetProvider {
 
       // Get the layout for the App Widget and attach an on-click listener
       // to the button
-      RemoteViews views = new RemoteViews(context.getPackageName(),
-          R.layout.gaeproxy_appwidget);
+      RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.gaeproxy_appwidget);
       views.setOnClickPendingIntent(R.id.serviceToggle, pendingIntent);
 
       if (GAEProxyService.isServiceStarted()) {

@@ -20,8 +20,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 import org.gaeproxy.R;
 
 /**
@@ -56,8 +60,7 @@ public abstract class BaseSpinnerCustomPreferenceActivity extends Activity {
 
     setContentView(R.layout.base_spinner_custom_preference_activity);
 
-    w.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
-        android.R.drawable.ic_dialog_map);
+    w.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, android.R.drawable.ic_dialog_map);
 
     mCustomEditText = (EditText) findViewById(R.id.BaseSpinnerCustomPreferenceEditText);
 
@@ -65,9 +68,9 @@ public abstract class BaseSpinnerCustomPreferenceActivity extends Activity {
 
     mSpinner.setPromptId(getSpinnerPromptId());
 
-    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-        this, getSpinnerValuesArrayId(),
-        android.R.layout.simple_spinner_item);
+    ArrayAdapter<CharSequence> adapter =
+        ArrayAdapter.createFromResource(this, getSpinnerValuesArrayId(),
+            android.R.layout.simple_spinner_item);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     mSpinner.setAdapter(adapter);
 
@@ -76,15 +79,13 @@ public abstract class BaseSpinnerCustomPreferenceActivity extends Activity {
     mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
       @Override
-      public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                 int position, long id) {
+      public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
         onSpinnerItemSelected(position);
       }
 
       @Override
       public void onNothingSelected(AdapterView<?> arg0) {
       }
-
     });
 
     Button okBtn = (Button) findViewById(R.id.BaseSpinnerCustomPreferenceOk);
@@ -107,9 +108,7 @@ public abstract class BaseSpinnerCustomPreferenceActivity extends Activity {
     });
   }
 
-  /**
-   * Behavior when the user press the Ok button.
-   */
+  /** Behavior when the user press the Ok button. */
   protected abstract void onOk();
 
   /**
@@ -119,9 +118,6 @@ public abstract class BaseSpinnerCustomPreferenceActivity extends Activity {
    */
   protected abstract void onSpinnerItemSelected(int position);
 
-  /**
-   * Initialize the spinner with the current value in preferences.
-   */
+  /** Initialize the spinner with the current value in preferences. */
   protected abstract void setSpinnerValueFromPreferences();
-
 }

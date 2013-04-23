@@ -29,9 +29,7 @@ import org.gaeproxy.R;
 import org.gaeproxy.zirco.controllers.Controller;
 import org.gaeproxy.zirco.utils.Constants;
 
-/**
- * Combined bookmarks and history activity.
- */
+/** Combined bookmarks and history activity. */
 public class BookmarksHistoryActivity extends TabActivity {
 
   @Override
@@ -43,14 +41,14 @@ public class BookmarksHistoryActivity extends TabActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (Controller.getInstance().getPreferences()
+    if (Controller.getInstance()
+        .getPreferences()
         .getBoolean(Constants.PREFERENCES_SHOW_FULL_SCREEN, false)) {
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
           WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
-    if (Controller
-        .getInstance()
+    if (Controller.getInstance()
         .getPreferences()
         .getBoolean(Constants.PREFERENCES_GENERAL_HIDE_TITLE_BARS, true)) {
       requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -68,8 +66,7 @@ public class BookmarksHistoryActivity extends TabActivity {
     // Bookmarks
     intent = new Intent().setClass(this, BookmarksListActivity.class);
 
-    spec = tabHost
-        .newTabSpec("bookmarks")
+    spec = tabHost.newTabSpec("bookmarks")
         .setIndicator(res.getString(R.string.Main_MenuShowBookmarks),
             res.getDrawable(R.drawable.ic_tab_bookmarks))
         .setContent(intent);
@@ -78,23 +75,19 @@ public class BookmarksHistoryActivity extends TabActivity {
     // History
     intent = new Intent().setClass(this, HistoryListActivity.class);
 
-    spec = tabHost
-        .newTabSpec("history")
+    spec = tabHost.newTabSpec("history")
         .setIndicator(res.getString(R.string.Main_MenuShowHistory),
             res.getDrawable(R.drawable.ic_tab_history))
         .setContent(intent);
     tabHost.addTab(spec);
 
-    if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(
-        Constants.PREFERENCE_USE_WEAVE, false)) {
+    if (PreferenceManager.getDefaultSharedPreferences(this)
+        .getBoolean(Constants.PREFERENCE_USE_WEAVE, false)) {
       // Weave bookmarks
-      intent = new Intent().setClass(this,
-          WeaveBookmarksListActivity.class);
+      intent = new Intent().setClass(this, WeaveBookmarksListActivity.class);
 
-      spec = tabHost
-          .newTabSpec("weave")
-          .setIndicator(
-              res.getString(R.string.WeaveBookmarksListActivity_Title),
+      spec = tabHost.newTabSpec("weave")
+          .setIndicator(res.getString(R.string.WeaveBookmarksListActivity_Title),
               res.getDrawable(R.drawable.ic_tab_weave))
           .setContent(intent);
       tabHost.addTab(spec);

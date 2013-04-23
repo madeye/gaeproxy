@@ -8,20 +8,25 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import org.apache.commons.codec.binary.Base64;
-import org.gaeproxy.db.DNSResponse;
-import org.gaeproxy.db.DatabaseHelper;
-import org.gaeproxy.db.DomainValidator;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import org.apache.commons.codec.binary.Base64;
+import org.gaeproxy.db.DNSResponse;
+import org.gaeproxy.db.DatabaseHelper;
+import org.gaeproxy.db.DomainValidator;
 
 /**
  * DNS Proxy Local Server
@@ -49,13 +54,12 @@ public class DNSServer implements Runnable {
 
   private int srvPort = 8153;
   final protected int DNS_PKG_HEADER_LEN = 12;
-  final private int[] DNS_HEADERS = {0, 0, 0x81, 0x80, 0, 0, 0, 0, 0, 0, 0, 0};
-  final private int[] DNS_PAYLOAD = {0xc0, 0x0c, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x3c,
-      0x00, 0x04};
+  final private int[] DNS_HEADERS = { 0, 0, 0x81, 0x80, 0, 0, 0, 0, 0, 0, 0, 0 };
+  final private int[] DNS_PAYLOAD = {
+      0xc0, 0x0c, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x3c, 0x00, 0x04
+  };
 
-  /**
-   * Hosts
-   */
+  /** Hosts */
   private Hashtable<String, String> orgCache = new Hashtable<String, String>();
 
   private String appHost = "203.208.46.1";
@@ -86,18 +90,14 @@ public class DNSServer implements Runnable {
       datagramSocket = new DatagramSocket(0, InetAddress.getByName("127.0.0.1"));
       srvPort = datagramSocket.getLocalPort();
       Log.d(TAG, "start at port " + srvPort);
-
     } catch (SocketException e) {
       Log.e(TAG, "error to initilized at port " + srvPort, e);
     } catch (UnknownHostException e) {
       Log.e(TAG, "error to initilized at port " + srvPort, e);
     }
-
   }
 
-  /**
-   * Add resolve result to cache
-   */
+  /** Add resolve result to cache */
   private synchronized void addToCache(String questDomainName, byte[] answer) {
     DNSResponse response = new DNSResponse(questDomainName);
     response.setAddress(DNSResponse.getIPString(answer));
@@ -154,8 +154,7 @@ public class DNSServer implements Runnable {
     System.arraycopy(quest, 4, response, 4, 2); /* 4:6 -> 4:6 | TYPE */
     System.arraycopy(quest, 4, response, 6, 2); /* 4:6 -> 7:9 | CLASS */
     /* 10:14 | TTL */
-    System.arraycopy(quest, DNS_PKG_HEADER_LEN, response, start, quest.length
-        - DNS_PKG_HEADER_LEN); /* 12:~ -> 15:~ */
+    System.arraycopy(quest, DNS_PKG_HEADER_LEN, response, start, quest.length - DNS_PKG_HEADER_LEN); /* 12:~ -> 15:~ */
     start += quest.length - DNS_PKG_HEADER_LEN;
 
     for (int val : DNS_PAYLOAD) {
@@ -228,10 +227,18 @@ public class DNSServer implements Runnable {
           if (answer != null && answer.length != 0) {
             addToCache(domain, answer);
             sendDns(answer, dnsq, datagramSocket);
-            Log.d(TAG, "Success to resolve: " + domain + " quest_length: "
-                + quest.length + " answer_length: " + answer.length
-                + " cost: " + (System.currentTimeMillis() - startTime) / 1000 + "s " +
-                "ip: " + DNSResponse.getIPString(answer));
+            Log.d(TAG, "Success to resolve: "
+                + domain
+                + " quest_length: "
+                + quest.length
+                + " answer_length: "
+                + answer.length
+                + " cost: "
+                + (System.currentTimeMillis() - startTime) / 1000
+                + "s "
+                +
+                "ip: "
+                + DNSResponse.getIPString(answer));
           } else {
             Log.e(TAG, "The size of DNS packet returned is 0");
           }
@@ -242,12 +249,9 @@ public class DNSServer implements Runnable {
     };
 
     resolveDomainName(domain, handler);
-
   }
 
-  /**
-   * Resolve UDP DNS request
-   */
+  /** Resolve UDP DNS request */
   protected String getRequestDomain(byte[] request) {
     String requestDomain = "";
     int reqLength = request.length;
@@ -255,8 +259,9 @@ public class DNSServer implements Runnable {
       byte[] question = new byte[reqLength - 12];
       System.arraycopy(request, 12, question, 0, reqLength - 12);
       requestDomain = parseDomain(question);
-      if (requestDomain.length() > 1)
+      if (requestDomain.length() > 1) {
         requestDomain = requestDomain.substring(0, requestDomain.length() - 1);
+      }
     }
     return requestDomain;
   }
@@ -269,9 +274,7 @@ public class DNSServer implements Runnable {
     return datagramSocket.isClosed();
   }
 
-  /**
-   * Load cache from DB
-   */
+  /** Load cache from DB */
   private void loadCache() {
     try {
       Dao<DNSResponse, String> dnsCacheDao = helper.getDNSCacheDao();
@@ -288,16 +291,13 @@ public class DNSServer implements Runnable {
     }
   }
 
-  /**
-   * Parse request to domain name
-   */
+  /** Parse request to domain name */
   private String parseDomain(byte[] request) {
 
     String result = "";
     int length = request.length;
     int partLength = request[0];
-    if (partLength == 0)
-      return result;
+    if (partLength == 0) return result;
     try {
       byte[] left = new byte[length - partLength - 1];
       System.arraycopy(request, partLength + 1, left, 0, length - partLength - 1);
@@ -309,9 +309,7 @@ public class DNSServer implements Runnable {
     return result;
   }
 
-  /**
-   * Parse IP string into byte, do validation.
-   */
+  /** Parse IP string into byte, do validation. */
   protected byte[] parseIPString(String ip) {
     byte[] result = null;
     int value;
@@ -389,13 +387,11 @@ public class DNSServer implements Runnable {
     String encode_domain = new String(Base64.encodeBase64(encode_temp.getBytes(), false));
     // Log.d(TAG, "BASE 64 pass 2: " + encode_domain);
 
-    String url = "http://myhosts.sinaapp.com/lookup.php?host="
-        + encode_domain;
+    String url = "http://myhosts.sinaapp.com/lookup.php?host=" + encode_domain;
     String host = "myhosts.sinaapp.com";
     url = url.replace(host, appHost);
 
     client.get(url, host, handler);
-
   }
 
   @Override
@@ -430,16 +426,16 @@ public class DNSServer implements Runnable {
         } else if (resp != null) {
           String addr = resp.getAddress();
           updateCache(resp);
-          sendDns(createDNSResponse(udpreq, parseIPString(addr)), dnsq,
-              datagramSocket);
+          sendDns(createDNSResponse(udpreq, parseIPString(addr)), dnsq, datagramSocket);
           Log.d(TAG, "DNS cache hit: " + questDomain);
           EasyTracker.getTracker().trackEvent("dns", "resolve", questDomain, 0L);
         } else {
           synchronized (domains) {
-            if (domains.contains(questDomain))
+            if (domains.contains(questDomain)) {
               continue;
-            else
+            } else {
               domains.add(questDomain);
+            }
           }
           fetchAnswerHTTP(dnsq, udpreq);
         }
@@ -453,12 +449,9 @@ public class DNSServer implements Runnable {
         Log.e(TAG, e.getLocalizedMessage());
       }
     }
-
   }
 
-  /**
-   * send response to the source
-   */
+  /** send response to the source */
   private void sendDns(byte[] response, DatagramPacket dnsq, DatagramSocket srvSocket) {
 
     System.arraycopy(dnsq.getData(), 0, response, 0, 2);
@@ -481,8 +474,7 @@ public class DNSServer implements Runnable {
       } catch (IOException ignored) {
         return;
       }
-      while (serverSocket != null
-          && !serverSocket.isClosed()) {
+      while (serverSocket != null && !serverSocket.isClosed()) {
         Socket client = null;
         try {
           client = serverSocket.accept();
@@ -517,5 +509,4 @@ public class DNSServer implements Runnable {
       }
     }
   }
-
 }

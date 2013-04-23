@@ -24,16 +24,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import org.gaeproxy.R;
-import org.gaeproxy.zirco.model.items.DownloadItem;
-
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import org.gaeproxy.R;
+import org.gaeproxy.zirco.model.items.DownloadItem;
 
-/**
- * The adapter for the download UI list.
- */
+/** The adapter for the download UI list. */
 public class DownloadListAdapter extends BaseAdapter {
 
   private Context mContext;
@@ -46,7 +43,7 @@ public class DownloadListAdapter extends BaseAdapter {
   /**
    * Constructor.
    *
-   * @param context   The current context.
+   * @param context The current context.
    * @param downloads The download list.
    */
   public DownloadListAdapter(Context context, List<DownloadItem> downloads) {
@@ -103,35 +100,32 @@ public class DownloadListAdapter extends BaseAdapter {
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     if (convertView == null) {
-      LayoutInflater inflater = (LayoutInflater) mContext
-          .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater =
+          (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       convertView = inflater.inflate(R.layout.download_row, null);
     }
 
     final DownloadItem item = mDownloads.get(position);
 
-    final ProgressBar progressBar = (ProgressBar) convertView
-        .findViewById(R.id.DownloadRow_ProgressBar);
-    final TextView fileNameView = (TextView) convertView
-        .findViewById(R.id.DownloadRow_FileName);
-    TextView urlView = (TextView) convertView
-        .findViewById(R.id.DownloadRow_Url);
-    final ImageButton stopButton = (ImageButton) convertView
-        .findViewById(R.id.DownloadRow_StopBtn);
+    final ProgressBar progressBar =
+        (ProgressBar) convertView.findViewById(R.id.DownloadRow_ProgressBar);
+    final TextView fileNameView = (TextView) convertView.findViewById(R.id.DownloadRow_FileName);
+    TextView urlView = (TextView) convertView.findViewById(R.id.DownloadRow_Url);
+    final ImageButton stopButton = (ImageButton) convertView.findViewById(R.id.DownloadRow_StopBtn);
 
     progressBar.setIndeterminate(false);
     progressBar.setMax(100);
     progressBar.setProgress(item.getProgress());
 
     if (item.isAborted()) {
-      fileNameView.setText(String.format(mContext.getResources()
-          .getString(R.string.DownloadListActivity_Aborted), item
-          .getFileName()));
+      fileNameView.setText(
+          String.format(mContext.getResources().getString(R.string.DownloadListActivity_Aborted),
+              item.getFileName()));
       stopButton.setEnabled(false);
     } else if (item.isFinished()) {
-      fileNameView.setText(String.format(mContext.getResources()
-          .getString(R.string.DownloadListActivity_Finished), item
-          .getFileName()));
+      fileNameView.setText(
+          String.format(mContext.getResources().getString(R.string.DownloadListActivity_Finished),
+              item.getFileName()));
       stopButton.setEnabled(false);
     } else {
       fileNameView.setText(item.getFileName());
@@ -144,12 +138,11 @@ public class DownloadListAdapter extends BaseAdapter {
       public void onClick(View v) {
         item.abortDownload();
         stopButton.setEnabled(false);
-        fileNameView.setText(String.format(mContext.getResources()
-            .getString(R.string.DownloadListActivity_Aborted), item
-            .getFileName()));
+        fileNameView.setText(
+            String.format(mContext.getResources().getString(R.string.DownloadListActivity_Aborted),
+                item.getFileName()));
         progressBar.setProgress(progressBar.getMax());
       }
-
     });
 
     mTitleMap.put(item, fileNameView);
@@ -158,5 +151,4 @@ public class DownloadListAdapter extends BaseAdapter {
 
     return convertView;
   }
-
 }

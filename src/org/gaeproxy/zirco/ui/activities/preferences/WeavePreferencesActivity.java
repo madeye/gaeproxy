@@ -32,19 +32,17 @@ public class WeavePreferencesActivity extends PreferenceActivity {
     addPreferencesFromResource(R.layout.weave_preferences_activity);
 
     Preference weaveServerPref = findPreference(Constants.PREFERENCE_WEAVE_SERVER);
-    weaveServerPref
-        .setOnPreferenceClickListener(new OnPreferenceClickListener() {
-          @Override
-          public boolean onPreferenceClick(Preference preference) {
-            openWeaveServerActivity();
-            return true;
-          }
-        });
+    weaveServerPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+      @Override
+      public boolean onPreferenceClick(Preference preference) {
+        openWeaveServerActivity();
+        return true;
+      }
+    });
   }
 
   private void openWeaveServerActivity() {
     Intent i = new Intent(this, WeaveServerPreferenceActivity.class);
     startActivity(i);
   }
-
 }

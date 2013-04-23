@@ -28,17 +28,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.PluginState;
 import android.webkit.WebSettings.ZoomDensity;
 import android.webkit.WebView;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import org.gaeproxy.ProxySettings;
 import org.gaeproxy.zirco.controllers.Controller;
 import org.gaeproxy.zirco.utils.ApplicationUtils;
 import org.gaeproxy.zirco.utils.Constants;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-/**
- * A convenient extension of WebView.
- */
+/** A convenient extension of WebView. */
 public class CustomWebView extends WebView {
 
   private Context mContext;
@@ -74,7 +71,7 @@ public class CustomWebView extends WebView {
    * Constructor.
    *
    * @param context The current context.
-   * @param attrs   The attribute set.
+   * @param attrs The attribute set.
    */
   public CustomWebView(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -90,29 +87,22 @@ public class CustomWebView extends WebView {
       try {
 
         mNotifyFindDialogDismissed.invoke(this);
-
       } catch (IllegalArgumentException e) {
-        Log.e("CustomWebView",
-            "doNotifyFindDialogDismissed(): " + e.getMessage());
+        Log.e("CustomWebView", "doNotifyFindDialogDismissed(): " + e.getMessage());
       } catch (IllegalAccessException e) {
-        Log.e("CustomWebView",
-            "doNotifyFindDialogDismissed(): " + e.getMessage());
+        Log.e("CustomWebView", "doNotifyFindDialogDismissed(): " + e.getMessage());
       } catch (InvocationTargetException e) {
-        Log.e("CustomWebView",
-            "doNotifyFindDialogDismissed(): " + e.getMessage());
+        Log.e("CustomWebView", "doNotifyFindDialogDismissed(): " + e.getMessage());
       }
     }
   }
 
-  /**
-   * Perform an 'onPause' on this WebView through reflexion.
-   */
+  /** Perform an 'onPause' on this WebView through reflexion. */
   public void doOnPause() {
     if (mOnPauseMethod != null) {
       try {
 
         mOnPauseMethod.invoke(this);
-
       } catch (IllegalArgumentException e) {
         Log.e("CustomWebView", "doOnPause(): " + e.getMessage());
       } catch (IllegalAccessException e) {
@@ -123,15 +113,12 @@ public class CustomWebView extends WebView {
     }
   }
 
-  /**
-   * Perform an 'onResume' on this WebView through reflexion.
-   */
+  /** Perform an 'onResume' on this WebView through reflexion. */
   public void doOnResume() {
     if (mOnResumeMethod != null) {
       try {
 
         mOnResumeMethod.invoke(this);
-
       } catch (IllegalArgumentException e) {
         Log.e("CustomWebView", "doOnResume(): " + e.getMessage());
       } catch (IllegalAccessException e) {
@@ -147,7 +134,6 @@ public class CustomWebView extends WebView {
       try {
 
         mSetFindIsUp.invoke(this, value);
-
       } catch (IllegalArgumentException e) {
         Log.e("CustomWebView", "doSetFindIsUp(): " + e.getMessage());
       } catch (IllegalAccessException e) {
@@ -189,7 +175,6 @@ public class CustomWebView extends WebView {
     }
 
     ProxySettings.setProxy(mContext, "127.0.0.1", port);
-
   }
 
   /**
@@ -203,63 +188,42 @@ public class CustomWebView extends WebView {
     WebSettings settings = getSettings();
 
     // User settings
-    settings.setJavaScriptEnabled(Controller
-        .getInstance()
+    settings.setJavaScriptEnabled(Controller.getInstance()
         .getPreferences()
-        .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_JAVASCRIPT,
-            true));
+        .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_JAVASCRIPT, true));
     settings.setLoadsImagesAutomatically(Controller.getInstance()
         .getPreferences()
         .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_IMAGES, true));
-    settings.setUseWideViewPort(Controller
-        .getInstance()
+    settings.setUseWideViewPort(Controller.getInstance()
         .getPreferences()
-        .getBoolean(Constants.PREFERENCES_BROWSER_USE_WIDE_VIEWPORT,
-            true));
-    settings.setLoadWithOverviewMode(Controller
-        .getInstance()
+        .getBoolean(Constants.PREFERENCES_BROWSER_USE_WIDE_VIEWPORT, true));
+    settings.setLoadWithOverviewMode(Controller.getInstance()
         .getPreferences()
-        .getBoolean(Constants.PREFERENCES_BROWSER_LOAD_WITH_OVERVIEW,
-            false));
-    settings.setSaveFormData(Controller
-        .getInstance()
+        .getBoolean(Constants.PREFERENCES_BROWSER_LOAD_WITH_OVERVIEW, false));
+    settings.setSaveFormData(Controller.getInstance()
         .getPreferences()
-        .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_FORM_DATA,
-            true));
-    settings.setSavePassword(Controller
-        .getInstance()
+        .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_FORM_DATA, true));
+    settings.setSavePassword(Controller.getInstance()
         .getPreferences()
-        .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_PASSWORDS,
-            true));
-    settings.setDefaultZoom(ZoomDensity.valueOf(Controller
-        .getInstance()
+        .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_PASSWORDS, true));
+    settings.setDefaultZoom(ZoomDensity.valueOf(Controller.getInstance()
         .getPreferences()
-        .getString(Constants.PREFERENCES_DEFAULT_ZOOM_LEVEL,
-            ZoomDensity.MEDIUM.toString())));
-    settings.setUserAgentString(Controller
-        .getInstance()
+        .getString(Constants.PREFERENCES_DEFAULT_ZOOM_LEVEL, ZoomDensity.MEDIUM.toString())));
+    settings.setUserAgentString(Controller.getInstance()
         .getPreferences()
-        .getString(Constants.PREFERENCES_BROWSER_USER_AGENT,
-            Constants.USER_AGENT_DEFAULT));
+        .getString(Constants.PREFERENCES_BROWSER_USER_AGENT, Constants.USER_AGENT_DEFAULT));
 
-    CookieManager.getInstance().setAcceptCookie(
-        Controller
-            .getInstance()
+    CookieManager.getInstance()
+        .setAcceptCookie(Controller.getInstance()
             .getPreferences()
-            .getBoolean(
-                Constants.PREFERENCES_BROWSER_ENABLE_COOKIES,
-                true));
+            .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_COOKIES, true));
 
     if (Build.VERSION.SDK_INT <= 7) {
-      settings.setPluginsEnabled(Controller
-          .getInstance()
+      settings.setPluginsEnabled(Controller.getInstance()
           .getPreferences()
-          .getBoolean(
-              Constants.PREFERENCES_BROWSER_ENABLE_PLUGINS_ECLAIR,
-              true));
+          .getBoolean(Constants.PREFERENCES_BROWSER_ENABLE_PLUGINS_ECLAIR, true));
     } else {
-      settings.setPluginState(PluginState.valueOf(Controller
-          .getInstance()
+      settings.setPluginState(PluginState.valueOf(Controller.getInstance()
           .getPreferences()
           .getString(Constants.PREFERENCES_BROWSER_ENABLE_PLUGINS,
               PluginState.ON_DEMAND.toString())));
@@ -296,16 +260,12 @@ public class CustomWebView extends WebView {
     return false;
   }
 
-  /**
-   * Inject the AdSweep javascript.
-   */
+  /** Inject the AdSweep javascript. */
   public void loadAdSweep() {
     super.loadUrl(ApplicationUtils.getAdSweepString(mContext));
   }
 
-  /**
-   * Load static reflected methods.
-   */
+  /** Load static reflected methods. */
   private void loadMethods() {
 
     if (!mBoMethodsLoaded) {
@@ -314,7 +274,6 @@ public class CustomWebView extends WebView {
 
         mOnPauseMethod = WebView.class.getMethod("onPause");
         mOnResumeMethod = WebView.class.getMethod("onResume");
-
       } catch (SecurityException e) {
         Log.e("CustomWebView", "loadMethods(): " + e.getMessage());
         mOnPauseMethod = null;
@@ -327,11 +286,8 @@ public class CustomWebView extends WebView {
 
       try {
 
-        mSetFindIsUp = WebView.class.getMethod("setFindIsUp",
-            Boolean.TYPE);
-        mNotifyFindDialogDismissed = WebView.class
-            .getMethod("notifyFindDialogDismissed");
-
+        mSetFindIsUp = WebView.class.getMethod("setFindIsUp", Boolean.TYPE);
+        mNotifyFindDialogDismissed = WebView.class.getMethod("notifyFindDialogDismissed");
       } catch (SecurityException e) {
         Log.e("CustomWebView", "loadMethods(): " + e.getMessage());
         mSetFindIsUp = null;
@@ -352,17 +308,13 @@ public class CustomWebView extends WebView {
     super.loadUrl(url);
   }
 
-  /**
-   * Triggered when the page has finished loading.
-   */
+  /** Triggered when the page has finished loading. */
   public void notifyPageFinished() {
     mProgress = 100;
     mIsLoading = false;
   }
 
-  /**
-   * Triggered when a new page loading is requested.
-   */
+  /** Triggered when a new page loading is requested. */
   public void notifyPageStarted() {
     mIsLoading = true;
   }
@@ -379,7 +331,8 @@ public class CustomWebView extends WebView {
     // useful and override over the right bubble.
     if ((action == MotionEvent.ACTION_DOWN)
         || (action == MotionEvent.ACTION_POINTER_DOWN)
-        || (action == MotionEvent.ACTION_POINTER_1_DOWN)
+        || (action
+        == MotionEvent.ACTION_POINTER_1_DOWN)
         || (action == MotionEvent.ACTION_POINTER_2_DOWN)
         || (action == MotionEvent.ACTION_POINTER_3_DOWN)) {
       if (ev.getPointerCount() > 1) {
@@ -389,11 +342,11 @@ public class CustomWebView extends WebView {
         this.getSettings().setBuiltInZoomControls(false);
         this.getSettings().setSupportZoom(false);
       }
-    } else if ((action == MotionEvent.ACTION_UP)
-        || (action == MotionEvent.ACTION_POINTER_UP)
-        || (action == MotionEvent.ACTION_POINTER_1_UP)
-        || (action == MotionEvent.ACTION_POINTER_2_UP)
-        || (action == MotionEvent.ACTION_POINTER_3_UP)) {
+    } else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_POINTER_UP) || (
+        action
+            == MotionEvent.ACTION_POINTER_1_UP) || (action == MotionEvent.ACTION_POINTER_2_UP) || (
+        action
+            == MotionEvent.ACTION_POINTER_3_UP)) {
       this.getSettings().setBuiltInZoomControls(false);
       this.getSettings().setSupportZoom(false);
     }
@@ -401,9 +354,7 @@ public class CustomWebView extends WebView {
     return super.onTouchEvent(ev);
   }
 
-  /**
-   * Reset the loaded url.
-   */
+  /** Reset the loaded url. */
   public void resetLoadedUrl() {
     mLoadedUrl = null;
   }
@@ -416,5 +367,4 @@ public class CustomWebView extends WebView {
   public void setProgress(int progress) {
     mProgress = progress;
   }
-
 }

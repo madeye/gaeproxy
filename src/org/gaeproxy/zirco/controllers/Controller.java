@@ -17,27 +17,20 @@ package org.gaeproxy.zirco.controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import java.util.ArrayList;
+import java.util.List;
 import org.gaeproxy.zirco.model.DbAdapter;
 import org.gaeproxy.zirco.model.items.DownloadItem;
 import org.gaeproxy.zirco.ui.components.CustomWebView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Controller implementation.
- */
+/** Controller implementation. */
 public final class Controller {
 
-  /**
-   * Holder for singleton implementation.
-   */
+  /** Holder for singleton implementation. */
   private static final class ControllerHolder {
     private static final Controller INSTANCE = new Controller();
 
-    /**
-     * Private Constructor.
-     */
+    /** Private Constructor. */
     private ControllerHolder() {
     }
   }
@@ -59,9 +52,7 @@ public final class Controller {
 
   private List<String> mMobileViewUrlList = null;
 
-  /**
-   * Private Constructor.
-   */
+  /** Private Constructor. */
   private Controller() {
     mDownloadList = new ArrayList<DownloadItem>();
   }
@@ -147,16 +138,12 @@ public final class Controller {
     return mWebViewList;
   }
 
-  /**
-   * Reset the AdBlock white list, so that it will be reloaded.
-   */
+  /** Reset the AdBlock white list, so that it will be reloaded. */
   public void resetAdBlockWhiteList() {
     mAdBlockWhiteList = null;
   }
 
-  /**
-   * Reset the mobile view url list, so that it will be reloaded.
-   */
+  /** Reset the mobile view url list, so that it will be reloaded. */
   public void resetMobileViewUrlList() {
     mMobileViewUrlList = null;
   }
@@ -178,5 +165,4 @@ public final class Controller {
   public void setWebViewList(List<CustomWebView> list) {
     mWebViewList = list;
   }
-
 }
