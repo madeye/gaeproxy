@@ -16,8 +16,9 @@
 #      logostream     <logostream@gmail.com>
 #      Felix Yan      <felixonmars@gmail.com>
 #      Mort Yao       <mort.yao@gmail.com>
+#      Wang Wei Qiang <wwqgtxx@gmail.com>
 
-__version__ = '2.1.16'
+__version__ = '2.1.17'
 
 import sys
 import os
@@ -46,7 +47,7 @@ except (ImportError, SystemError):
     elif sys.platform == 'darwin' and platform.processor() == 'i386':
         sys.stderr.write('`wget --no-check-certificate --header="Host: goagent.googlecode.com" http://www.google.cn/files/gevent-1.0dev-macosx-intel.egg`\n')
     elif os.name == 'nt':
-        sys.stderr.write('visit `https://github.com/SiteSupport/gevent/downloads`\n')
+        sys.stderr.write('visit `https://github.com/surfly/gevent/downloads`\n')
     else:
         sys.stderr.write('`sudo easy_install gevent`\n')
     import threading
@@ -1000,6 +1001,7 @@ class Common(object):
         self.GAE_PROFILE = self.CONFIG.get('gae', 'profile')
         self.GAE_CRLF = self.CONFIG.getint('gae', 'crlf')
         self.GAE_VALIDATE = self.CONFIG.getint('gae', 'validate')
+        self.GAE_OBFUSCATE = self.CONFIG.getint('gae', 'obfuscate') if self.CONFIG.has_option('gae', 'obfuscate') else 0
 
         self.PAC_ENABLE = self.CONFIG.getint('pac', 'enable')
         self.PAC_IP = self.CONFIG.get('pac', 'ip')
@@ -1173,7 +1175,7 @@ def gae_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     headers.pop('Host', None)
     metadata = 'G-Method:%s\nG-Url:%s\n%s' % (method, url, ''.join('G-%s:%s\n' % (k, v) for k, v in kwargs.iteritems() if v))
     skip_headers = http.skip_headers
-    if 'X-Requested-With' not in headers:
+    if False and 'X-Requested-With' not in headers:
         # not a ajax request, we could abbv the headers
         abbv_headers = http.abbv_headers
         g_abbv = []
@@ -1188,9 +1190,16 @@ def gae_urlfetch(method, url, headers, payload, fetchserver, **kwargs):
     else:
         metadata += ''.join('%s:%s\n' % (k, v) for k, v in headers.iteritems() if k not in skip_headers)
     metadata = zlib.compress(metadata)[2:-4]
-    gae_payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
     need_crlf = 0 if fetchserver.startswith('https') else common.GAE_CRLF
-    response = http.request('POST', fetchserver, gae_payload, {'Content-Length': len(gae_payload)}, crlf=need_crlf)
+    if common.GAE_OBFUSCATE:
+        cookie = base64.b64encode(metadata).strip()
+        if not payload:
+            response = http.request('GET', fetchserver, payload, {'Cookie': cookie}, crlf=need_crlf)
+        else:
+            response = http.request('POST', fetchserver, payload, {'Cookie': cookie, 'Content-Length': len(payload)}, crlf=need_crlf)
+    else:
+        payload = '%s%s%s' % (struct.pack('!h', len(metadata)), metadata, payload)
+        response = http.request('POST', fetchserver, payload, {'Content-Length': len(payload)}, crlf=need_crlf)
     response.app_status = response.status
     if response.status != 200:
         if response.status in (400, 405):
@@ -1412,7 +1421,7 @@ class GAEProxyHandler(object):
                         continue
                 else:
                     google_ipmap[domain] = [domain]
-            for dnsserver in ('8.8.8.8', '114.114.114.114'):
+            for dnsserver in ('8.8.8.8', '8.8.4.4', '114.114.114.114', '114.114.115.115'):
                 for domain in need_resolve_remote:
                     logging.info('resolve remote domain=%r from dnsserver=%r', domain, dnsserver)
                     try:
