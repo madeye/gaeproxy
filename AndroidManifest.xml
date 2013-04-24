@@ -38,7 +38,7 @@
         android:name=".GAEProxyActivity"
         android:label="@string/app_name"
         android:launchMode="singleTask"
-        android:taskAffinity=".GAEProxy">
+        android:taskAffinity=".GAEProxyActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
