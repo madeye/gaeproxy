@@ -46,8 +46,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -67,6 +69,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import com.google.ads.AdRequest;
@@ -377,8 +381,7 @@ public class GAEProxyActivity extends PreferenceActivity
         } catch (NameNotFoundException e) {
           versionName = "";
         }
-        showADialog(getString(R.string.about) + " (" + versionName + ")\n\n" + getString(
-            R.string.copy_rights));
+        showAbout();
         break;
     }
 
@@ -722,6 +725,36 @@ public class GAEProxyActivity extends PreferenceActivity
     }
 
     return true;
+  }
+
+  private void showAbout() {
+
+    WebView web = new WebView(this);
+    web.loadUrl("file:///android_asset/startpage/about.html");
+    web.setWebViewClient(new WebViewClient() {
+      @Override
+      public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        return true;
+      }
+    });
+
+    String versionName = "";
+    try {
+      versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+    } catch (NameNotFoundException ex) {
+        versionName = "";
+    }
+
+    new AlertDialog.Builder(this)
+        .setTitle(String.format(getString(R.string.about_title), versionName))
+        .setCancelable(false)
+        .setNegativeButton(getString(R.string.ok_iknow), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+            dialog.cancel();
+          }
+        }).setView(web).create().show();
   }
 
   private void showADialog(String msg) {
