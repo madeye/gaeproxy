@@ -64,6 +64,7 @@
         googlecode. \n\n(gaeproxy.googlecode.com)
     </string>
     <string name="about">About</string>
+    <string name="about_title">GAEProxy %s</string>
     <string name="proxy_type">Proxy Type</string>
     <array name="proxy_type_entry">
         <item>GAE</item>
