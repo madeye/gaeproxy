@@ -54,9 +54,12 @@ public class GAEProxyUpdateService extends IntentService {
   @Override protected void onHandleIntent(Intent intent) {
     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-    Set<Integer> appSet = App.getProxiedApps(this);
-    App.updateApps(this, appSet);
-
-    settings.edit().putBoolean("packageChanged", false).commit();
+    if (GAEProxyService.isServiceStarted()) {
+      settings.edit().putBoolean("packageChanged", true).commit();
+    } else {
+      Set<Integer> appSet = App.getProxiedApps(this);
+      App.updateApps(this, appSet);
+      settings.edit().putBoolean("packageChanged", false).commit();
+    }
   }
 }
