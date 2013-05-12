@@ -428,7 +428,6 @@ public class DNSServer implements Runnable {
           updateCache(resp);
           sendDns(createDNSResponse(udpreq, parseIPString(addr)), dnsq, datagramSocket);
           Log.d(TAG, "DNS cache hit: " + questDomain);
-          EasyTracker.getTracker().trackEvent("dns", "resolve", questDomain, 0L);
         } else {
           synchronized (domains) {
             if (domains.contains(questDomain)) {
@@ -438,6 +437,7 @@ public class DNSServer implements Runnable {
             }
           }
           fetchAnswerHTTP(dnsq, udpreq);
+          EasyTracker.getTracker().trackEvent("dns", "resolve", questDomain, 0L);
         }
       } catch (SocketException e) {
         Log.e(TAG, e.getLocalizedMessage());
