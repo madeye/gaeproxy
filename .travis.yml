@@ -12,6 +12,12 @@ before_install:
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   - android update sdk --filter tools,platform-tools,android-16 --no-ui --no-https -a
 install:
-  - sudo pip install python-swiftclient
+  - gem install travis-artifacts
 script: 
   - mvn clean install -DTRAVIS=true
+env:
+  global:
+    - "ARTIFACTS_AWS_REGION=ap-northeast-1"
+    - "ARTIFACTS_S3_BUCKET=travis-nightly"
+    - secure: "qi8EYqbwLzeNO9qsGlOtPStqucMxeMseubzmrafXtxzgp8fDGLacDcMlzKHj\n024vflz4w0j0LFU8QiphqTMvffzO9DlEbe9zo5NbUIYVeo4cXfGzPHzqHhVZ\n595N3pEDSSYmHo4/CFWoOOrcsExubWAxV3beKDGE4ggRcYzRzE4="
+    - secure: "gMYt5SUHn0DR3dQNq9RHi8Y9VDij6Nnh+ZPsWcXePK0qpF3+IdRjID0hfoaw\ngq03xlIcRWUCTHHxHoPknhBn7JmRTjbpu26OVaQZJRpOEDlVWZhwWL8Idn7C\nt9q4EOW/ZWiVANTt65/j62dhaj16nvlii/gDDPIV3hU+X79Fquk="
