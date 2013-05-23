@@ -2,8 +2,6 @@
 
 [![Build Status](https://secure.travis-ci.org/madeye/gaeproxy.png)](http://travis-ci.org/madeye/gaeproxy)
 
-[Nightly Builds](http://buildbot.sinaapp.com)
-
 ## DOWNLOADS
 
 Latest Versions: [Google Drive]
