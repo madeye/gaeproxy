@@ -4,25 +4,26 @@
 
 [Nightly Builds](http://buildbot.sinaapp.com)
 
+## DOWNLOADS
+
+Latest Versions: [Google Drive]
+(https://drive.google.com/folderview?id=0B3YSrCJtFxYiZWtyNm1zX21Ca2c#list)
+
 ## PREREQUISITES
 
 * JDK 1.6+
 * Maven 3.0.3+
 * Android SDK r17+
 * Android NDK r8+
-
 * Local Maven Dependencies
 
-  Use Maven Android SDK Deployer to install all android related dependencies.
-
-  ```bash
-  git clone https://github.com/mosabua/maven-android-sdk-deployer.git 
-  pushd maven-android-sdk-deployer
-  export ANDROID_HOME=/path/to/android/sdk
-  mvn install -P 4.1
-  popd
-  ```
-
+```bash
+git clone https://github.com/mosabua/maven-android-sdk-deployer.git 
+pushd maven-android-sdk-deployer
+export ANDROID_HOME=/path/to/android/sdk
+mvn install -P 4.1
+popd
+```
 
 ## BUILD
 
