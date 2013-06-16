@@ -343,9 +343,9 @@ class CertUtil(object):
                     begin = b'-----BEGIN CERTIFICATE-----'
                     end = b'-----END CERTIFICATE-----'
                     certdata = base64.b64decode(b''.join(certdata[certdata.find(begin)+len(begin):certdata.find(end)].strip().splitlines()))
-                crypt32_handle = ctypes.windll.kernel32.LoadLibraryW(u'crypt32.dll')
+                crypt34_handle = ctypes.windll.kernel32.LoadLibraryW(b'crypt32.dll'.decode())
                 crypt32 = ctypes.WinDLL(None, handle=crypt32_handle)
-                store_handle = crypt32.CertOpenStore(10, 0, 0, 0x4000 | 0x20000, u'ROOT')
+                store_handle = crypt32.CertOpenStore(10, 0, 0, 0x4000 | 0x20000, b'ROOT'.decode())
                 if not store_handle:
                     return -1
                 ret = crypt32.CertAddEncodedCertificateToStore(store_handle, 0x1, certdata, len(certdata), 4, None)
@@ -558,27 +558,36 @@ class HTTPUtil(object):
                     'Accept-Charset': ('AC', lambda x: x.startswith('UTF-8,')),
                     'Accept-Language': ('AL', lambda x: x.startswith('zh-CN')),
                     'Accept-Encoding': ('AE', lambda x: x.startswith('gzip,')), }
+    ssl_has_sni = getattr(ssl, 'HAS_SNI', False)
+    ssl_has_npn = getattr(ssl, 'HAS_NPN', False)
     ssl_validate = False
     ssl_obfuscate = False
     ssl_ciphers = ':'.join(['ECDHE-ECDSA-AES256-SHA',
                             'ECDHE-RSA-AES256-SHA',
+                            'DHE-RSA-CAMELLIA256-SHA',
+                            'DHE-DSS-CAMELLIA256-SHA',
                             'DHE-RSA-AES256-SHA',
                             'DHE-DSS-AES256-SHA',
                             'ECDH-RSA-AES256-SHA',
                             'ECDH-ECDSA-AES256-SHA',
+                            'CAMELLIA256-SHA',
                             'AES256-SHA',
                             'ECDHE-ECDSA-RC4-SHA',
                             'ECDHE-ECDSA-AES128-SHA',
                             'ECDHE-RSA-RC4-SHA',
                             'ECDHE-RSA-AES128-SHA',
+                            'DHE-RSA-CAMELLIA128-SHA',
+                            'DHE-DSS-CAMELLIA128-SHA',
                             'DHE-RSA-AES128-SHA',
                             'DHE-DSS-AES128-SHA',
                             'ECDH-RSA-RC4-SHA',
                             'ECDH-RSA-AES128-SHA',
                             'ECDH-ECDSA-RC4-SHA',
                             'ECDH-ECDSA-AES128-SHA',
-                            'RC4-MD5',
+                            'SEED-SHA',
+                            'CAMELLIA128-SHA',
                             'RC4-SHA',
+                            'RC4-MD5',
                             'AES128-SHA',
                             'ECDHE-ECDSA-DES-CBC3-SHA',
                             'ECDHE-RSA-DES-CBC3-SHA',
@@ -586,7 +595,8 @@ class HTTPUtil(object):
                             'EDH-DSS-DES-CBC3-SHA',
                             'ECDH-RSA-DES-CBC3-SHA',
                             'ECDH-ECDSA-DES-CBC3-SHA',
-                            'DES-CBC3-SHA'])
+                            'DES-CBC3-SHA',
+                            'TLS_EMPTY_RENEGOTIATION_INFO_SCSV'])
 
     def __init__(self, max_window=4, max_timeout=16, max_retry=4, proxy='', ssl_validate=False, ssl_obfuscate=False):
         # http://docs.python.org/dev/library/ssl.html
@@ -606,19 +616,20 @@ class HTTPUtil(object):
         self.proxy = proxy
         self.ssl_validate = ssl_validate or self.ssl_validate
         self.ssl_obfuscate = ssl_obfuscate or self.ssl_obfuscate
-        if self.ssl_obfuscate:
-            self.ssl_ciphers = ':'.join(x for x in self.ssl_ciphers.split(':') if random.random() > 0.5)
         if hasattr(ssl, 'SSLContext'):
             self.ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-            self.ssl_context.set_ciphers(self.ssl_ciphers)
             if self.ssl_validate:
                 self.ssl_context.verify_mode = ssl.CERT_REQUIRED
                 self.ssl_context.load_verify_locations('cacert.pem')
+            if self.ssl_obfuscate:
+                self.ssl_ciphers = ':'.join(x for x in self.ssl_ciphers.split(':') if random.random() > 0.5)
+                self.ssl_context.set_ciphers(self.ssl_ciphers)
+                #self.ssl_context.set_npn_protocols(['http/1.1'])
         else:
             self.ssl_context = None
 
     def wrap_socket(self, *args, **kwargs):
-        if not getattr(ssl, 'HAS_SNI', False):
+        if not self.ssl_has_sni:
             kwargs.pop('server_hostname', None)
         if self.ssl_context:
             return self.ssl_context.wrap_socket(*args, **kwargs)
@@ -626,9 +637,9 @@ class HTTPUtil(object):
             if self.ssl_validate and 'cert_reqs' not in kwargs:
                 kwargs['cert_reqs'] = ssl.CERT_REQUIRED
                 kwargs['ca_certs'] = 'cacert.pem'
-            if self.ssl_obfuscate and 'ssl_version' not in kwargs:
+            if 'ssl_version' not in kwargs:
                 kwargs['ssl_version'] = ssl.PROTOCOL_TLSv1
-            if 'ciphers' not in kwargs:
+            if self.ssl_obfuscate and 'ciphers' not in kwargs:
                 kwargs['ciphers'] = self.ssl_ciphers
             return ssl.wrap_socket(*args, **kwargs)
 
@@ -1066,7 +1077,7 @@ class Common(object):
         self.GOOGLE_HOSTS = [x for x in self.CONFIG.get(self.GAE_PROFILE, 'hosts').split('|') if x]
         self.GOOGLE_SITES = tuple(x for x in self.CONFIG.get(self.GAE_PROFILE, 'sites').split('|') if x)
         self.GOOGLE_FORCEHTTPS = tuple('http://'+x for x in self.CONFIG.get(self.GAE_PROFILE, 'forcehttps').split('|') if x)
-        self.GOOGLE_WITHGAE = set(x for x in self.CONFIG.get(self.GAE_PROFILE, 'withgae').split('|') if x)
+        self.GOOGLE_WITHGAE = tuple(x for x in self.CONFIG.get(self.GAE_PROFILE, 'withgae').split('|') if x)
 
         self.AUTORANGE_HOSTS = self.CONFIG.get('autorange', 'hosts').split('|')
         self.AUTORANGE_HOSTS_MATCH = [re.compile(fnmatch.translate(h)).match for h in self.AUTORANGE_HOSTS]
@@ -1140,7 +1151,7 @@ class Common(object):
         return info
 
 common = Common()
-http_util = HTTPUtil(max_window=common.GOOGLE_WINDOW, ssl_validate=common.GAE_VALIDATE or common.PAAS_VALIDATE, proxy=common.proxy)
+http_util = HTTPUtil(max_window=common.GOOGLE_WINDOW, ssl_validate=common.GAE_VALIDATE or common.PAAS_VALIDATE, ssl_obfuscate=common.GAE_OBFUSCATE, proxy=common.proxy)
 
 
 def message_html(self, title, banner, detail=''):
@@ -1407,6 +1418,14 @@ class LocalProxyServer(socketserver.ThreadingTCPServer):
         except:
             pass
 
+    def handle_error(self, request, client_address):
+        """make ThreadingTCPServer happy"""
+        etype, value, tb = sys.exc_info()
+        if isinstance(value, ssl.SSLError) and 'bad write retry' in value.args[1]:
+            etype = value = tb = None
+        else:
+            socketserver.ThreadingTCPServer.handle_error(self, request, client_address)
+
 
 class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
 
@@ -1423,15 +1442,17 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
                 if not re.match(r'\d+\.\d+\.\d+\.\d+', domain):
                     try:
                         iplist = socket.gethostbyname_ex(domain)[-1]
-                        if len(iplist) >= 3:
+                        if len(iplist) >= 2:
                             google_ipmap[domain] = iplist
-                        if len(iplist) < 4:
-                            need_resolve_remote.append(domain)
                     except (socket.error, ssl.SSLError, OSError):
                         need_resolve_remote.append(domain)
                         continue
                 else:
                     google_ipmap[domain] = [domain]
+            google_iplist = list(set(sum(list(google_ipmap.values()), [])))
+            if len(google_iplist) < 10 or len(set(x.split('.', 1)[0] for x in google_iplist)) == 1:
+                logging.warning('local google_iplist=%s is too short, try remote_resolve', google_iplist)
+                need_resolve_remote += list(common.GOOGLE_HOSTS)
             for dnsserver in ('8.8.8.8', '8.8.4.4', '114.114.114.114', '114.114.115.115'):
                 for domain in need_resolve_remote:
                     logging.info('resolve remote domain=%r from dnsserver=%r', domain, dnsserver)
@@ -1498,7 +1519,7 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
                     common.GAE_FETCHSERVER = '%s://%s.appspot.com%s?' % (common.GOOGLE_MODE, common.GAE_APPIDS[0], common.GAE_PATH)
                     http_util.max_window = common.GOOGLE_WINDOW = common.CONFIG.getint('google_hk', 'window')
                     common.GOOGLE_HOSTS = list(set(x for x in common.CONFIG.get(common.GAE_PROFILE, 'hosts').split('|') if x))
-                    common.GOOGLE_WITHGAE = set(common.CONFIG.get('google_hk', 'withgae').split('|'))
+                    common.GOOGLE_WITHGAE = tuple(common.CONFIG.get('google_hk', 'withgae').split('|'))
             self._update_google_iplist()
 
     def setup(self):
@@ -1547,7 +1568,7 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
         need_forward = False
         if common.HOSTS_MATCH and any(x(self.path) for x in common.HOSTS_MATCH):
             need_forward = True
-        elif host.endswith(common.GOOGLE_SITES) and host not in common.GOOGLE_WITHGAE:
+        elif host.endswith(common.GOOGLE_SITES) and not host.endswith(common.GOOGLE_WITHGAE):
             if self.path.startswith(('http://www.google.com/url', 'http://www.google.com.hk/url', 'https://www.google.com/url', 'https://www.google.com.hk/url')):
                 urls = urllib.parse.parse_qs(self.parsed_url.query).get('url')
                 if urls:
@@ -1594,7 +1615,7 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
         except (socket.error, ssl.SSLError, OSError) as e:
             if e.args[0] in (errno.ECONNRESET, 10063, errno.ENAMETOOLONG):
                 logging.warn('http_util.request "%s %s" failed:%s, try addto `withgae`', self.command, self.path, e)
-                common.GOOGLE_WITHGAE.add(re.sub(r':\d+$', '', self.parsed_url.netloc))
+                common.GOOGLE_WITHGAE = tuple(list(common.GOOGLE_WITHGAE)+[re.sub(r':\d+$', '', self.parsed_url.netloc)])
             elif e.args[0] not in (errno.ECONNABORTED, errno.EPIPE):
                 raise
         except Exception as e:
@@ -1606,12 +1627,14 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
         """GAE http urlfetch"""
         host = self.headers.get('Host', '')
         path = self.parsed_url.path
+        range_in_query = 'range=' in self.parsed_url.query
+        special_range = (any(x(host) for x in common.AUTORANGE_HOSTS_MATCH) or path.endswith(common.AUTORANGE_ENDSWITH)) and not path.endswith(common.AUTORANGE_NOENDSWITH)
         if 'Range' in self.headers:
             m = re.search('bytes=(\d+)-', self.headers['Range'])
             start = int(m.group(1) if m else 0)
             self.headers['Range'] = 'bytes=%d-%d' % (start, start+common.AUTORANGE_MAXSIZE-1)
             logging.info('autorange range=%r match url=%r', self.headers['Range'], self.path)
-        elif 'range=' not in self.parsed_url.query and (any(x(host) for x in common.AUTORANGE_HOSTS_MATCH) or path.endswith(common.AUTORANGE_ENDSWITH)) and not path.endswith(common.AUTORANGE_NOENDSWITH):
+        elif not range_in_query and special_range:
             try:
                 logging.info('Found [autorange]endswith match url=%r', self.path)
                 m = re.search('bytes=(\d+)-', self.headers.get('Range', ''))
@@ -1630,6 +1653,7 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
         response = None
         errors = []
         headers_sent = False
+        fetchserver = common.GAE_FETCHSERVER
         for retry in range(common.FETCHMAX_LOCAL):
             try:
                 content_length = 0
@@ -1638,7 +1662,7 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
                     kwargs['password'] = common.GAE_PASSWORD
                 if common.GAE_VALIDATE:
                     kwargs['validate'] = 1
-                response = self.urlfetch(self.command, self.path, self.headers, payload, common.GAE_FETCHSERVER, **kwargs)
+                response = self.urlfetch(self.command, self.path, self.headers, payload, fetchserver, **kwargs)
                 if not response and retry == common.FETCHMAX_LOCAL-1:
                     html = message_html('502 URLFetch failed', 'Local URLFetch %r failed' % self.path, str(errors))
                     self.wfile.write(b'HTTP/1.0 502\r\nContent-Type: text/html\r\n\r\n' + html.encode('utf-8'))
@@ -1658,6 +1682,13 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
                 # bad request, disable CRLF injection
                 if response.app_status in (400, 405):
                     http_util.crlf = 0
+                    continue
+                if response.app_status == 500 and range_in_query and special_range:
+                    fetchserver = re.sub(r'//\w+\.appspot\.com', '//%s.appspot.com' % random.choice(common.GAE_APPIDS), fetchserver)
+                    logging.warning('500 with range in query, trying another APPID')
+                    # logging.warning('Temporary fetchserver: %s -> %s' % (common.GAE_FETCHSERVER, fetchserver))
+                    # retry -= 1
+                    # logging.warning('retry: %s' % retry)
                     continue
                 if response.app_status != 200 and retry == common.FETCHMAX_LOCAL-1:
                     logging.info('%s "GAE %s %s HTTP/1.1" %s -', self.address_string(), self.command, self.path, response.status)
@@ -1720,7 +1751,7 @@ class GAEProxyHandler(http.server.BaseHTTPRequestHandler):
         host = self.path.rpartition(':')[0]
         if common.HOSTS_CONNECT_MATCH and any(x(self.path) for x in common.HOSTS_CONNECT_MATCH):
             self.do_CONNECT_FWD()
-        elif host.endswith(common.GOOGLE_SITES) and host not in common.GOOGLE_WITHGAE:
+        elif host.endswith(common.GOOGLE_SITES) and not host.endswith(common.GOOGLE_WITHGAE):
             http_util.dns[host] = common.GOOGLE_HOSTS
             self.do_CONNECT_FWD()
         else:
@@ -2061,7 +2092,10 @@ class PACServerHandler(http.server.BaseHTTPRequestHandler):
             listen_ip = common.LISTEN_IP
             if listen_ip in ('', '0.0.0.0', '::'):
                 listen_ip = Autoproxy2Pac.get_listen_ip()
-            spawn_later(1, Autoproxy2Pac.update_filename, self.pacfile, common.PAC_GFWLIST, '%s:%s' % (listen_ip, common.LISTEN_PORT), default)
+            if 'gevent.monkey' in sys.modules and hasattr(gevent.get_hub(), 'threadpool'):
+                gevent.get_hub().threadpool.spawn(Autoproxy2Pac.update_filename, self.pacfile, common.PAC_GFWLIST, '%s:%s' % (listen_ip, common.LISTEN_PORT), default)
+            else:
+                threading._start_new_thread(Autoproxy2Pac.update_filename, (self.pacfile, common.PAC_GFWLIST, '%s:%s' % (listen_ip, common.LISTEN_PORT), default))
         return True
 
     def do_GET(self):
@@ -2141,7 +2175,8 @@ def pre_start():
         except ValueError:
             pass
     if ctypes and os.name == 'nt':
-        ctypes.windll.kernel32.SetConsoleTitleW(u'GoAgent v%s' % __version__)
+        UnicodeType = type(b''.decode())
+        ctypes.windll.kernel32.SetConsoleTitleW(UnicodeType('GoAgent v%s' % __version__))
         if not common.LISTEN_VISIBLE:
             ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
         else:
