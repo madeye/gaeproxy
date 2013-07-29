@@ -53,6 +53,7 @@
     <string name="crash_alert">检测到一次非正常退出，状态已重置</string>
     <string name="copy_rights">GAE代理是一款开源软件，依照GPLv3协议发布。\n\n如果您有任何问题，请前往项目网站进行反馈。
 		\n\n(gaeproxy.googlecode.com)</string>
+    <string name="install_ca">安装根证书</string>
     <string name="about">关于</string>
     <string name="proxy_type">代理类型</string>
     <string name="connecting">正在连接...</string>
