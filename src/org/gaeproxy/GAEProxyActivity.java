@@ -328,9 +328,10 @@ public class GAEProxyActivity extends PreferenceActivity
   public boolean onCreateOptionsMenu(Menu menu) {
     menu.add(Menu.NONE, Menu.FIRST + 1, 1, getString(R.string.recovery))
         .setIcon(android.R.drawable.ic_menu_delete);
-    menu.add(Menu.NONE, Menu.FIRST + 2, 2, getString(R.string.about))
+    menu.add(Menu.NONE, Menu.FIRST + 2, 3, getString(R.string.about))
         .setIcon(android.R.drawable.ic_menu_info_details);
-    // return true才会起作用
+    menu.add(Menu.NONE, Menu.FIRST + 3, 2, getString(R.string.install_ca))
+        .setIcon(android.R.drawable.ic_menu_add);
     return true;
   }
 
@@ -382,6 +383,11 @@ public class GAEProxyActivity extends PreferenceActivity
           versionName = "";
         }
         showAbout();
+        break;
+      case Menu.FIRST + 3:
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse("http://myhosts.sinaapp.com/ca.crt"));
+        startActivity(i);
         break;
     }
 

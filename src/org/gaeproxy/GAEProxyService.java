@@ -43,9 +43,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -197,6 +199,7 @@ public class GAEProxyService extends Service {
   private Object[] mSetForegroundArgs = new Object[1];
   private Object[] mStartForegroundArgs = new Object[2];
   private Object[] mStopForegroundArgs = new Object[1];
+  private BroadcastReceiver mShutdownReceiver = null;
 
   public static boolean isServiceStarted() {
     final boolean isServiceStarted;
@@ -514,6 +517,14 @@ public class GAEProxyService extends Service {
   public void onCreate() {
     super.onCreate();
 
+    mShutdownReceiver = new BroadcastReceiver() {
+      @Override public void onReceive(Context context, Intent intent) {
+        stopSelf();
+      }
+    };
+    IntentFilter filter = new IntentFilter(Intent.ACTION_SHUTDOWN);
+    registerReceiver(mShutdownReceiver, filter);
+
     EasyTracker.getTracker().trackEvent("service", "start", getVersionName(), 0L);
 
     notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -546,6 +557,11 @@ public class GAEProxyService extends Service {
   public void onDestroy() {
 
     EasyTracker.getTracker().trackEvent("service", "stop", getVersionName(), 0L);
+
+    if (mShutdownReceiver != null) {
+      unregisterReceiver(mShutdownReceiver);
+      mShutdownReceiver = null;
+    }
 
     statusLock = true;
 
