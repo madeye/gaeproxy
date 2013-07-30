@@ -80,10 +80,6 @@ except ImportError:
     urllib.request = __import__('urllib2')
     urllib.parse = __import__('urlparse')
 try:
-    import ctypes
-except ImportError:
-    ctypes = None
-try:
     import OpenSSL
 except ImportError:
     OpenSSL = None
@@ -153,24 +149,11 @@ class Logging(type(sys)):
     def __init__(self, *args, **kwargs):
         self.level = self.__class__.INFO
         self.__write = __write = sys.stderr.write
-        self.isatty = getattr(sys.stderr, 'isatty', lambda: False)()
         self.__set_error_color = lambda: None
         self.__set_warning_color = lambda: None
         self.__set_debug_color = lambda: None
         self.__reset_color = lambda: None
-        if self.isatty:
-            if os.name == 'nt':
-                SetConsoleTextAttribute = ctypes.windll.kernel32.SetConsoleTextAttribute
-                GetStdHandle = ctypes.windll.kernel32.GetStdHandle
-                self.__set_error_color = lambda: SetConsoleTextAttribute(GetStdHandle(-11), 0x04)
-                self.__set_warning_color = lambda: SetConsoleTextAttribute(GetStdHandle(-11), 0x06)
-                self.__set_debug_color = lambda: SetConsoleTextAttribute(GetStdHandle(-11), 0x002)
-                self.__reset_color = lambda: SetConsoleTextAttribute(GetStdHandle(-11), 0x07)
-            elif os.name == 'posix':
-                self.__set_error_color = lambda: __write('\033[31m')
-                self.__set_warning_color = lambda: __write('\033[33m')
-                self.__set_debug_color = lambda: __write('\033[32m')
-                self.__reset_color = lambda: __write('\033[0m')
+        #GAEProxy Patch
 
     @classmethod
     def getLogger(cls, *args, **kwargs):
@@ -339,35 +322,7 @@ class CertUtil(object):
                     commonname = next(v.decode() for k, v in x509.get_subject().get_components() if k == b'O')
             except Exception as e:
                 logging.error('load_certificate(certfile=%r) failed:%s', certfile, e)
-        if sys.platform.startswith('win'):
-            with open(certfile, 'rb') as fp:
-                certdata = fp.read()
-                if certdata.startswith(b'-----'):
-                    begin = b'-----BEGIN CERTIFICATE-----'
-                    end = b'-----END CERTIFICATE-----'
-                    certdata = base64.b64decode(b''.join(certdata[certdata.find(begin)+len(begin):certdata.find(end)].strip().splitlines()))
-                crypt32 = ctypes.WinDLL(b'crypt32.dll'.decode())
-                store_handle = crypt32.CertOpenStore(10, 0, 0, 0x4000 | 0x20000, b'ROOT'.decode())
-                if not store_handle:
-                    return -1
-                ret = crypt32.CertAddEncodedCertificateToStore(store_handle, 0x1, certdata, len(certdata), 4, None)
-                crypt32.CertCloseStore(store_handle, 0)
-                del crypt32
-                return 0 if ret else -1
-        elif sys.platform == 'darwin':
-            return os.system('security find-certificate -a -c "%s" | grep "%s" >/dev/null || security add-trusted-cert -d -r trustRoot -k "/Library/Keychains/System.keychain" "%s"' % (commonname, commonname, certfile))
-        elif sys.platform.startswith('linux'):
-            import platform
-            platform_distname = platform.dist()[0]
-            if platform_distname == 'Ubuntu':
-                pemfile = "/etc/ssl/certs/%s.pem" % commonname
-                new_certfile = "/usr/local/share/ca-certificates/%s.crt" % commonname
-                if not os.path.exists(pemfile):
-                    return os.system('cp "%s" "%s" && update-ca-certificates' % (certfile, new_certfile))
-            elif any(os.path.isfile('%s/certutil' % x) for x in os.environ['PATH'].split(os.pathsep)):
-                return os.system('certutil -L -d sql:$HOME/.pki/nssdb | grep "%s" || certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "%s" -i "%s"' % (commonname, commonname, certfile))
-            else:
-                logging.warning('please install *libnss3-tools* package to import GoAgent root ca')
+        #GAEProxy Patch
         return 0
 
     @staticmethod
@@ -2195,19 +2150,8 @@ def pre_start():
             resource.setrlimit(resource.RLIMIT_NOFILE, (8192, -1))
         except ValueError:
             pass
-    if ctypes and os.name == 'nt':
-        UnicodeType = type(b''.decode())
-        ctypes.windll.kernel32.SetConsoleTitleW(UnicodeType('GoAgent v%s' % __version__))
-        if not common.LISTEN_VISIBLE:
-            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
-        else:
-            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 1)
-        if common.LOVE_ENABLE and random.randint(1, 100) <= 5:
-            title = ctypes.create_unicode_buffer(1024)
-            ctypes.windll.kernel32.GetConsoleTitleW(ctypes.byref(title), len(title)-1)
-            ctypes.windll.kernel32.SetConsoleTitleW('%s %s' % (title.value, random.choice(common.LOVE_TIP)))
-        # GAEProxy Patch
-        # No blacklist
+    # GAEProxy Patch
+    # No blacklist
     if common.GAE_APPIDS[0] == 'goagent':
         logging.critical('please edit %s to add your appid to [gae] !', common.CONFIG_FILENAME)
         sys.exit(-1)
