@@ -85,6 +85,13 @@ except ImportError:
     OpenSSL = None
 
 # GAEProxy Patch
+class NullDevice():
+    def write(self, s):
+        pass
+
+sys.stdout = NullDevice()
+sys.stderr = sys.stdout
+
 class DNSCacheUtil(object):
     '''DNSCache module, integrated with GAEProxy'''
 
@@ -2141,17 +2148,7 @@ class DNSServer(socketserver.ThreadingUDPServer):
 
 
 def pre_start():
-    if sys.platform == 'cygwin':
-        logging.info('cygwin is not officially supported, please continue at your own risk :)')
-        #sys.exit(-1)
-    if os.name == 'posix':
-        try:
-            import resource
-            resource.setrlimit(resource.RLIMIT_NOFILE, (8192, -1))
-        except ValueError:
-            pass
     # GAEProxy Patch
-    # No blacklist
     if common.GAE_APPIDS[0] == 'goagent':
         logging.critical('please edit %s to add your appid to [gae] !', common.CONFIG_FILENAME)
         sys.exit(-1)
