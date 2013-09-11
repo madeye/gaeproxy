@@ -48,12 +48,6 @@
                 android:title="@string/auto_connect">
         </CheckBoxPreference>
         <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="isHTTPSProxy"
-                android:summary="@string/https_proxy_summary"
-                android:title="@string/https_proxy">
-        </CheckBoxPreference>
-        <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="isGFWList"
                 android:summary="@string/auto_set_gfwlist_summary"

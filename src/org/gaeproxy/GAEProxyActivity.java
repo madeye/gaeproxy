@@ -123,7 +123,6 @@ public class GAEProxyActivity extends PreferenceActivity
   private EditTextPreference portText;
   private EditTextPreference sitekeyText;
   private ListPreference proxyTypeList;
-  private CheckBoxPreference isHTTPSProxyCheck;
   private CheckBoxPreference isGFWListCheck;
   private CheckBoxPreference isRunningCheck;
   private Preference proxiedApps;
@@ -191,7 +190,6 @@ public class GAEProxyActivity extends PreferenceActivity
 
     isAutoConnectCheck.setEnabled(false);
     isGlobalProxyCheck.setEnabled(false);
-    isHTTPSProxyCheck.setEnabled(false);
     proxyTypeList.setEnabled(false);
   }
 
@@ -201,7 +199,6 @@ public class GAEProxyActivity extends PreferenceActivity
     sitekeyText.setEnabled(true);
     isGlobalProxyCheck.setEnabled(true);
     isGFWListCheck.setEnabled(true);
-    isHTTPSProxyCheck.setEnabled(true);
     if (!isGlobalProxyCheck.isChecked()) {
       proxiedApps.setEnabled(true);
       isBypassAppsCheck.setEnabled(true);
@@ -268,7 +265,6 @@ public class GAEProxyActivity extends PreferenceActivity
 
     isRunningCheck = (CheckBoxPreference) findPreference("isRunning");
     isAutoConnectCheck = (CheckBoxPreference) findPreference("isAutoConnect");
-    isHTTPSProxyCheck = (CheckBoxPreference) findPreference("isHTTPSProxy");
     isGlobalProxyCheck = (CheckBoxPreference) findPreference("isGlobalProxy");
     isGFWListCheck = (CheckBoxPreference) findPreference("isGFWList");
     isBypassAppsCheck = (CheckBoxPreference) findPreference("isBypassApps");

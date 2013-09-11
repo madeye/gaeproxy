@@ -114,8 +114,8 @@ public class GAEProxyService extends Service {
       "59.24.3.173"
   };
   private static final String TAG = "GAEProxyService";
-  private static final String DEFAULT_HOST = "74.125.128.18";
-  private static final String DEFAULT_DNS = "50.17.31.189";
+  private static final String DEFAULT_HOST = "74.125.128.106";
+  private static final String DEFAULT_DNS = "220.181.136.37";
   private static final Class<?>[] mStartForegroundSignature = new Class[] {
       int.class, Notification.class
   };
@@ -189,7 +189,7 @@ public class GAEProxyService extends Service {
   private SharedPreferences settings = null;
   private boolean hasRedirectSupport = true;
   private boolean isGlobalProxy = false;
-  private boolean isHTTPSProxy = false;
+  private boolean isHTTPSProxy = true;
   private boolean isGFWList = false;
   private boolean isBypassApps = false;
   private Set<Integer> mProxiedApps;
@@ -300,7 +300,6 @@ public class GAEProxyService extends Service {
     }
 
     isGlobalProxy = settings.getBoolean("isGlobalProxy", false);
-    isHTTPSProxy = settings.getBoolean("isHTTPSProxy", false);
     isGFWList = settings.getBoolean("isGFWList", false);
     isBypassApps = settings.getBoolean("isBypassApps", false);
 
@@ -407,7 +406,7 @@ public class GAEProxyService extends Service {
     if (proxyType.equals("GAE")) {
       appHost = parseHost("g.maxcdn.info", true);
       if (appHost == null || appHost.equals("") || isInBlackList(appHost)) {
-        appHost = DEFAULT_HOST;
+        appHost = settings.getString("appHost", DEFAULT_HOST);
       }
     } else if (proxyType.equals("PaaS")) {
       appHost = parseHost(appId, false);
@@ -415,6 +414,8 @@ public class GAEProxyService extends Service {
         return false;
       }
     }
+
+    handler.sendEmptyMessage(MSG_HOST_CHANGE);
 
     dnsHost = parseHost("myhosts.sinaapp.com", false);
     if (dnsHost == null || dnsHost.equals("") || isInBlackList(appHost)) {
@@ -646,9 +647,7 @@ public class GAEProxyService extends Service {
     return START_STICKY;
   }
 
-  private boolean preConnection() {
-
-    if (isHTTPSProxy) {
+  private boolean checkHTTPSProxy() {
       InputStream is = null;
 
       String socksIp = settings.getString("socksIp", null);
@@ -696,15 +695,23 @@ public class GAEProxyService extends Service {
 
       if (socksIp == null || socksPort == null) return false;
 
-      Log.d(TAG, "Forward Successful");
+      return true;
+  }
+
+  private boolean preConnection() {
+
+    isHTTPSProxy = checkHTTPSProxy();
+
+    if (isHTTPSProxy) {
+      String socksIp = settings.getString("socksIp", null);
+      String socksPort = settings.getString("socksPort", null);
+
       if (Utils.isRoot()) {
         Utils.runRootCommand(BASE + "proxy.sh start " + port + " " + socksIp + " " + socksPort);
       } else {
         Utils.runCommand(BASE + "proxy.sh start " + port + " " + socksIp + " " + socksPort);
       }
     } else {
-
-      Log.d(TAG, "Forward Successful");
       if (Utils.isRoot()) {
         Utils.runRootCommand(BASE + "proxy.sh start " + port + " " + "127.0.0.1" + " " + port);
       } else {
