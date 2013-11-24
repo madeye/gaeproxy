@@ -26,23 +26,4 @@
         
     </style>
 
-    <style name="Bookmarks"></style>
-
-    <style name="Bookmarks.Title">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="History"></style>
-
-    <style name="History.Title">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="History.Url">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">#888888</item>
-    </style>
-
 </resources>
