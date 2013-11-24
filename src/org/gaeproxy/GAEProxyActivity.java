@@ -91,6 +91,7 @@ public class GAEProxyActivity extends PreferenceActivity
     implements OnSharedPreferenceChangeListener {
 
   public static final String PREFS_NAME = "GAEProxy";
+  private static final String BASE = "/data/data/org.gaeproxy";
   private static final String TAG = "GAEProxy";
   private static final int MSG_CRASH_RECOVER = 1;
   private static final int MSG_INITIAL_FINISH = 2;
@@ -144,7 +145,7 @@ public class GAEProxyActivity extends PreferenceActivity
         OutputStream out;
         try {
           in = assetManager.open(path + (path.isEmpty() ? "" : "/") + file);
-          out = new FileOutputStream("/data/data/org.gaeproxy/" + file);
+          out = new FileOutputStream(BASE + "/" + file);
           copyFile(in, out);
           in.close();
           out.flush();
@@ -168,7 +169,7 @@ public class GAEProxyActivity extends PreferenceActivity
 
     Utils.runRootCommand(Utils.getIptables() + " -t nat -F OUTPUT");
 
-    Utils.runCommand(GAEProxyService.BASE + "proxy.sh stop");
+    Utils.runCommand(BASE + "/proxy.sh stop");
   }
 
   private void dirChecker(String dir) {
@@ -212,15 +213,15 @@ public class GAEProxyActivity extends PreferenceActivity
     mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
         "GAEProxy");
 
-    File tmp = new File("/data/data/org.gaeproxy/python.mp3");
+    File tmp = new File(BASE + "/python.mp3");
 
     copyAssets("modules");
     String[] argc = {
-        "7z", "x", tmp.getAbsolutePath(), "/data/data/org.gaeproxy"
+        "7z", "x", tmp.getAbsolutePath(), BASE
     };
     LZMA.extract(argc);
-
     tmp.delete();
+
     if (mWakeLock.isHeld()) mWakeLock.release();
 
     return true;
@@ -292,11 +293,11 @@ public class GAEProxyActivity extends PreferenceActivity
           edit.putBoolean(versionName, true);
           edit.commit();
 
-          File f = new File("/data/data/org.gaeproxy/certs");
+          File f = new File(BASE + "/certs");
           if (f.exists() && f.isFile()) f.delete();
           if (!f.exists()) f.mkdir();
 
-          File hosts = new File("/data/data/org.gaeproxy/hosts");
+          File hosts = new File(BASE + "/hosts");
 
           if (hosts.exists()) hosts.delete();
 
@@ -306,6 +307,8 @@ public class GAEProxyActivity extends PreferenceActivity
               + "chmod 755 /data/data/org.gaeproxy/redsocks\n"
               + "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
               + "chmod 755 /data/data/org.gaeproxy/python-cl\n");
+
+          Utils.runRootCommand("rm -f " + BASE + "/proxy.ini\n");
 
           install();
         }
