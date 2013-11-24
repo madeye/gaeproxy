@@ -7,12 +7,6 @@
                 android:summary="@string/service_summary"
                 android:title="@string/service_controller">
         </CheckBoxPreference>
-
-        <Preference
-                android:key="browser"
-                android:summary="@string/browser_summary"
-                android:title="@string/browser">
-        </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/proxy_cat">
         <ListPreference

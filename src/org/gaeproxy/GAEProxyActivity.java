@@ -127,7 +127,6 @@ public class GAEProxyActivity extends PreferenceActivity
   private CheckBoxPreference isRunningCheck;
   private Preference proxiedApps;
   private CheckBoxPreference isBypassAppsCheck;
-  private Preference browser;
   private AdView adView;
 
   private void copyAssets(String path) {
@@ -139,20 +138,20 @@ public class GAEProxyActivity extends PreferenceActivity
     } catch (IOException e) {
       Log.e(TAG, e.getMessage());
     }
-    for (int i = 0; i < files.length; i++) {
-      InputStream in = null;
-      OutputStream out = null;
-      try {
-        in = assetManager.open(path + (path.isEmpty() ? "" : "/") + files[i]);
-        out = new FileOutputStream("/data/data/org.gaeproxy/" + files[i]);
-        copyFile(in, out);
-        in.close();
-        in = null;
-        out.flush();
-        out.close();
-        out = null;
-      } catch (Exception e) {
-        Log.e(TAG, e.getMessage());
+    if (files != null) {
+      for (String file : files) {
+        InputStream in;
+        OutputStream out;
+        try {
+          in = assetManager.open(path + (path.isEmpty() ? "" : "/") + file);
+          out = new FileOutputStream("/data/data/org.gaeproxy/" + file);
+          copyFile(in, out);
+          in.close();
+          out.flush();
+          out.close();
+        } catch (Exception e) {
+          Log.e(TAG, e.getMessage());
+        }
       }
     }
   }
@@ -175,9 +174,7 @@ public class GAEProxyActivity extends PreferenceActivity
   private void dirChecker(String dir) {
     File f = new File(dir);
 
-    if (!f.isDirectory()) {
-      f.mkdirs();
-    }
+    if (!f.isDirectory()) f.mkdirs();
   }
 
   private void disableAll() {
@@ -261,7 +258,6 @@ public class GAEProxyActivity extends PreferenceActivity
     portText = (EditTextPreference) findPreference("port");
     sitekeyText = (EditTextPreference) findPreference("sitekey");
     proxiedApps = findPreference("proxiedApps");
-    browser = findPreference("browser");
 
     isRunningCheck = (CheckBoxPreference) findPreference("isRunning");
     isAutoConnectCheck = (CheckBoxPreference) findPreference("isAutoConnect");
@@ -309,7 +305,6 @@ public class GAEProxyActivity extends PreferenceActivity
           Utils.runCommand("chmod 755 /data/data/org.gaeproxy/iptables\n"
               + "chmod 755 /data/data/org.gaeproxy/redsocks\n"
               + "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
-              + "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
               + "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 
           install();
@@ -405,9 +400,6 @@ public class GAEProxyActivity extends PreferenceActivity
     if (preference.getKey() != null && preference.getKey().equals("proxiedApps")) {
       Intent intent = new Intent(this, ProxiedAppActivity.class);
       startActivity(intent);
-    } else if (preference.getKey() != null && preference.getKey().equals("browser")) {
-      Intent intent = new Intent(this, org.gaeproxy.zirco.ui.activities.MainActivity.class);
-      startActivity(intent);
     } else if (preference.getKey() != null && preference.getKey().equals("isRunning")) {
       if (!serviceStart()) {
         Editor edit = settings.edit();
@@ -455,9 +447,7 @@ public class GAEProxyActivity extends PreferenceActivity
     if (settings.getBoolean("isRunning", false)) {
       isRunningCheck.setChecked(true);
       disableAll();
-      browser.setEnabled(true);
     } else {
-      browser.setEnabled(false);
       isRunningCheck.setChecked(false);
       enableAll();
     }
@@ -546,10 +536,8 @@ public class GAEProxyActivity extends PreferenceActivity
     if (key.equals("isRunning")) {
       if (settings.getBoolean("isRunning", false)) {
         disableAll();
-        browser.setEnabled(true);
         isRunningCheck.setChecked(true);
       } else {
-        browser.setEnabled(false);
         isRunningCheck.setChecked(false);
         enableAll();
       }
@@ -639,8 +627,9 @@ public class GAEProxyActivity extends PreferenceActivity
 
         if (f.exists() && f.isDirectory()) {
           File[] files = f.listFiles();
-          for (int i = 0; i < files.length; i++)
-            if (!files[i].isDirectory()) files[i].delete();
+          if (files != null) {
+            for (File file : files) if (!file.isDirectory()) file.delete();
+          }
           f.delete();
         }
 
@@ -655,7 +644,6 @@ public class GAEProxyActivity extends PreferenceActivity
         Utils.runCommand("chmod 755 /data/data/org.gaeproxy/iptables\n"
             + "chmod 755 /data/data/org.gaeproxy/redsocks\n"
             + "chmod 755 /data/data/org.gaeproxy/proxy.sh\n"
-            + "chmod 755 /data/data/org.gaeproxy/localproxy.sh\n"
             + "chmod 755 /data/data/org.gaeproxy/busybox\n"
             + "chmod 755 /data/data/org.gaeproxy/python-cl\n");
 

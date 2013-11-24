@@ -52,6 +52,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
@@ -63,8 +64,12 @@ import android.util.Pair;
 import android.widget.RemoteViews;
 import com.google.analytics.tracking.android.EasyTracker;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -189,7 +194,6 @@ public class GAEProxyService extends Service {
   private SharedPreferences settings = null;
   private boolean hasRedirectSupport = true;
   private boolean isGlobalProxy = false;
-  private boolean isHTTPSProxy = true;
   private boolean isGFWList = false;
   private boolean isBypassApps = false;
   private Set<Integer> mProxiedApps;
@@ -221,6 +225,50 @@ public class GAEProxyService extends Service {
     return false;
   }
 
+  private String loadStringFromRawResource(Resources resources, int resId) {
+    InputStream rawResource = resources.openRawResource(resId);
+    String content = streamToString(rawResource);
+    try {rawResource.close();} catch (IOException ignored) {}
+    return content;
+  }
+  private String streamToString(InputStream in) {
+    String l;
+    BufferedReader r = new BufferedReader(new InputStreamReader(in));
+    StringBuilder s = new StringBuilder();
+    try {
+      while ((l = r.readLine()) != null) {
+        s.append(l).append("\n");
+      }
+    } catch (IOException ignored) {}
+    return s.toString();
+  }
+
+  private void writeConfig() throws FileNotFoundException, UnsupportedEncodingException {
+    String config = loadStringFromRawResource(getResources(), R.raw.proxy);
+    config = config.replace("APPID", appId);
+    config = config.replace("PORT", String.valueOf(port));
+    config = config.replace("PASSWORD", sitekey);
+    config = config.replace("HOSTS", appHost);
+    if (proxyType.equals("PaaS")) {
+      config = config.replace("PAASPATH", appPath);
+      config = config.replace("PAAS", "1");
+    } else {
+      config = config.replace("GAEPATH", appPath);
+      config = config.replace("PAAS", "0");
+      if (proxyType.equals("GAE-RC4")) {
+        config = config.replace("ENCRYPT", "rc4");
+      }
+    }
+    PrintWriter writer = new PrintWriter(BASE + "proxy.ini", "UTF-8");
+    writer.print(config);
+    writer.close();
+  }
+
+  private void flushDNS() {
+    Utils.runRootCommand("ndc resolver flushdefaultif\n"
+        + "ndc resolver flushif wlan0\n");
+  }
+
   private boolean parseProxyURL(String url) {
     if (proxyType.equals("PaaS")) {
       Uri uri = Uri.parse(url);
@@ -245,20 +293,9 @@ public class GAEProxyService extends Service {
 
     try {
 
-      StringBuilder sb = new StringBuilder();
+      writeConfig();
 
-      sb.append(BASE + "localproxy.sh");
-      sb.append(" \"").append(Utils.getDataPath(this)).append("\"");
-      sb.append(" \"").append(proxyType).append("\"");
-      sb.append(" \"").append(appId).append("\"");
-      sb.append(" \"").append(port).append("\"");
-      sb.append(" \"").append(appHost).append("\"");
-      sb.append(" \"").append(appPath).append("\"");
-      sb.append(" \"").append(sitekey).append("\"");
-
-      final String cmd = sb.toString();
-
-      Log.e(TAG, cmd);
+      final String cmd = BASE + "python-cl " + BASE + "goagent.py";
 
       if (Utils.isRoot()) {
         Utils.runRootCommand(cmd);
@@ -461,6 +498,7 @@ public class GAEProxyService extends Service {
     dnsThread.start();
 
     connect();
+    flushDNS();
 
     return true;
   }
@@ -693,14 +731,12 @@ public class GAEProxyService extends Service {
         break;
       }
 
-      if (socksIp == null || socksPort == null) return false;
-
-      return true;
+    return !(socksIp == null || socksPort == null);
   }
 
   private boolean preConnection() {
 
-    isHTTPSProxy = checkHTTPSProxy();
+    boolean isHTTPSProxy = checkHTTPSProxy();
 
     if (isHTTPSProxy) {
       String socksIp = settings.getString("socksIp", null);
