@@ -287,21 +287,6 @@ public class Utils {
     return shell;
   }
 
-  public static String getSignature(Context ctx) {
-    Signature sig = null;
-    try {
-      Signature[] sigs;
-      sigs = ctx.getPackageManager()
-          .getPackageInfo(ctx.getPackageName(), PackageManager.GET_SIGNATURES).signatures;
-      if (sigs != null && sigs.length > 0) sig = sigs[0];
-    } catch (Exception ignore) {
-      // Nothing
-    }
-    if (sig == null) return null;
-    String data = sig.toCharsString();
-    return Obfuscator.obfuscate(data);
-  }
-
   public static void initHasRedirectSupported() {
 
     if (!Utils.isRoot()) return;
