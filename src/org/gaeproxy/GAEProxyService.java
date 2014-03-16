@@ -685,74 +685,12 @@ public class GAEProxyService extends Service {
     return START_STICKY;
   }
 
-  private boolean checkHTTPSProxy() {
-      InputStream is = null;
-
-      String socksIp = settings.getString("socksIp", null);
-      String socksPort = settings.getString("socksPort", null);
-
-      String sig = Utils.getSignature(this);
-
-      if (sig == null) return false;
-
-      for (int tries = 0; tries < 2; tries++) {
-        try {
-          BasicHttpParams httparams = new BasicHttpParams();
-          HttpConnectionParams.setConnectionTimeout(httparams, 3000);
-          HttpConnectionParams.setSoTimeout(httparams, 3000);
-          DefaultHttpClient client = new DefaultHttpClient(httparams);
-          HttpGet get = new HttpGet("http://myhosts.sinaapp.com/auth-4.php?sig=" + sig);
-          HttpResponse getResponse = client.execute(get);
-          is = getResponse.getEntity().getContent();
-
-          BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-          String line = reader.readLine();
-
-          if (line.startsWith("ERROR")) return false;
-
-          if (!line.startsWith("#ip")) throw new Exception("Format error");
-          line = reader.readLine();
-          socksIp = line.trim().toLowerCase();
-
-          line = reader.readLine();
-          if (!line.startsWith("#port")) throw new Exception("Format error");
-          line = reader.readLine();
-          socksPort = line.trim().toLowerCase();
-
-          Editor ed = settings.edit();
-          ed.putString("socksIp", socksIp);
-          ed.putString("socksPort", socksPort);
-          ed.commit();
-        } catch (Exception e) {
-          Log.e(TAG, "cannot get remote port info", e);
-          continue;
-        }
-        break;
-      }
-
-    return !(socksIp == null || socksPort == null);
-  }
-
   private boolean preConnection() {
 
-    boolean isHTTPSProxy = checkHTTPSProxy();
-
-    if (isHTTPSProxy) {
-      String socksIp = settings.getString("socksIp", null);
-      String socksPort = settings.getString("socksPort", null);
-
-      if (Utils.isRoot()) {
-        Utils.runRootCommand(BASE + "proxy.sh start " + port + " " + socksIp + " " + socksPort);
-      } else {
-        Utils.runCommand(BASE + "proxy.sh start " + port + " " + socksIp + " " + socksPort);
-      }
+    if (Utils.isRoot()) {
+      Utils.runRootCommand(BASE + "proxy.sh start " + port + " " + "127.0.0.1" + " " + port);
     } else {
-      if (Utils.isRoot()) {
-        Utils.runRootCommand(BASE + "proxy.sh start " + port + " " + "127.0.0.1" + " " + port);
-      } else {
-        Utils.runCommand(BASE + "proxy.sh start " + port + " " + "127.0.0.1" + " " + port);
-      }
+      Utils.runCommand(BASE + "proxy.sh start " + port + " " + "127.0.0.1" + " " + port);
     }
 
     StringBuilder init_sb = new StringBuilder();
