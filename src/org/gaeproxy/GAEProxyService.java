@@ -120,6 +120,7 @@ public class GAEProxyService extends Service {
   };
   private static final String TAG = "GAEProxyService";
   private static final String DEFAULT_HOST = "74.125.128.106";
+  private static final String VIDEO_HOST = "74.125.10.73";
   private static final String DEFAULT_DNS = "220.181.136.37";
   private static final Class<?>[] mStartForegroundSignature = new Class[] {
       int.class, Notification.class
@@ -167,6 +168,7 @@ public class GAEProxyService extends Service {
           ed.putBoolean("isRunning", false);
           break;
         case MSG_HOST_CHANGE:
+          ed.putString("videoHost", videoHost);
           ed.putString("appHost", appHost);
           break;
         case MSG_STOP_SELF:
@@ -188,7 +190,9 @@ public class GAEProxyService extends Service {
   private String appId;
   private String appPath;
   private String appHost = DEFAULT_HOST;
+  private String videoHost = VIDEO_HOST;
   private String[] appMask;
+  private String[] videoMask;
   private int port;
   private String sitekey;
   private SharedPreferences settings = null;
@@ -452,6 +456,11 @@ public class GAEProxyService extends Service {
       }
     }
 
+    videoHost = parseHost("v.maxcdn.info", true);
+    if (videoHost == null || videoHost.equals("") || isInBlackList(videoHost)) {
+        videoHost = settings.getString("videoHost", VIDEO_HOST);
+    }
+
     handler.sendEmptyMessage(MSG_HOST_CHANGE);
 
     dnsHost = parseHost("myhosts.sinaapp.com", false);
@@ -463,6 +472,7 @@ public class GAEProxyService extends Service {
       String[] hosts = dnsHost.split("\\|");
       dnsHost = hosts[hosts.length - 1];
       appMask = appHost.split("\\|");
+      videoMask = videoHost.split("\\|");
     } catch (Exception ex) {
       return false;
     }
@@ -685,13 +695,75 @@ public class GAEProxyService extends Service {
     return START_STICKY;
   }
 
+  private boolean checkHTTPSProxy() {
+      InputStream is = null;
+
+      String socksIp = settings.getString("socksIp", null);
+      String socksPort = settings.getString("socksPort", null);
+
+      String sig = Utils.getSignature(this);
+
+      if (sig == null) return false;
+
+      for (int tries = 0; tries < 2; tries++) {
+        try {
+          BasicHttpParams httparams = new BasicHttpParams();
+          HttpConnectionParams.setConnectionTimeout(httparams, 3000);
+          HttpConnectionParams.setSoTimeout(httparams, 3000);
+          DefaultHttpClient client = new DefaultHttpClient(httparams);
+          HttpGet get = new HttpGet("http://myhosts.sinaapp.com/auth-4.php?sig=" + sig);
+          HttpResponse getResponse = client.execute(get);
+          is = getResponse.getEntity().getContent();
+
+          BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+          String line = reader.readLine();
+
+          if (line.startsWith("ERROR")) return false;
+
+          if (!line.startsWith("#ip")) throw new Exception("Format error");
+          line = reader.readLine();
+          socksIp = line.trim().toLowerCase();
+
+          line = reader.readLine();
+          if (!line.startsWith("#port")) throw new Exception("Format error");
+          line = reader.readLine();
+          socksPort = line.trim().toLowerCase();
+
+          Editor ed = settings.edit();
+          ed.putString("socksIp", socksIp);
+          ed.putString("socksPort", socksPort);
+          ed.commit();
+        } catch (Exception e) {
+          Log.e(TAG, "cannot get remote port info", e);
+          continue;
+        }
+        break;
+      }
+
+    return !(socksIp == null || socksPort == null);
+  }
+
   private boolean preConnection() {
 
+    boolean isHTTPSProxy = checkHTTPSProxy();
+
+    if (isHTTPSProxy) {
+      String socksIp = settings.getString("socksIp", null);
+      String socksPort = settings.getString("socksPort", null);
+
+      if (Utils.isRoot()) {
+        Utils.runRootCommand(BASE + "proxy.sh start " + port + " " + socksIp + " " + socksPort);
+      } else {
+        Utils.runCommand(BASE + "proxy.sh start " + port + " " + socksIp + " " + socksPort);
+      }
+    } else {
       if (Utils.isRoot()) {
         Utils.runRootCommand(BASE + "proxy.sh start " + port + " " + "127.0.0.1" + " " + port);
       } else {
         Utils.runCommand(BASE + "proxy.sh start " + port + " " + "127.0.0.1" + " " + port);
       }
+    }
 
     StringBuilder init_sb = new StringBuilder();
 
@@ -718,6 +790,10 @@ public class GAEProxyService extends Service {
     init_sb.append(cmd_bypass.replace("0.0.0.0", dnsHost));
 
     for (String mask : appMask) {
+      init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
+    }
+
+    for (String mask : videoMask) {
       init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
     }
 

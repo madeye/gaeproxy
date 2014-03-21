@@ -165,6 +165,10 @@ class Logging(type(sys)):
 
     def __init__(self, *args, **kwargs):
         self.level = self.__class__.INFO
+        self.__set_error_color = lambda: None
+        self.__set_warning_color = lambda: None
+        self.__set_debug_color = lambda: None
+        self.__reset_color = lambda: None
         #GAEProxy Patch
 
     @classmethod
@@ -183,26 +187,34 @@ class Logging(type(sys)):
         pass
 
     def debug(self, fmt, *args, **kwargs):
+        self.__set_debug_color()
         self.log('DEBUG', fmt, *args, **kwargs)
+        self.__reset_color()
 
     def info(self, fmt, *args, **kwargs):
         self.log('INFO', fmt, *args)
 
     def warning(self, fmt, *args, **kwargs):
+        self.__set_warning_color()
         self.log('WARNING', fmt, *args, **kwargs)
+        self.__reset_color()
 
     def warn(self, fmt, *args, **kwargs):
         self.warning(fmt, *args, **kwargs)
 
     def error(self, fmt, *args, **kwargs):
+        self.__set_error_color()
         self.log('ERROR', fmt, *args, **kwargs)
+        self.__reset_color()
 
     def exception(self, fmt, *args, **kwargs):
         self.error(fmt, *args, **kwargs)
         traceback.print_exc(file=sys.stderr)
 
     def critical(self, fmt, *args, **kwargs):
+        self.__set_error_color()
         self.log('CRITICAL', fmt, *args, **kwargs)
+        self.__reset_color()
 logging = sys.modules['logging'] = Logging('logging')
 
 
@@ -272,12 +284,12 @@ class CertUtil(object):
             subj.commonName = commonname
             subj.organizationName = commonname
             sans = [commonname] + [x for x in sans if x != commonname]
-        req.add_extensions([OpenSSL.crypto.X509Extension(b'subjectAltName', True, ', '.join('DNS: %s' % x for x in sans))])
+        #req.add_extensions([OpenSSL.crypto.X509Extension(b'subjectAltName', True, ', '.join('DNS: %s' % x for x in sans)).encode()])
         req.set_pubkey(pkey)
         req.sign(pkey, 'sha1')
 
         cert = OpenSSL.crypto.X509()
-        cert.set_version(3)
+        cert.set_version(2)
         try:
             cert.set_serial_number(int(hashlib.md5(commonname.encode('utf-8')).hexdigest(), 16))
         except OpenSSL.SSL.Error:
@@ -291,7 +303,7 @@ class CertUtil(object):
             sans = ['*'+commonname] + [s for s in sans if s != '*'+commonname]
         else:
             sans = [commonname] + [s for s in sans if s != commonname]
-        cert.add_extensions([OpenSSL.crypto.X509Extension(b'subjectAltName', True, ', '.join('DNS: %s' % x for x in sans))])
+        #cert.add_extensions([OpenSSL.crypto.X509Extension(b'subjectAltName', True, ', '.join('DNS: %s' % x for x in sans))])
         cert.sign(key, 'sha1')
 
         certfile = os.path.join(CertUtil.ca_certdir, commonname + '.crt')
@@ -302,7 +314,6 @@ class CertUtil(object):
 
     @staticmethod
     def get_cert(commonname, sans=()):
-        sans = ["*.akamaihd.net","*.fbcdn.net","*.google.com","*.appspot.com","*.googleapis.com","*.googlevideo.com","*.twitter.com","*.facebook.com","*.whatsapp.net"]
         if commonname.count('.') >= 2 and len(commonname.split('.')[-2]) > 4:
             commonname = '.'+commonname.partition('.')[-1]
         certfile = os.path.join(CertUtil.ca_certdir, commonname + '.crt')
