@@ -120,7 +120,7 @@ public class GAEProxyService extends Service {
   };
   private static final String TAG = "GAEProxyService";
   private static final String DEFAULT_HOST = "74.125.128.106";
-  private static final String VIDEO_HOST = "74.125.10.73";
+  private static final String VIDEO_HOST = "74.125.0.0|173.194.0.0";
   private static final String DEFAULT_DNS = "220.181.136.37";
   private static final Class<?>[] mStartForegroundSignature = new Class[] {
       int.class, Notification.class
@@ -794,7 +794,7 @@ public class GAEProxyService extends Service {
     }
 
     for (String mask : videoMask) {
-      init_sb.append(cmd_bypass.replace("0.0.0.0", mask));
+      init_sb.append(cmd_bypass.replace("0.0.0.0", mask+"/16"));
     }
 
     init_sb.append(

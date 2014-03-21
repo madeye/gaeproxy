@@ -387,7 +387,7 @@ public class DNSServer implements Runnable {
     String encode_domain = new String(Base64.encodeBase64(encode_temp.getBytes(), false));
     // Log.d(TAG, "BASE 64 pass 2: " + encode_domain);
 
-    String url = "http://myhosts.sinaapp.com/lookup-2.php?host=" + encode_domain;
+    String url = "http://myhosts.sinaapp.com/lookup-1.php?host=" + encode_domain;
     String host = "myhosts.sinaapp.com";
     url = url.replace(host, appHost);
 
