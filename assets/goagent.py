@@ -1152,7 +1152,7 @@ class Common(object):
         self.METHOD_REMATCH_MAP = collections.OrderedDict((re.compile(k).match, v) for k, v in self.CONFIG.items(hosts_section) if '\\' in k)
         self.METHOD_REMATCH_HAS_LOCALFILE = any(x.startswith('file://') for x in self.METHOD_REMATCH_MAP.values())
 
-        self.HTTP_WITHGAE = set(self.CONFIG.get(http_section, 'withgae').split('|'))
+        self.HTTP_WITHGAE = tuple(self.CONFIG.get(http_section, 'withgae').split('|'))
         self.HTTP_CRLFSITES = tuple(self.CONFIG.get(http_section, 'crlfsites').split('|'))
         self.HTTP_FORCEHTTPS = set(self.CONFIG.get(http_section, 'forcehttps').split('|'))
         self.HTTP_FAKEHTTPS = set(self.CONFIG.get(http_section, 'fakehttps').split('|'))
@@ -1762,7 +1762,7 @@ class GAEProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.url_parts = urlparse.urlparse(self.path)
         if common.USERAGENT_ENABLE:
             self.headers['User-Agent'] = common.USERAGENT_STRING
-        if host in common.HTTP_WITHGAE:
+        if host.endswith(common.HTTP_WITHGAE):
             return self.do_METHOD_AGENT()
         if host in common.HTTP_FORCEHTTPS and not self.headers.get('Referer', '').startswith('https://') and not self.path.startswith('https://'):
             return self.wfile.write(('HTTP/1.1 301\r\nLocation: %s\r\n\r\n' % self.path.replace('http://', 'https://', 1)).encode())
@@ -1986,7 +1986,7 @@ class GAEProxyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_CONNECT(self):
         """handle CONNECT cmmand, socket forward or deploy a fake cert"""
         host, _, port = self.path.rpartition(':')
-        if host in common.HTTP_FAKEHTTPS or host in common.HTTP_WITHGAE:
+        if host in common.HTTP_FAKEHTTPS or host.endswith(common.HTTP_WITHGAE):
             return self.do_CONNECT_AGENT()
         elif self.path in common.CONNECT_HOSTS_MAP or self.path.endswith(common.CONNECT_POSTFIX_ENDSWITH):
             return self.do_CONNECT_FWD()
