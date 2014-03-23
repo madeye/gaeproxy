@@ -794,7 +794,7 @@ public class GAEProxyService extends Service {
     }
 
     for (String mask : videoMask) {
-      init_sb.append(cmd_bypass.replace("0.0.0.0", mask+"/16"));
+      init_sb.append(cmd_bypass.replace("0.0.0.0", mask+"/16 --dport 443"));
     }
 
     init_sb.append(
